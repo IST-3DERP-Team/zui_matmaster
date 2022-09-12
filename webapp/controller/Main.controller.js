@@ -25,6 +25,15 @@ sap.ui.define([
                 var _this = this;
                 this.validationErrors = [];
 
+                //console.log(this.getOwnerComponent().getModel("ZVI_3DERP_STYLES_FILTER_CDS/ZVI"));
+                /*var oModel1 = this.getOwnerComponent().getModel("ZVI_3DERP_STYLES_FILTER_CDS");
+                oModel1.read('ZVB_SBU_SH', {
+                    success: function (data, response) {
+                       console.log(data);
+                    },
+                    error: function (err) { }
+                })*/
+
                 oModel.read('/MaterialSet', {
                     success: function (data, response) {
                         data.results.forEach((item, index) => {
@@ -1638,30 +1647,71 @@ sap.ui.define([
                                 if(aNewRows[0].Hasgmc){
                                     var oTable = this.byId("matMasterTab");
                                     oTable.getColumns().forEach((col, idx) => {
-                                        if(col.getLabel().getText().toUpperCase() ==="GMC"){
+                                        //console.log(col.getLabel().getText().toUpperCase());
+                                        switch(col.getLabel().getText().toUpperCase()) { 
+                                            case 'MATERIAL GROUP':
+                                            case 'GROSS WEIGHT':
+                                            case 'NET WEIGHT':
+                                            case 'WEIGHT UOM':
+                                            case 'VOLUME':
+                                            case 'VOLUME UOM':
+                                            case 'CUSTOMER MATERIAL':
+                                            case 'PROCESS CODE':
+                                            case 'ORDER UNIT':
+                                            case 'BASE UOM':
+                                            case 'GROSS WEIGHT': { 
+                                                oTable.getRows()[0].getCells()[idx].setProperty("enabled",false);
+                                               break; 
+                                            } 
+                                            case 'GMC': { 
+                                                oTable.getRows()[0].getCells()[idx].setProperty("enabled",true);
+                                               break; 
+                                            } 
+                                        }
+                                        /*if(col.getLabel().getText().toUpperCase() ==="GMC"){
                                             oTable.getRows()[0].getCells()[idx].setProperty("enabled",true);
                                         }
                                         if(col.getLabel().getText().toUpperCase() ==="MATERIAL GROUP"){
                                             oTable.getRows()[0].getCells()[idx].setProperty("enabled",false);
                                         }
-                                        if(col.getLabel().getText().toUpperCase() ==="BASE UNIT"){
+                                        if(col.getLabel().getText().toUpperCase() ==="BASE UOM"){
                                             oTable.getRows()[0].getCells()[idx].setProperty("enabled",false);
-                                        }
+                                        }*/
                                     })
                                 }
                                 else{
                                     oModel.setProperty(this._inputSourceCtx.getPath() + '/Processcode', item.Processcd);
                                     var oTable = this.byId("matMasterTab");
                                     oTable.getColumns().forEach((col, idx) => {
-                                        if(col.getLabel().getText().toUpperCase() ==="GMC"){
+                                        switch(col.getLabel().getText().toUpperCase()) { 
+                                            case 'MATERIAL GROUP':
+                                            case 'GROSS WEIGHT':
+                                            case 'NET WEIGHT':
+                                            case 'WEIGHT UOM':
+                                            case 'VOLUME':
+                                            case 'VOLUME UOM':
+                                            case 'CUSTOMER MATERIAL':
+                                            case 'PROCESS CODE':
+                                            case 'ORDER UNIT':
+                                            case 'BASE UOM':
+                                            case 'GROSS WEIGHT': { 
+                                                oTable.getRows()[0].getCells()[idx].setProperty("enabled",true);
+                                               break; 
+                                            } 
+                                            case 'GMC': { 
+                                                oTable.getRows()[0].getCells()[idx].setProperty("enabled",false);
+                                               break; 
+                                            } 
+                                        } 
+                                        /*if(col.getLabel().getText().toUpperCase() ==="GMC"){
                                             oTable.getRows()[0].getCells()[idx].setProperty("enabled",false);
                                         }
                                         if(col.getLabel().getText().toUpperCase() ==="MATERIAL GROUP"){
                                             oTable.getRows()[0].getCells()[idx].setProperty("enabled",true);
                                         }
-                                        if(col.getLabel().getText().toUpperCase() ==="BASE UNIT"){
+                                        if(col.getLabel().getText().toUpperCase() ==="BASE UOM"){
                                             oTable.getRows()[0].getCells()[idx].setProperty("enabled",true);
-                                        }
+                                        }*/
                                     })
                                 }
                             })
