@@ -36,7 +36,3 @@ server:
             metadataXmlPath: ./webapp/localService/ZGW_3DERP_MATERIAL_SRV/metadata.xml
             mockdataRootPath: ./webapp/localService/ZGW_3DERP_MATERIAL_SRV/mockdata
             generateMockData: true
-          - urlPath: /sap/opu/odata/sap/ZVI_3DERP_STYLES_FILTER_CDS/
-            metadataXmlPath: ./webapp/localService/ZVI_3DERP_STYLES_FILTER_CDS/metadata.xml
-            mockdataRootPath: ./webapp/localService/ZVI_3DERP_STYLES_FILTER_CDS/mockdata
-            generateMockData: true

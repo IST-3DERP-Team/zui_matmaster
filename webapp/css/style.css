@@ -14,9 +14,9 @@
     background-color: aliceblue !important;
 }
 
-.tablePadding {
+/* .tablePadding {
     height: 200px;
-}
+} */
 
 .sapMBtn.activeFiltering .sapMBtnInner {
     background: linear-gradient(45deg, blue, transparent) !important;
@@ -45,3 +45,18 @@
     font-style: italic;
 }
 
+.sapMITBHead {
+    margin: 0 !important;
+}
+
+.sidePadding {
+    padding: 0px 0.5rem !important;
+}
+
+.marginTopNone {
+    margin-top: 0 !important;
+}
+
+.defBGColor {
+    background-color: aliceblue !important;
+}

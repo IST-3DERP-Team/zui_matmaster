@@ -110,6 +110,93 @@
                 <Property Name="PressVal" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Pressure Value" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="PressUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Pressure Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
             </EntityType>
+            <EntityType Name="WeightUnit" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Mandt"/>
+                    <PropertyRef Name="Msehi"/>
+                </Key>
+                <Property Name="Mandt" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Client" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Msehi" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Internal UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Kzex3" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="3-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzex6" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="6-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Andec" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Rounding" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzkeh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Commercial unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzwob" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Value bsd cmmt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kz1eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(1) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kz2eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(2) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Dimid" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Dimension" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Zaehl" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Numerator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nennr" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Denominator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Exp10" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Exponent" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Addko" Type="Edm.Decimal" Nullable="false" Precision="9" Scale="6" sap:unicode="false" sap:label="Additive const." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Expon" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="fl. pt. exp." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Decan" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Decimal places" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Isocode" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="ISO code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Primary" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Primary code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TempValue" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Temperature" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TempUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Temperature un." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Famunit" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Un.of meas.fam." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PressVal" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Pressure Value" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PressUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Pressure Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+            </EntityType>
+            <EntityType Name="VolumeUnit" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Mandt"/>
+                    <PropertyRef Name="Msehi"/>
+                </Key>
+                <Property Name="Mandt" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Client" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Msehi" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Internal UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Kzex3" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="3-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzex6" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="6-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Andec" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Rounding" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzkeh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Commercial unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzwob" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Value bsd cmmt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kz1eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(1) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kz2eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(2) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Dimid" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Dimension" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Zaehl" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Numerator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nennr" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Denominator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Exp10" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Exponent" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Addko" Type="Edm.Decimal" Nullable="false" Precision="9" Scale="6" sap:unicode="false" sap:label="Additive const." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Expon" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="fl. pt. exp." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Decan" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Decimal places" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Isocode" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="ISO code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Primary" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Primary code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TempValue" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Temperature" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TempUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Temperature un." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Famunit" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Un.of meas.fam." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PressVal" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Pressure Value" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PressUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Pressure Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+            </EntityType>
+            <EntityType Name="DimensionUnit" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Mandt"/>
+                    <PropertyRef Name="Msehi"/>
+                </Key>
+                <Property Name="Mandt" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Client" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Msehi" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Internal UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Kzex3" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="3-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzex6" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="6-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Andec" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Rounding" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzkeh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Commercial unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kzwob" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Value bsd cmmt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kz1eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(1) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kz2eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(2) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Dimid" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Dimension" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Zaehl" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Numerator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nennr" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Denominator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Exp10" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Exponent" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Addko" Type="Edm.Decimal" Nullable="false" Precision="9" Scale="6" sap:unicode="false" sap:label="Additive const." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Expon" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="fl. pt. exp." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Decan" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Decimal places" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Isocode" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="ISO code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Primary" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Primary code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TempValue" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Temperature" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TempUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Temperature un." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Famunit" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Un.of meas.fam." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PressVal" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Pressure Value" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PressUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Pressure Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+            </EntityType>
             <EntityType Name="MaterialAtrrib" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="Matno"/>
@@ -375,98 +462,20 @@
                 <Property Name="Shorttext" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Short Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Shorttext2" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Short Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
-            <EntityType Name="WeightUnit" sap:content-version="1">
+            <EntityType Name="SBURsc" sap:content-version="1">
                 <Key>
-                    <PropertyRef Name="Mandt"/>
-                    <PropertyRef Name="Msehi"/>
+                    <PropertyRef Name="SBU"/>
                 </Key>
-                <Property Name="Mandt" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Client" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Msehi" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Internal UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
-                <Property Name="Kzex3" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="3-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzex6" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="6-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Andec" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Rounding" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzkeh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Commercial unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzwob" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Value bsd cmmt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kz1eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(1) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kz2eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(2) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Dimid" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Dimension" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Zaehl" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Numerator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Nennr" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Denominator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Exp10" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Exponent" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Addko" Type="Edm.Decimal" Nullable="false" Precision="9" Scale="6" sap:unicode="false" sap:label="Additive const." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Expon" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="fl. pt. exp." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Decan" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Decimal places" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Isocode" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="ISO code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Primary" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Primary code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="TempValue" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Temperature" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="TempUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Temperature un." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
-                <Property Name="Famunit" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Un.of meas.fam." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="PressVal" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Pressure Value" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="PressUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Pressure Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
-            </EntityType>
-            <EntityType Name="VolumeUnit" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Mandt"/>
-                    <PropertyRef Name="Msehi"/>
-                </Key>
-                <Property Name="Mandt" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Client" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Msehi" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Internal UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
-                <Property Name="Kzex3" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="3-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzex6" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="6-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Andec" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Rounding" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzkeh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Commercial unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzwob" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Value bsd cmmt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kz1eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(1) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kz2eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(2) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Dimid" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Dimension" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Zaehl" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Numerator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Nennr" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Denominator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Exp10" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Exponent" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Addko" Type="Edm.Decimal" Nullable="false" Precision="9" Scale="6" sap:unicode="false" sap:label="Additive const." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Expon" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="fl. pt. exp." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Decan" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Decimal places" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Isocode" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="ISO code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Primary" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Primary code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="TempValue" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Temperature" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="TempUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Temperature un." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
-                <Property Name="Famunit" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Un.of meas.fam." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="PressVal" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Pressure Value" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="PressUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Pressure Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
-            </EntityType>
-            <EntityType Name="DimensionUnit" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Mandt"/>
-                    <PropertyRef Name="Msehi"/>
-                </Key>
-                <Property Name="Mandt" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Client" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Msehi" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Internal UoM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
-                <Property Name="Kzex3" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="3-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzex6" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="6-char.ext.unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Andec" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Rounding" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzkeh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Commercial unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kzwob" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Value bsd cmmt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kz1eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(1) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Kz2eh" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="(2) unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Dimid" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Dimension" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Zaehl" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Numerator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Nennr" Type="Edm.Int32" Nullable="false" sap:unicode="false" sap:label="Denominator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Exp10" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Exponent" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Addko" Type="Edm.Decimal" Nullable="false" Precision="9" Scale="6" sap:unicode="false" sap:label="Additive const." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Expon" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="fl. pt. exp." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Decan" Type="Edm.Int16" Nullable="false" sap:unicode="false" sap:label="Decimal places" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Isocode" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="ISO code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="Primary" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Primary code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="TempValue" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Temperature" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="TempUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Temperature un." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
-                <Property Name="Famunit" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Un.of meas.fam." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="PressVal" Type="Edm.Double" Nullable="false" sap:unicode="false" sap:label="Pressure Value" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="PressUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Pressure Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="SBU" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="SBU" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
             <EntityContainer Name="ZGW_3DERP_MATMASTER_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
                 <EntitySet Name="MRPTypeSet" EntityType="ZGW_3DERP_MATMASTER_SRV.MRPType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="MatPlantSet" EntityType="ZGW_3DERP_MATMASTER_SRV.MatPlant" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="MatTypeRscSet" EntityType="ZGW_3DERP_MATMASTER_SRV.MatTypeRsc" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="BaseUnitSet" EntityType="ZGW_3DERP_MATMASTER_SRV.BaseUnit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="WeightUnitSet" EntityType="ZGW_3DERP_MATMASTER_SRV.WeightUnit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="VolumeUnitSet" EntityType="ZGW_3DERP_MATMASTER_SRV.VolumeUnit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="DimensionUnitSet" EntityType="ZGW_3DERP_MATMASTER_SRV.DimensionUnit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="MaterialAtrribSet" EntityType="ZGW_3DERP_MATMASTER_SRV.MaterialAtrrib" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="MaterialBatchSet" EntityType="ZGW_3DERP_MATMASTER_SRV.MaterialBatch" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="MaterialCusInfoSet" EntityType="ZGW_3DERP_MATMASTER_SRV.MaterialCusInfo" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
@@ -479,9 +488,7 @@
                 <EntitySet Name="MaterialSet" EntityType="ZGW_3DERP_MATMASTER_SRV.Material" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="MatTypeClassSet" EntityType="ZGW_3DERP_MATMASTER_SRV.MatTypeClass" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="MatTypeAttribSet" EntityType="ZGW_3DERP_MATMASTER_SRV.MatTypeAttrib" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
-                <EntitySet Name="WeightUnitSet" EntityType="ZGW_3DERP_MATMASTER_SRV.WeightUnit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
-                <EntitySet Name="VolumeUnitSet" EntityType="ZGW_3DERP_MATMASTER_SRV.VolumeUnit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
-                <EntitySet Name="DimensionUnitSet" EntityType="ZGW_3DERP_MATMASTER_SRV.DimensionUnit" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="SBURscSet" EntityType="ZGW_3DERP_MATMASTER_SRV.SBURsc" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
             </EntityContainer>
             <atom:link rel="self" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZGW_3DERP_MATMASTER_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
             <atom:link rel="latest-version" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZGW_3DERP_MATMASTER_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>

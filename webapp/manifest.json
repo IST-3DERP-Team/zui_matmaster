@@ -33,24 +33,6 @@
                     "annotations": [],
                     "localUri": "localService/ZGW_3DERP_MATERIAL_SRV/metadata.xml"
                 }
-            },
-            "ZVI_3DERP_STYLES_FILTER_CDS_Annotation": {
-                "uri": "/destinations/LTD888/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZVI_3DERP_STYLES_FILTER_CDS_VAN',Version='0001')/$value/",
-                "type": "ODataAnnotation",
-                "settings": {
-                    "localUri": "localService/ZVI_3DERP_STYLES_FILTER_CDS/ZVI_3DERP_STYLES_FILTER_CDS_Annotation.xml"
-                }
-            },
-            "ZVI_3DERP_STYLES_FILTER_CDS": {
-                "uri": "/sap/opu/odata/sap/ZVI_3DERP_STYLES_FILTER_CDS/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0",
-                    "annotations": [
-                        "ZVI_3DERP_STYLES_FILTER_CDS_Annotation"
-                    ],
-                    "localUri": "localService/ZVI_3DERP_STYLES_FILTER_CDS/metadata.xml"
-                }
             }
         }
     },
@@ -103,15 +85,6 @@
             },
             "ZGW_3DERP_MATERIAL_SRV": {
                 "dataSource": "ZGW_3DERP_MATERIAL_SRV",
-                "preload": true,
-                "settings": {
-                    "defaultBindingMode": "TwoWay",
-                    "defaultCountMode": "Inline",
-                    "refreshAfterChange": false
-                }
-            },
-            "ZVI_3DERP_STYLES_FILTER_CDS": {
-                "dataSource": "ZVI_3DERP_STYLES_FILTER_CDS",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",

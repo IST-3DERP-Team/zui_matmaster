@@ -5,7 +5,7 @@
         xmlns:uit="sap.ui.table"
         id="fragment-1" 
         fragmentName="fragment1">
-    <Dialog contentWidth="1500px"
+    <Dialog contentWidth="1000px"
         contentHeight="500px"
         title="Material Classifications"
         resizable="true"
@@ -71,6 +71,7 @@
                         <Input value="{mtClassModel>Desczh}" enabled="{mtClassModel>DescInput}"/>
                     </uit:template>
                 </uit:Column>     
+                <!--
                 <uit:Column width="8rem">
                     <Label text="Created By" />
                     <uit:template>
@@ -94,7 +95,7 @@
                     <uit:template>
                         <Text text="{mtClassModel>Updateddt}" wrapping="false" />
                     </uit:template>
-                </uit:Column>
+                </uit:Column>-->
             </uit:columns>
         </uit:Table>    
     </Dialog>
