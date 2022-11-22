@@ -67,6 +67,20 @@
                 "sap.ushell": {}
             }
         },
+        "commands": {
+			"Save": {
+				"shortcut": "Ctrl+S"
+			},
+			"Delete": {
+				"shortcut": "Ctrl+D"
+			},
+            "Edit": {
+				"shortcut": "Ctrl+E"
+			},
+            "New": {
+				"shortcut": "Ctrl+I"
+			}
+		},
         "contentDensities": {
             "compact": true,
             "cozy": true

@@ -7,6 +7,12 @@
     xmlns:uiL="sap.ui.layout"
     xmlns:uiT="sap.ui.table"> 
     <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false">
+        <dependents>
+            <core:CommandExecution id="CE_SAVE" command="Save" enabled="true" execute="onSave" />
+            <core:CommandExecution id="CE_EDIT" command="Edit" enabled="true" execute="onEditMM" />
+            <core:CommandExecution id="CE_DELETE" command="Delete" enabled="true" execute="onDeleteMM" />
+            <core:CommandExecution id="CE_NEW" command="New" enabled="true" execute="onCreateMM" />
+        </dependents>
         <content>
             <!--
             <uiL:FixFlex id="fixFlexMM" class="fixFlexFixedSize sidePadding" fixContentSize="50%">
@@ -410,11 +416,10 @@
                     </uiT:layoutData> 
                 </uiT:Table>
                 <IconTabBar id="itbDetail"
+                    class="sapUiNoContentPadding"
                     expanded="{device>/isNoPhone}" 
                     expandable="false" 
-                    class="tabColor" 
                     select="onSelectTab"
-                    headerBackgroundDesign="Transparent" 
                     stretchContentHeight="true" 
                     applyContentPadding="false">
                     <items>
