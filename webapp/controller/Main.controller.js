@@ -911,6 +911,7 @@ sap.ui.define([
                     if (item.getProperty("key") === oSource.getValue().trim()) {
                         isInvalid = false;
                         oSource.setValueState(isInvalid ? "Error" : "None");
+                        var vSBU = this.byId('cboxSBU').getSelectedKey();
                         console.log(this.getView().getModel(sModel));
                         if(oSource.getBindingInfo("value").parts[0].path ==="Materialtype"){
                             var et=item.getBindingContext().sPath;
@@ -950,7 +951,7 @@ sap.ui.define([
                                                 oTable.getRows()[0].getCells()[idx].setProperty("enabled",true);
                                                 oModel.read('/GMCRscSet', {
                                                     urlParameters: {
-                                                        "$filter": "Mattyp eq '"  + item.getProperty("key") + "'"
+                                                        "$filter": "Mattyp eq '"  + item.getProperty("key") + "' and Sbu eq '" + vSBU +"'"
                                                     },
                                                     success: function (data, response) {
                                                         oJSONModel.setData(data);
