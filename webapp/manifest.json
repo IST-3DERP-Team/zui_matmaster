@@ -33,6 +33,24 @@
                     "annotations": [],
                     "localUri": "localService/ZGW_3DERP_MATERIAL_SRV/metadata.xml"
                 }
+            },
+            "ZGW_3DERP_COMMON_SRV": {
+                "uri": "/sap/opu/odata/sap/ZGW_3DERP_COMMON_SRV/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "annotations": [],
+                    "localUri": "localService/ZGW_3DERP_COMMON_SRV/metadata.xml"
+                }
+            },
+            "ZGW_3DERP_RFC_SRV": {
+                "uri": "/sap/opu/odata/sap/ZGW_3DERP_RFC_SRV",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "annotations": [],
+                    "localUri": "localService/ZGW_3DERP_RFC_SRV/metadata.xml"
+                }
             }
         }
     },
@@ -68,19 +86,19 @@
             }
         },
         "commands": {
-			"Save": {
-				"shortcut": "Ctrl+S"
-			},
-			"Delete": {
-				"shortcut": "Ctrl+D"
-			},
+            "Save": {
+                "shortcut": "Ctrl+S"
+            },
+            "Delete": {
+                "shortcut": "Ctrl+D"
+            },
             "Edit": {
-				"shortcut": "Ctrl+E"
-			},
+                "shortcut": "Ctrl+E"
+            },
             "New": {
-				"shortcut": "Ctrl+I"
-			}
-		},
+                "shortcut": "Ctrl+I"
+            }
+        },
         "contentDensities": {
             "compact": true,
             "cozy": true
@@ -99,6 +117,24 @@
             },
             "ZGW_3DERP_MATERIAL_SRV": {
                 "dataSource": "ZGW_3DERP_MATERIAL_SRV",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false
+                }
+            },
+            "ZGW_3DERP_COMMON_SRV": {
+                "dataSource": "ZGW_3DERP_COMMON_SRV",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false
+                }
+            },
+            "ZGW_3DERP_RFC_SRV": {
+                "dataSource": "ZGW_3DERP_RFC_SRV",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",

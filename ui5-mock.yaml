@@ -18,6 +18,18 @@ server:
             url: http://159.138.39.203:8000
             client: "888"
             destination: LTD888
+          - path: /sap
+            url: http://159.138.39.203:8000
+            client: "888"
+            destination: LTD888
+          - path: /sap/opu/odata/sap/ZGW_3DERP_RFC_SRV
+            url: http://159.138.39.203:8000
+            client: "888"
+            destination: LTD888
+          - path: /sap/opu/odata/sap/ZGW_3DERP_MATERIAL_SRV/
+            url: http://159.138.39.203:8000
+            client: "888"
+            destination: LTD888
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
@@ -32,7 +44,11 @@ server:
             metadataXmlPath: ./webapp/localService/mainService/metadata.xml
             mockdataRootPath: ./webapp/localService/mainService/mockdata
             generateMockData: true
-          - urlPath: /sap/opu/odata/sap/ZGW_3DERP_MATERIAL_SRV/
-            metadataXmlPath: ./webapp/localService/ZGW_3DERP_MATERIAL_SRV/metadata.xml
-            mockdataRootPath: ./webapp/localService/ZGW_3DERP_MATERIAL_SRV/mockdata
+          - urlPath: /sap/opu/odata/sap/ZGW_3DERP_COMMON_SRV/
+            metadataXmlPath: ./webapp/localService/ZGW_3DERP_COMMON_SRV/metadata.xml
+            mockdataRootPath: ./webapp/localService/ZGW_3DERP_COMMON_SRV/mockdata
+            generateMockData: true
+          - urlPath: /sap/opu/odata/sap/ZGW_3DERP_RFC_SRV
+            metadataXmlPath: ./webapp/localService/ZGW_3DERP_RFC_SRV/metadata.xml
+            mockdataRootPath: ./webapp/localService/ZGW_3DERP_RFC_SRV/mockdata
             generateMockData: true

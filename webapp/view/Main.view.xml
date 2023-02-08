@@ -607,6 +607,11 @@
                                             search="filterGlobally"
                                             width="15rem"/>
                                         <ToolbarSeparator/>
+                                        <Button id="btnExtendMat" 
+                                            icon="sap-icon://document"
+                                            tooltip="Extend Material"
+                                            press=".onExtendMaterial"
+                                            visible="true" />
                                         <Button id="btnRefreshPlant" 
                                             icon="sap-icon://refresh"
                                             press=".onRefreshPlant"
