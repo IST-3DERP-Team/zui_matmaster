@@ -38,6 +38,7 @@ sap.ui.define([
                 this._oFilterDialog = null;
                 this._oViewSettingsDialog = {};
                 this._DiscardChangesDialog = null;
+                this._columnLoadError = false;
 
                 this._aEntitySet = {
                     matMaster: "MaterialSet", attributes: "MaterialAtrribSet", batch: "MaterialBatchSet", customInfo : "MaterialCusInfoSet", plant : "PlantSet",MatTypeClass: "MatTypeClassSet"
@@ -1651,6 +1652,393 @@ sap.ui.define([
                 var mmNo = this.getView().getModel("ui").getData().activeMaterialNo;
                 this.getCustomInfo(mmNo);
             },
+
+            //Start of Extend Material Adjustment
+            getDynamicColumns: async function(model, dataSource) {
+                var _this = this;
+                var modCode = model;
+                var tabName = dataSource;
+
+                //get dynamic columns based on saved layout or ZERP_CHECK
+                var oJSONColumnsModel = new JSONModel();
+
+                var vSBU = this.byId('cboxSBU').getSelectedKey();
+
+                var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
+
+                oModel.setHeaders({
+                    sbu: vSBU,
+                    type: modCode,
+                    tabname: tabName
+                });
+
+                await new Promise((resolve, reject) => {
+                    oModel.read("/ColumnsSet", {
+                        success: async function (oData, oResponse) {
+                            if (oData.results.length > 0) {
+                                _this._columnLoadError = false;
+                                if (modCode === 'MMExtend') {
+                                    oJSONColumnsModel.setData(oData.results);
+                                    _this.getView().setModel(oJSONColumnsModel, "mmExtendTblColumns");
+                                    _this.setTableColumnsData(modCode);
+                                    resolve();
+                                }
+                            }else{
+                                _this._columnLoadError = true;
+                                if (modCode === 'MMExtend') {
+                                    _this.getView().setModel(oJSONColumnsModel, "mmExtendTblColumns");
+                                    _this.setTableColumnsData(modCode);
+                                    resolve();
+                                }
+                            }
+                        },
+                        error: function (err) {
+                            _this._columnLoadError = true;
+                            resolve();
+                        }
+                    });
+                });
+            },
+
+            setTableColumnsData(modCode){
+                var _this = this;
+                var oColumnsModel;
+                var oDataModel;
+
+                var oColumnsData;
+                var oData;
+
+                if(modCode === "MMExtend"){
+                    oColumnsModel = _this.getView().getModel("mmExtendTblColumns");  
+                    oDataModel = _this.getView().getModel("mmExtendTblData"); 
+
+                    oData = oDataModel === undefined ? [] :oDataModel.getProperty('/');
+
+                    if(_this._columnLoadError){
+                        oData = [];
+                    }
+                    oColumnsData = oColumnsModel.getProperty('/');
+                    _this.addColumns("mmExtendTbl", oColumnsData, oData, "mmExtendTbl");
+                }
+            },
+
+            addColumns: async function(table, columnsData, data, model) {
+                var me = this;
+                var oModel = new JSONModel();
+                oModel.setData({
+                    columns: columnsData,
+                    rows: data
+                });
+
+                var oTable = this.getView().byId(table);
+
+                oTable.setModel(oModel);
+
+                oTable.bindColumns("/columns", function (index, context) {
+                    var sColumnId = context.getObject().ColumnName;
+                    var sColumnLabel = context.getObject().ColumnLabel;
+                    var sColumnType = context.getObject().DataType;
+                    var sColumnVisible = context.getObject().Visible;
+                    var sColumnSorted = context.getObject().Sorted;
+                    var sColumnSortOrder = context.getObject().SortOrder;
+                    var sColumnWidth = context.getObject().ColumnWidth;
+                    var sColumnWidth = context.getObject().ColumnWidth;
+                    if (sColumnType === "STRING" || sColumnType === "DATETIME"|| sColumnType === "BOOLEAN") {
+                        return new sap.ui.table.Column({
+                            id: model+"-"+sColumnId,
+                            label: sColumnLabel,
+                            template: me.columnTemplate(sColumnId),
+                            width: sColumnWidth + "px",
+                            hAlign: me.columnSize(sColumnId),
+                            sortProperty: sColumnId,
+                            filterProperty: sColumnId,
+                            autoResizable: true,
+                            visible: sColumnVisible,
+                            sorted: sColumnSorted,
+                            sortOrder: ((sColumnSorted === true) ? sColumnSortOrder : "Ascending" )
+                        });
+                    }else if (sColumnType === "NUMBER") {
+                        return new sap.ui.table.Column({
+                            id: model+"-"+sColumnId,
+                            label: sColumnLabel,
+                            template: new sap.m.Text({ text: "{" + sColumnId + "}", wrapping: false, tooltip: "{" + sColumnId + "}" }), //default text
+                            width: sColumnWidth + "px",
+                            hAlign: "End",
+                            sortProperty: sColumnId,
+                            filterProperty: sColumnId,
+                            autoResizable: true,
+                            visible: sColumnVisible,
+                            sorted: sColumnSorted,
+                            sortOrder: ((sColumnSorted === true) ? sColumnSortOrder : "Ascending" )
+                        });
+                    }
+
+                });
+
+                //bind the data to the table
+                oTable.bindRows("/rows");
+            },
+            columnTemplate: function(sColumnId){
+                var oColumnTemplate;
+                oColumnTemplate = new sap.m.Text({ text: "{" + sColumnId + "}", wrapping: false, tooltip: "{" + sColumnId + "}" }); //default text
+                if (sColumnId === "DELETED") { 
+                    //Manage button
+                    oColumnTemplate = new sap.m.CheckBox({
+                        selected: "{" + sColumnId + "}",
+                        editable: false
+                    });
+                }
+                if (sColumnId === "CLOSED") { 
+                    //Manage button
+                    oColumnTemplate = new sap.m.CheckBox({
+                        selected: "{" + sColumnId + "}",
+                        editable: false
+                    });
+                }
+                if (sColumnId === "UNLIMITED" || sColumnId === "INVRCPT" || sColumnId === "GRBASEDIV" || sColumnId === "GRIND") { 
+                    //Manage button
+                    oColumnTemplate = new sap.m.CheckBox({
+                        selected: "{" + sColumnId + "}",
+                        editable: false
+                    });
+                }
+                if (sColumnId === "INVRCPTIND") { 
+                    //Manage button
+                    oColumnTemplate = new sap.m.CheckBox({
+                        selected: "{" + sColumnId + "}",
+                        editable: false
+                    });
+                }
+                if (sColumnId === "GRBASEDIVIND") { 
+                    //Manage button
+                    oColumnTemplate = new sap.m.CheckBox({
+                        selected: "{" + sColumnId + "}",
+                        editable: false
+                    });
+                }
+                if (sColumnId === "DELCOMPLETE") { 
+                    //Manage button
+                    oColumnTemplate = new sap.m.CheckBox({
+                        selected: "{" + sColumnId + "}",
+                        editable: false
+                    });
+                }
+    
+                return oColumnTemplate;
+            },
+            columnSize: function(sColumnId){
+                var oColumnSize;
+                if (sColumnId === "DELETED") { 
+                    //Manage button
+                    oColumnSize = "Center";
+                }
+                if (sColumnId === "CLOSED") { 
+                    //Manage button
+                    oColumnSize = "Center";
+                }
+                if (sColumnId === "UNLIMITED" || sColumnId === "INVRCPT" || sColumnId === "GRBASEDIV" || sColumnId === "GRIND") { 
+                    //Manage button
+                    oColumnSize = "Center";
+                }
+                if (sColumnId === "INVRCPTIND") { 
+                    //Manage button
+                    oColumnSize = "Center";
+                }
+                if (sColumnId === "GRBASEDIVIND") { 
+                    //Manage button
+                    oColumnSize = "Center";
+                }
+                if (sColumnId === "OVERDELTOL") { 
+                    //Manage button
+                    oColumnSize = "Center";
+                }
+                if (sColumnId === "UNDERDELTOL") { 
+                    //Manage button
+                    oColumnSize = "Center";
+                }
+                return oColumnSize;
+            },
+
+            onExtendMaterial: async function(){
+                var _this = this;
+                var oModel = this.getOwnerComponent().getModel();
+                var matNo = _this.getView().getModel("ui").getProperty("/activeMaterialNo");
+                var vSBU = this.byId('cboxSBU').getSelectedKey();
+
+
+                var onExtendMatData = {};
+                var oJSONModel = new JSONModel();
+                var extendMatJSONModel = new JSONModel();
+
+                var extendMaterialCheck = [];
+                var extendMaterialSet = [];
+                var matchedPlant = [];
+                var extendMaterialList = [];
+
+                await new Promise((resolve, reject)=>{
+                    oModel.read("/ExtendMaterialChkSet",{ 
+                        urlParameters: {
+                            "$filter": "MATNO eq '" + matNo + "'"
+                            // "$filter": "VENDORCD eq '0003101604' and PURCHORG eq '1601' and PURCHGRP eq '601' and SHIPTOPLANT eq 'B601' and PURCHPLANT eq 'C600' and DOCTYP eq 'ZMRP'"
+                        },success: async function (oData, oResponse) {
+                            extendMaterialCheck = oData.results;
+                            resolve();
+                        },
+                        error: function () {
+                            resolve();
+                        }
+                    });
+                });
+
+                await new Promise((resolve, reject)=>{
+                    oModel.read("/ExtendMaterialSet",{ 
+                        urlParameters: {
+                            "$filter": "SBU eq '" + vSBU + "'"
+                            // "$filter": "VENDORCD eq '0003101604' and PURCHORG eq '1601' and PURCHGRP eq '601' and SHIPTOPLANT eq 'B601' and PURCHPLANT eq 'C600' and DOCTYP eq 'ZMRP'"
+                        },success: async function (oData, oResponse) {
+                            extendMaterialSet = oData.results;
+                            resolve();
+                        },
+                        error: function () {
+                            resolve();
+                        }
+                    });
+                });
+                
+                await new Promise((resolve, reject)=>{
+                    extendMaterialSet.filter(function (el, index){
+                        extendMaterialCheck.forEach(item => {
+                            if(el.PLANTCD === item.PLANTCD){
+                                delete extendMaterialSet[index]
+                            }
+                        });
+                        resolve();
+                    })
+
+                    extendMaterialSet.forEach(item => {
+                        extendMaterialList.push(item)
+                    })
+                    resolve();
+                });
+
+                oJSONModel.setData(extendMaterialList);
+                _this.getView().setModel(oJSONModel, "mmExtendTblData");
+
+                onExtendMatData = {
+                    Title: "Extend Material",
+                };
+                extendMatJSONModel.setData(onExtendMatData);
+
+                _this.onExtendMaterialDialog = sap.ui.xmlfragment(_this.getView().getId(), "zuimatmaster.view.fragments.dialog.MMExtendDialog", _this);
+                _this.onExtendMaterialDialog.setModel(extendMatJSONModel);
+                _this.getView().addDependent(_this.onExtendMaterialDialog);
+
+                var _promiseResult = new Promise((resolve, reject)=>{
+                    resolve(this.getDynamicColumns("MMExtend", "ZDV_MMEXTEND"));
+                });
+                await _promiseResult;
+
+                _this.onExtendMaterialDialog.open();
+            },
+
+            onSaveExtendMaterial: async function(){
+                var _this = this;
+                var oModel = this.getOwnerComponent().getModel();
+                var matModel = this.getOwnerComponent().getModel("ZGW_3DERP_MATERIAL_SRV");
+                var matNo = _this.getView().getModel("ui").getProperty("/activeMaterialNo");
+
+                var oTable = this.byId("mmExtendTbl");
+                var aSelIndices = oTable.getSelectedIndices();
+                var oTmpSelectedIndices = [];
+                var aData = oTable.getModel().getData().rows;
+
+                var isValid = false;
+                var plantCd = "";
+                var iCounter = 0;
+
+                var oParam = {};
+                var oParamInitParam = {};
+                var oParamData = [];
+
+                if (aSelIndices.length > 0) {
+                    this.showLoadingDialog('Loading...');
+                    aSelIndices.forEach(item => {
+                        oTmpSelectedIndices.push(oTable.getBinding("rows").aIndices[item])
+                    });
+                    aSelIndices = oTmpSelectedIndices;
+                    for(var item in aSelIndices){
+                        await new Promise((resolve, reject)=>{
+                            iCounter++;
+                            oModel.read("/ExtendMaterialVldMatChkSet",{ 
+                                urlParameters: {
+                                    "$filter": "MATNO eq '" + matNo + "'"
+                                    // "$filter": "VENDORCD eq '0003101604' and PURCHORG eq '1601' and PURCHGRP eq '601' and SHIPTOPLANT eq 'B601' and PURCHPLANT eq 'C600' and DOCTYP eq 'ZMRP'"
+                                },success: async function (oData, oResponse) {
+                                    if(oData.results.length > 0){
+                                        isValid = true;
+                                        resolve(plantCd = oData.results[0].PLANTCD);
+                                    }
+                                    resolve();
+                                },
+                                error: function () {
+                                    resolve();
+                                }
+                            });
+                        });
+                        if(isValid){
+                            oParamInitParam = {
+                                Subrc: 0
+                            }
+                            oParamData.push({
+                                Row: 0,
+                                Matnr: matNo,
+                                WerksFrom: plantCd,
+                                WerksTo: aData.at(item).PLANTCD
+                            })
+                        }
+                        if (aSelIndices.length === iCounter) {
+                            oParam = oParamInitParam;
+                            oParam['N_IMatPlant'] = oParamData;
+                            oParam['N_EMatPlant'] = [];
+                            oParam['N_Messtab'] = [];
+
+                            if(oParamData.length > 0){
+                                await new Promise((resolve, reject)=>{
+                                    matModel.create("/MatExtendSet", oParam, {
+                                        method: "POST",
+                                        success: function(oData, oResponse){
+                                            if(oData.N_Messtab.results[0].Message !== undefined || oData.N_Messtab.results[0].Message !== "" || oData.N_Messtab.results[0].Message !== null){
+                                                MessageBox.information(oData.N_Messtab.results[0].Message);
+                                            }
+                                            resolve();
+                                        },error: function(error){
+                                            
+                                            resolve();
+                                        }
+                                    });
+                                })
+                            }else{
+                                MessageBox.error("Plant Code of Material is not Valid!");
+                            }
+
+                        }
+                    }
+                    
+                    _this.closeLoadingDialog();
+                    this.onExtendMaterialDialog.destroy(true);
+                    this.getPlant(matNo);
+                }else{
+                    MessageBox.warning("No Selected Record!");
+                }
+
+            },
+
+            onCancelExtendMM: async function(){
+                this.onExtendMaterialDialog.destroy(true);
+            },
+
+            //End of Extend Material Adjustment
+
             onRefreshPlant(){
                 var mmNo = this.getView().getModel("ui").getData().activeMaterialNo;
                 this.getPlant(mmNo)
