@@ -1125,7 +1125,7 @@ sap.ui.define([
                     this.byId("btnFilterMM").setVisible(true);
                     this.byId("btnFullScreenHdr").setVisible(true);
                     this.byId("btnColPropMM").setVisible(true);
-                    this.byId("searchFieldMM").setVisible(true);
+                    // this.byId("searchFieldMM").setVisible(true);
                     this.onTableResize("Hdr","Min");
                     this.setRowReadMode("matMaster");
                     this.getView().getModel("matMaster").setProperty("/", this._oDataBeforeChange);
@@ -1144,7 +1144,7 @@ sap.ui.define([
                 this.byId("btnFilterCustomInfo").setVisible(true);
                 this.byId("btnFullScreenHdr").setVisible(true);
                 this.byId("btnColPropCustomInfo").setVisible(true);
-                this.byId("searchFieldCustomInfo").setVisible(true);
+                // this.byId("searchFieldCustomInfo").setVisible(true);
                 this.onTableResize("Hdr","Min");
                 this.setRowReadMode("customInfo");
                 this.getView().getModel("customInfo").setProperty("/", this._oDataBeforeChange);
@@ -1422,7 +1422,7 @@ sap.ui.define([
                         this.byId("btnFilterMM").setVisible(true);
                         this.byId("btnFullScreenHdr").setVisible(true);
                         this.byId("btnColPropMM").setVisible(true);
-                        this.byId("searchFieldMM").setVisible(true);
+                        // this.byId("searchFieldMM").setVisible(true);
                         this.onTableResize("Hdr","Min");
                     }
 
@@ -2649,7 +2649,7 @@ sap.ui.define([
                     this.byId("btnFilterMM").setVisible(true);
                     this.byId("btnFullScreenHdr").setVisible(true);
                     this.byId("btnColPropMM").setVisible(true);
-                    this.byId("searchFieldMM").setVisible(true);
+                    // this.byId("searchFieldMM").setVisible(true);
                     this.onTableResize("Hdr","Min");
                     this.setRowReadMode("matMaster");
                     this.getView().getModel("matMaster").setProperty("/", this._oDataBeforeChange);
@@ -2665,7 +2665,7 @@ sap.ui.define([
                     this.byId("btnFilterAttr").setVisible(true);
                     this.byId("btnFullScreenHdr").setVisible(true);
                     this.byId("btnColPropAttr").setVisible(true);
-                    this.byId("searchFieldAttr").setVisible(true);
+                    // this.byId("searchFieldAttr").setVisible(true);
                     this.onTableResize("Attr","Min");
     
                     this.setRowReadMode("attributes");
@@ -2691,7 +2691,7 @@ sap.ui.define([
                     this.byId("btnFilterMM").setVisible(true);
                     this.byId("btnFullScreenHdr").setVisible(true);
                     this.byId("btnColPropMM").setVisible(true);
-                    this.byId("searchFieldMM").setVisible(true);
+                    // this.byId("searchFieldMM").setVisible(true);
                     this.onTableResize("Hdr","Min");
                     this.setRowReadMode("matMaster");
                     this.getView().getModel("matMaster").setProperty("/", this._oDataBeforeChange);

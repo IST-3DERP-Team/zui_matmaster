@@ -444,7 +444,7 @@
                                             search="filterGlobally"
                                             visible="false"
                                             width="15rem"/>
-                                        <ToolbarSeparator/>
+                                        <!-- <ToolbarSeparator/> -->
                                         <Button id="btnRefreshAttr" 
                                             icon="sap-icon://refresh"
                                             press=".onRefreshAttr"
@@ -494,7 +494,7 @@
                                             search="filterGlobally"
                                             visible="false"
                                             width="15rem"/>
-                                        <ToolbarSeparator/>
+                                        <!-- <ToolbarSeparator/> -->
                                         <Button id="btnRefreshBatch" 
                                             icon="sap-icon://refresh"
                                             press=".onRefreshBatch"
@@ -544,7 +544,7 @@
                                             search="filterGlobally"
                                             visible="false"
                                             width="15rem"/>
-                                        <ToolbarSeparator/>
+                                        <!-- <ToolbarSeparator/> -->
                                         <Button id="btnEditCustomInfo" 
                                             icon="sap-icon://edit"
                                             press="onEditCustomInfo"
@@ -611,10 +611,10 @@
                                             search="filterGlobally"
                                             visible="false"
                                             width="15rem"/>
-                                        <ToolbarSeparator/>
+                                        <!-- <ToolbarSeparator/> -->
                                         <Button id="btnExtendMat" 
                                             text="Extend Material"
-                                            icon="sap-icon://add-process"
+                                            icon="sap-icon://add-coursebook"
                                             tooltip="Extend Material"
                                             press=".onExtendMaterial"
                                             visible="true" />

@@ -14,7 +14,7 @@ xmlns:f="sap.ui.layout.form" xmlns:uiT="sap.ui.table">
 					<Text text="Material: {ui>/activeMaterialNo}" class="selHdrKeyFontStyle" />
 					<ToolbarSpacer/>
 					<Button id="mmInitExtendBtn" 
-						icon="sap-icon://save"
+						icon="sap-icon://add-coursebook"
 						press=".onSaveExtendMaterial" 
 						text = "Extend Material"
 						visible="true" />
