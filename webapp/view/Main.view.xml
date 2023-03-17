@@ -361,8 +361,9 @@
                                 placeholder="Filter"
                                 value=""
                                 search="filterGlobally"
+                                visible="false"
                                 width="15rem"/>
-                            <ToolbarSeparator/>
+                            <!-- <ToolbarSeparator/> -->
                             <Button id="btnAddMM" 
                                 icon="sap-icon://add"
                                 press=".onCreateMM"
@@ -441,6 +442,7 @@
                                             placeholder="Filter"
                                             value=""
                                             search="filterGlobally"
+                                            visible="false"
                                             width="15rem"/>
                                         <ToolbarSeparator/>
                                         <Button id="btnRefreshAttr" 
@@ -490,6 +492,7 @@
                                             placeholder="Filter"
                                             value=""
                                             search="filterGlobally"
+                                            visible="false"
                                             width="15rem"/>
                                         <ToolbarSeparator/>
                                         <Button id="btnRefreshBatch" 
@@ -539,6 +542,7 @@
                                             placeholder="Filter"
                                             value=""
                                             search="filterGlobally"
+                                            visible="false"
                                             width="15rem"/>
                                         <ToolbarSeparator/>
                                         <Button id="btnEditCustomInfo" 
@@ -605,10 +609,12 @@
                                             placeholder="Filter"
                                             value=""
                                             search="filterGlobally"
+                                            visible="false"
                                             width="15rem"/>
                                         <ToolbarSeparator/>
                                         <Button id="btnExtendMat" 
-                                            icon="sap-icon://document"
+                                            text="Extend Material"
+                                            icon="sap-icon://add-process"
                                             tooltip="Extend Material"
                                             press=".onExtendMaterial"
                                             visible="true" />

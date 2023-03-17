@@ -8,12 +8,13 @@ sap.ui.define([
     "sap/ui/Device",
     "sap/ui/table/library",
     "sap/ui/core/Fragment",
-    'jquery.sap.global'
+    'jquery.sap.global',
+    "sap/ui/core/routing/HashChanger",
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, Fragment,jQuery) {
+    function (Controller, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, Fragment,jQuery, HashChanger) {
         "use strict";
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -21,6 +22,7 @@ sap.ui.define([
 
         return Controller.extend("zuimatmaster.controller.Main", {
             onInit: function () {
+                this.getAppAction();
                 var oModel = this.getOwnerComponent().getModel();
                 var _this = this;
                 this.validationErrors = [];
@@ -66,6 +68,31 @@ sap.ui.define([
                 this._isMMEdited=false;
                 this._isCustomInfo=false;
                 this._cancelMM = false;
+            },
+            getAppAction: async function() {
+                if (sap.ushell.Container !== undefined) {
+                    const fullHash = new HashChanger().getHash(); 
+                    const urlParsing = await sap.ushell.Container.getServiceAsync("URLParsing");
+                    const shellHash = urlParsing.parseShellHash(fullHash); 
+                    const sAction = shellHash.action;
+
+                    if (sAction === "display") {
+                        this.byId("btnAddMM").setVisible(false);
+                        this.byId("btnEditMM").setVisible(false);
+                        this.byId("btnDeleteMM").setVisible(false);
+                        this.byId("btnEditCustomInfo").setVisible(false);
+                        this.byId("btnDeleteCustomInfo").setVisible(false);
+                        this.byId("btnExtendMat").setVisible(false);
+                    }
+                    else {
+                        this.byId("btnAddMM").setVisible(true);
+                        this.byId("btnEditMM").setVisible(true);
+                        this.byId("btnDeleteMM").setVisible(true);
+                        this.byId("btnEditCustomInfo").setVisible(true);
+                        this.byId("btnDeleteCustomInfo").setVisible(true);
+                        this.byId("btnExtendMat").setVisible(true);
+                    }
+                }
             },
             getMatMaster() {
                 var oModel = this.getOwnerComponent().getModel();
