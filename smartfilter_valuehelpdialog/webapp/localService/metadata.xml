@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZGW_3DERP_MHU_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Main" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="INTHUID"/>
+                </Key>
+                <Property Name="MANDT" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Client" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="INTHUID" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="HUID" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="HUTYP" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="HU Type" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="HUID1" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="HU ID1" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="HUID2" Type="Edm.String" Nullable="false" MaxLength="100" sap:unicode="false" sap:label="HU ID2" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="HUGRP1" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="HU Group 1" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="HUGRP2" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="HU Group 2" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="HUSTATUS" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="HU Status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WHSECD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Warehouse Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="STORAREACD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Storage Area Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="BINCD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Bin Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PLANTCD" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SLOC" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Stor. Loc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OBJASSIGNID" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Object Assigned ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OBJKEY" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Object Key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HLHUID" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="HL HUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DESTPLANT" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="GRSWT" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="WTUOM" sap:label="Gross weight" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NETWT" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="WTUOM" sap:label="Net Weight" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WTUOM" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Unit of Weight" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="LNDIM" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="WTUOM" sap:label="LNDIM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WDDIM" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="WTUOM" sap:label="WDIM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DIMUOM" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="UOM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="CREATEDBY" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Created By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CREATEDDT" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Created on" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CREATEDTM" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Created Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UPDATEDBY" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Updated By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UPDATEDDT" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Last Change" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="EBELN" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="EBELN" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UPDATEDTM" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Updated Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="HUTypeSH" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Hutyp"/>
+                </Key>
+                <Property Name="Hutyp" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="HU Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Shorttext" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Short Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="WarehouseSH" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="WHSECD"/>
+                </Key>
+                <Property Name="WHSECD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Warehouse Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="STORAREACD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Store Area Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PLANTCD" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="StoreAreaSH" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="STORARECD"/>
+                </Key>
+                <Property Name="STORARECD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Store Area Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WHSECD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Warehouse Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="PlantSH" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Plantcd"/>
+                </Key>
+                <Property Name="Plantcd" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name1" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Name 1" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="StorageLocSH" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="PLANTCD"/>
+                </Key>
+                <Property Name="PLANTCD" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SLOC" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Stor. Loc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SHORTTEXT" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Short Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WHSECD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Warehouse Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Mattypgrp" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Material Type Group" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="STORAREACD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Store Area Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Deleted" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Deleted" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ProdSloc" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="PLANTCD"/>
+                    <PropertyRef Name="SLOC"/>
+                </Key>
+                <Property Name="PLANTCD" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SLOC" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Stor. Loc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SHORTTEXT" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Short Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WHSECD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Warehouse Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MATTYPGRP" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Material Type Group" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="STORAREACD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Store Area Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="BinCodeSH" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="WHSECD"/>
+                </Key>
+                <Property Name="WHSECD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Warehouse Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="BINCD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Bin Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="STORAREATYP" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Storage Area Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="STORAREACD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Store Area Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Details" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="INTHUID"/>
+                    <PropertyRef Name="HUITEM"/>
+                </Key>
+                <Property Name="INTHUID" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="HUID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HUITEM" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="HU Item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="HUITEMTYP" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="HU Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MATNO" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Material" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="BATCH" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Batch" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="QTYBASE" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:label="QTYBASE" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="BASEUOM" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Base Unit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="DLVNO" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Dlv No" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DLVITEM" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Delv Item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="EBELN" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Purchasing Doc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="EBELP" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="LIFNR" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Vendor" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="VENDBATCH" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Vend Batch" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="GRADE" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="GRADE" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CREATEDBY" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Created By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CREATEDDT" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Created on" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UPDATEDBY" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Updated By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UPDATEDDT" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Last Change" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityContainer Name="ZGW_3DERP_MHU_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="MainSet" EntityType="ZGW_3DERP_MHU_SRV.Main" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HUTypeSHSet" EntityType="ZGW_3DERP_MHU_SRV.HUTypeSH" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="WarehouseSHSet" EntityType="ZGW_3DERP_MHU_SRV.WarehouseSH" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="StoreAreaSHSet" EntityType="ZGW_3DERP_MHU_SRV.StoreAreaSH" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="PlantSHSet" EntityType="ZGW_3DERP_MHU_SRV.PlantSH" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="StorageLocSHSet" EntityType="ZGW_3DERP_MHU_SRV.StorageLocSH" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="ProdSlocSet" EntityType="ZGW_3DERP_MHU_SRV.ProdSloc" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="BinCodeSHSet" EntityType="ZGW_3DERP_MHU_SRV.BinCodeSH" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="DetailsSet" EntityType="ZGW_3DERP_MHU_SRV.Details" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+            </EntityContainer>
+            <atom:link rel="self" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZGW_3DERP_MHU_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZGW_3DERP_MHU_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

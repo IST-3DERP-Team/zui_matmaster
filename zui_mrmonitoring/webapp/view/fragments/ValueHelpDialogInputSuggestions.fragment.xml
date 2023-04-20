@@ -1,0 +1,43 @@
+<core:FragmentDefinition
+	xmlns="sap.ui.comp.valuehelpdialog"
+	xmlns:m="sap.m"
+	xmlns:fb="sap.ui.comp.filterbar"
+	xmlns:core="sap.ui.core">
+	<ValueHelpDialog id="_IDGenValueHelpDialog1"
+		title="Requesting Plant"
+		ok=".onValueHelpOkPress"
+		cancel=".onValueHelpCancelPress"
+		afterClose=".onValueHelpAfterClose"
+		supportRanges="true"
+		key="werks"
+		descriptionKey="name1"
+	>
+		<filterBar>
+			<fb:FilterBar id="_IDGenFilterBar1" advancedMode="true" search=".onFilterBarSearch">
+				<fb:filterGroupItems>
+					<fb:FilterGroupItem id="_IDGenFilterGroupItem1"
+						groupName="__$INTERNAL$"
+						name="werks"
+						label="Plant"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Input id="_IDGenInput1" name="werks" />
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem id="_IDGenFilterGroupItem2"
+						groupName="__$INTERNAL$"
+						name="name1"
+						label="Name"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Input id="_IDGenInput2" name="name1" />
+						</fb:control>
+					</fb:FilterGroupItem>
+
+				</fb:filterGroupItems>
+			</fb:FilterBar>
+		</filterBar>
+	</ValueHelpDialog>
+</core:FragmentDefinition>

@@ -1,0 +1,270 @@
+<mvc:View controllerName="zuimlc.controller.header"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:core="sap.ui.core"
+    xmlns:uiL="sap.ui.layout"
+    xmlns:uiT="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:semantic="sap.m.semantic"
+    displayBlock="true"
+>
+    <Page id="_IDGenPage1" showHeader="false" title="{ddtext>/GENERATEPO}" showNavButton="true">
+        <VBox class="mainHeader" id="_IDGenVBox1" fitContainer="true">
+            <Panel id="delvHdrForm" height="200px" class="sapUiNoContentPadding hdrFormBgColor">
+                <Toolbar id="_IDGenToolbar1" class="sapUiTinyMarginBeginEnd">
+                    <Text id="_IDGenText1" text="Header" class="headerTitle" />
+                    <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
+                    <Button id="btnEditHdr" 
+                        icon="sap-icon://edit"
+                        press="onEdit"
+                        tooltip="{ddtext>/EDIT}"
+                        visible="true"/>
+                    <Button id="btnSaveHdr" 
+                        icon="sap-icon://save"
+                        press="onSave"
+                        tooltip="{ddtext>/SAVE}"
+                        visible="false"/>
+                    <Button id="btnCancelHdr" 
+                        icon="sap-icon://sys-cancel"
+                        press="onCancel"
+                        tooltip="{ddtext>/CANCEL}"
+                        visible="false"/>
+                </Toolbar>
+                <form:Form id="headerForm" editable="true" class="sapUiNoContentPadding">
+                    <form:layout>
+                        <form:ResponsiveGridLayout id="_IDGenResponsiveGridLayout1"
+                            labelSpanXL="4"
+                            labelSpanL="4"
+                            labelSpanM="4"
+                            labelSpanS="12"
+                            adjustLabelSpan="false"
+                            emptySpanXL="0"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            emptySpanS="0"
+                            columnsXL="4"
+                            columnsL="2"
+                            columnsM="1" 
+                            singleContainerFullSize="false" />
+                    </form:layout>
+                    <form:formContainers>
+                        <form:FormContainer id="_IDGenFormContainer1" ariaLabelledBy="Grp1" class="sapUiNoContentPadding">
+                            <form:formElements>
+                                <form:FormElement id="_IDGenFormElement1">
+                                    <form:label>
+                                        <Label id="_IDGenLabel8" text="{ddtext>/LCNO}" required="true"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrLCNO" value="{header>/LCNO}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement25">
+                                    <form:label>
+                                        <Label id="_IDGenLabel9" text="{ddtext>/KUNNR}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrKUNNR" value="{header>/KUNNR}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement27">
+                                    <form:label>
+                                        <Label id="_IDGenLabel10" text="{ddtext>/LCDT}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <DatePicker
+                                            id="hdrLCDT"
+                                            value="{header>/LCDT}"
+                                            placeholder="Enter Date"
+                                            displayFormat="MM/dd/yyyy"
+                                            valueFormat="MM/dd/yyyy"
+                                            editable="false" />   
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement29">
+                                    <form:label>
+                                        <Label id="_IDGenLabel1" text="{ddtext>/BANKS}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrBANKS" value="{header>/BANKS}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>                                                                     
+                            </form:formElements>
+                        </form:FormContainer>
+                        <form:FormContainer id="_IDGenFormContainer2" ariaLabelledBy="Grp2" class="sapUiNoContentPadding">
+                            <form:formElements>
+                                <form:FormElement id="_IDGenFormElement30">
+                                    <form:label>
+                                        <Label id="_IDGenLabel11" text="{ddtext>/BANKL}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrBANKL" value="{header>/BANKL}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement> 
+                                <form:FormElement id="_IDGenFormElement31">
+                                    <form:label>
+                                        <Label id="_IDGenLabel12" text="{ddtext>/EXPDT}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <DatePicker
+                                            id="hdrEXPDT"
+                                            value="{header>/EXPDT}"
+                                            placeholder="Enter Date"
+                                            displayFormat="MM/dd/yyyy"
+                                            valueFormat="MM/dd/yyyy"
+                                            editable="false" /> 
+                                    </form:fields>
+                                </form:FormElement> 
+                                <form:FormElement id="_IDGenFormElement32">
+                                    <form:label>
+                                        <Label id="_IDGenLabel13" text="{ddtext>/WAERS}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrWAERS" value="{header>/WAERS}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement> 
+                                <form:FormElement id="_IDGenFormElement34">
+                                    <form:label>
+                                        <Label id="_IDGenLabel15" text="{ddtext>/LCAMT}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrLCAMT" value="{header>/LCAMT}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>                                                             
+                            </form:formElements>
+                        </form:FormContainer>
+                        <form:FormContainer id="_IDGenFormContainer3" ariaLabelledBy="Grp3" class="sapUiNoContentPadding">
+                            <form:formElements>
+                                <form:FormElement id="_IDGenFormElement35">
+                                    <form:label>
+                                        <Label id="_IDGenLabel16" text="{ddtext>/BUKRS}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrBUKRS" value="{header>/BUKRS}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement36">
+                                    <form:label>
+                                        <Label id="_IDGenLabel17" text="{ddtext>/PERCENT}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrPERCENT" value="{header>/PERCENT}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement37">
+                                    <form:label>
+                                        <Label id="_IDGenLabel18" text="{ddtext>/LCAMTPER}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrLCAMTPER" value="{header>/LCAMTPER}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement38">
+                                    <form:label>
+                                        <Label id="_IDGenLabel19" text="{ddtext>/BALAMT}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrBALAMT" value="{header>/BALAMT}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                            </form:formElements>
+                        </form:FormContainer>
+                        <form:FormContainer id="_IDGenFormContainer4" ariaLabelledBy="Grp4" class="sapUiNoContentPadding">
+                            <form:formElements>
+                                <form:FormElement id="_IDGenFormElement26" label="{ddtext>/DELETED}">
+                                    <form:fields>
+                                        <CheckBox id="hdrDELETED" selected="{header>/DELETED}" editable="false" /> 
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement39">
+                                    <form:label>
+                                        <Label id="_IDGenLabel20" text="{ddtext>/CREATEDBY}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrCREATEDBY" value="{header>/CREATEDBY}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement40">
+                                    <form:label>
+                                        <Label id="_IDGenLabel21" text="{ddtext>/CREATEDDT}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrCREATEDDT" value="{header>/CREATEDDT}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                                <form:FormElement id="_IDGenFormElement41">
+                                    <form:label>
+                                        <Label id="_IDGenLabel22" text="{ddtext>/UPDATEDBY}" required="false"></Label>
+                                    </form:label>
+                                    <form:fields>
+                                        <Input id="hdrUPDATEDBY" value="{header>/UPDATEDBY}" editable="false" />
+                                    </form:fields>
+                                </form:FormElement>
+                            </form:formElements>
+                        </form:FormContainer>                            
+                    </form:formContainers>
+                </form:Form>
+                <layoutData>
+                    <FlexItemData id="_IDGenFlexItemData1" baseSize="0%" />
+                </layoutData>
+            </Panel>
+            <uiT:Table id="detailsTab" class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd" visibleRowCountMode="Auto" showColumnVisibilityMenu="true" rows="{MLCDTLS>/results}" enableColumnFreeze="true" selectionMode="MultiToggle" cellClick="onCellClickHdr" sort="onSorted" rowSelectionChange="onRowSelect" >
+                    <uiT:extension>
+                        <Toolbar id="_IDGenToolbar2">
+                            <ToolbarSpacer id="_IDGenToolbarSpacer2"/>
+                            <Button id="btnAddDtls"
+                                icon="sap-icon://add"
+                                press="onCreate"
+                                tooltip="{ddtext>/ADD}"
+                                visible="true"/>
+                            <Button id="btnDeleteDtls" 
+                                icon="sap-icon://delete"
+                                press="onDelete"
+                                tooltip="{ddtext>/DELETE}"
+                                visible="true"/>
+                            <Button id="btnRefreshDtls" 
+                                icon="sap-icon://refresh"
+                                press="onRefresh"
+                                tooltip="{ddtext>/REFRESH}"
+                                visible="true"/>
+                            <Button id="btnAddNewRow" 
+                                icon="sap-icon://add"
+                                text="{ddtext>/ADD}"
+                                press="onAddNewRow" 
+                                tooltip="{ddtext>/ADD}"
+                                visible="false"/>
+                            <Button id="btnRemoveNewRow" 
+                                icon="sap-icon://sys-minus"
+                                press="onRemoveNewRow" 
+                                text="{ddtext>/REMOVE}"
+                                tooltip="{ddtext>/REMOVE}"
+                                visible="false"/>
+                            <Button id="btnSavedDtls" 
+                                icon="sap-icon://save"
+                                press="onSaveDtls"
+                                tooltip="{ddtext>/SAVE}"
+                                visible="false"/>
+                            <Button id="btnCancelDtls" 
+                                icon="sap-icon://sys-cancel"
+                                press="onCancel"
+                                tooltip="{ddtext>/CANCEL}"
+                                visible="false"/> 
+                            <Button id="btnFullScreenDtls" 
+                                icon="sap-icon://full-screen"
+                                press="onTableResize"
+                                tooltip="{ddtext>/FULLSCREEN}"
+                                visible="true" />
+                            <Button id="btnExitFullScreenDtls" 
+                                icon="sap-icon://exit-full-screen"
+                                press="onTableResize"
+                                tooltip="{ddtext>/EXITFULLSCREEN}"
+                                visible="false" /> 
+                        </Toolbar>
+                    </uiT:extension> 
+                    <uiT:layoutData>
+                        <FlexItemData id="_IDGenFlexItemData3" growFactor="1" baseSize="0%" />
+                    </uiT:layoutData>
+                </uiT:Table>
+        </VBox>
+    </Page>
+</mvc:View>

@@ -1,0 +1,93 @@
+<mvc:View controllerName="zuimlc.controller.main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:uiL="sap.ui.layout"
+    xmlns:uiT="sap.ui.table"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:semantic="sap.m.semantic"
+    xmlns:smartfilterbar="sap.ui.comp.smartfilterbar"
+    xmlns:cards="sap.f.cards"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:sv="sap.ui.comp.smartvariants"
+    xmlns:layout="sap.ui.layout"
+    xmlns:t="sap.ui.table"
+    xmlns:plugins="sap.ui.table.plugins"
+    xmlns:fb="sap.ui.comp.filterbar"
+    displayBlock="true"
+>
+    <Page id="page" title="{i18n>title}" showHeader="false">
+        <content>
+            <VBox id="_IDGenVBox1" fitContainer="true">
+                <smartfilterbar:SmartFilterBar id="smartFilterBar" entitySet="ZVB_3DERP_MLC_FILTERS" search="onSearch" persistencyKey="3DERP_StylesPKey" showClearOnFB="true" filterContainerWidth="15rem">
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration1" key="SBU" groupId="_BASIC" label="SBU" mandatory="mandatory" width="50px">
+                            <smartfilterbar:customControl>
+                                <ComboBox id="cboxSBU"
+                                    selectedKey="{ui>/sbu}"
+                                    items="{
+                                        path: '/ZVB_3DERP_SBU_SH'
+                                    }">
+                                    <core:Item id="_IDGenItem1" key="{SBU}" text="{SBU}" />
+                                </ComboBox>                                  
+                            </smartfilterbar:customControl>
+                        </smartfilterbar:ControlConfiguration>
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration2" key="COMPANY" label="Company" groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration3" key="CUSTOMER" label="Customer" groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration4" key="BANK" label="Bank" groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration5" key="LCNUMBER" label="LC Number" groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:layoutData>
+                        <FlexItemData id="_IDGenFlexItemData1" growFactor="0"/>
+                    </smartfilterbar:layoutData>
+                </smartfilterbar:SmartFilterBar>
+                <uiT:Table id="mainTab"
+                    class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                    visibleRowCountMode="Auto"
+                    showColumnVisibilityMenu="true"
+                    rows="{MLC>/results}"
+                    enableColumnFreeze="true"
+                    selectionMode="MultiToggle"
+                    cellClick="onCellClick"
+                    sort="onSorted"
+                    rowSelectionChange="onRowSelect">
+                    <uiT:extension>
+                        <Toolbar id="_IDGenToolbar1">
+                            <ToolbarSpacer id="_IDGenToolbarSpacer1" />
+                            <SearchField id="searchFieldMain" placeholder="Search" value="" search=".onSearchHeader" width="15rem" />
+                            <ToolbarSeparator id="_IDGenToolbarSeparator1" />
+                            <Button id="btnNewMain" icon="sap-icon://add" press=".onNewHdr" visible="true" />
+                            <Button id="btnRefreshMain" icon="sap-icon://refresh" press=".onRefreshMain" visible="true" />
+                            <Button id="btnSaveLayoutMain" icon="sap-icon://grid" press=".onSaveLayout" visible="true" />
+                        </Toolbar>
+                    </uiT:extension>
+                    <uiT:layoutData>
+                        <FlexItemData id="_IDGenFlexItemData2" growFactor="1" baseSize="0%" />
+                    </uiT:layoutData>
+                </uiT:Table>
+                <uiT:Table id="detailsTab" class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd" visibleRowCountMode="Auto" showColumnVisibilityMenu="true" rows="{MLCDTLS>/results}" enableColumnFreeze="true" selectionMode="MultiToggle" cellClick="onCellClickHdr" sort="onSorted" rowSelectionChange="onRowSelect" >
+                    <uiT:extension>
+                        <Toolbar id="_IDGenToolbar2">
+                            <ToolbarSpacer id="_IDGenToolbarSpacer2" />
+                            <SearchField id="searchFieldDtls" placeholder="Search" value="" search=".onSearchHeader" width="15rem" />
+                            <ToolbarSeparator id="_IDGenToolbarSeparator2" />
+                            <Button id="btnRefreshDtls" icon="sap-icon://refresh" press=".onRefreshMain" visible="true" />
+                            <Button id="btnSaveLayoutDtls" icon="sap-icon://grid" press=".onSaveLayout" visible="true" />
+                        </Toolbar>
+                    </uiT:extension>
+                    <uiT:layoutData>
+                        <FlexItemData id="_IDGenFlexItemData3" growFactor="1" baseSize="0%" />
+                    </uiT:layoutData>
+                </uiT:Table>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

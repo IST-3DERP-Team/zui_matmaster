@@ -1,0 +1,193 @@
+{
+    "_version": "1.17.0",
+    "sap.app": {
+        "id": "zuimlc",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.9.4",
+            "toolsId": "c096e4fd-d625-413d-abd5-8a226f6cb095"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/sap/opu/odata/sap/ZGW_3DERP_MLC_SRV/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "localUri": "localService/mainService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "ZVB_3DERP_MLC_FILTERS_CDS_Annotation": {
+                "uri": "/destinations/LTD888/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZVB_3DERP_MLC_FILTERS_CDS_VAN',Version='0001')/$value/",
+                "type": "ODataAnnotation",
+                "settings": {
+                    "localUri": "localService/ZVB_3DERP_MLC_FILTERS_CDS/ZVB_3DERP_MLC_FILTERS_CDS_Annotation.xml"
+                }
+            },
+            "ZVB_3DERP_MLC_FILTERS_CDS": {
+                "uri": "/sap/opu/odata/sap/ZVB_3DERP_MLC_FILTERS_CDS/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "annotations": [
+                        "ZVB_3DERP_MLC_FILTERS_CDS_Annotation"
+                    ],
+                    "localUri": "localService/ZVB_3DERP_MLC_FILTERS_CDS/metadata.xml"
+                }
+            },
+            "ZGW_3DERP_COMMON_SRV": {
+                "uri": "/sap/opu/odata/sap/ZGW_3DERP_COMMON_SRV/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "annotations": [],
+                    "localUri": "localService/ZGW_3DERP_COMMON_SRV/metadata.xml"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.65.8",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.f": {},
+                "sap.suite.ui.generic.template": {},
+                "sap.ui.comp": {},
+                "sap.ui.generic.app": {},
+                "sap.ui.table": {},
+                "sap.ushell": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "zuimlc.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {}
+            },
+            "ZVB_3DERP_MLC_FILTERS_CDS": {
+                "dataSource": "ZVB_3DERP_MLC_FILTERS_CDS",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false
+                }
+            },
+            "ZGW_3DERP_COMMON_SRV": {
+                "dataSource": "ZGW_3DERP_COMMON_SRV",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false
+                }
+            },
+            "MLCDATA_MODEL":{
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "UI_MODEL": {
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "CAPTION_MSGS_MODEL": {
+                "type": "sap.ui.model.json.JSONModel"
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "zuimlc.view",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false
+            },
+            "routes": [
+                {
+                    "name": "RouteMain",
+                    "pattern": ":?query:",
+                    "target": [
+                        "Targetmain"
+                    ]
+                },
+                {
+                    "name": "RouteHeader",
+                    "pattern": "RouteHeader",
+                    "greedy": false,
+                    "target": [
+                        "Targetheader"
+                    ]
+                }
+            ],
+            "targets": {
+                "Targetmain": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "main",
+                    "viewName": "main"
+                },
+                "Targetheader": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "header",
+                    "viewName": "header"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "zuimlc.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "App"
+        },
+        "config": {
+            "fullWidth": true
+        }
+    }
+}

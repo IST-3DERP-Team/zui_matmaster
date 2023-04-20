@@ -1,0 +1,45 @@
+<mvc:View controllerName="smartfiltervaluehelpdialog.controller.main"
+    xmlns:mvc="sap.ui.core.mvc"
+	xmlns:layout="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form"
+	xmlns="sap.m">
+	<layout:Grid id="_IDGenGrid1" defaultSpan="L12 M12 S12">
+		<layout:content>
+			<form:SimpleForm id="_IDGenSimpleForm1" editable="true" layout="ResponsiveGridLayout" labelSpanM="12" labelSpanL="12" labelSpanXL="12" emptySpanL="6" emptySpanM="6">
+				<form:content>
+					<Label id="_IDGenLabel1" text="Products" labelFor="multiInput"/>
+					<MultiInput
+						id="multiInput"
+						valueHelpRequest=".onValueHelpRequested"
+						suggestionRows="{
+							path: '/reqPlantFilter',
+							sorter: { path: 'Hutyp' },
+							length: 10
+						}"
+					>
+						<suggestionColumns>
+							<Column id="_IDGenColumn1">
+								<Label id="_IDGenLabel2" text="ProductId"/>
+							</Column>
+							<Column id="_IDGenColumn2">
+								<Label id="_IDGenLabel3" text="Product Name"/>
+							</Column>
+							<Column id="_IDGenColumn3">
+								<Label id="_IDGenLabel4" text="Category"/>
+							</Column>
+						</suggestionColumns>
+						<suggestionRows>
+							<ColumnListItem id="_IDGenColumnListItem1">
+								<cells>
+									<Label id="_IDGenLabel5" text="{ProductId}" />
+									<Label id="_IDGenLabel6" text="{Name}" />
+									<Label id="_IDGenLabel7" text="{Category}" />
+								</cells>
+							</ColumnListItem>
+						</suggestionRows>
+					</MultiInput>
+				</form:content>
+			</form:SimpleForm>
+		</layout:content>
+	</layout:Grid>
+</mvc:View>

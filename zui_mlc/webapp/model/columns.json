@@ -1,0 +1,10 @@
+{
+    "MLC":[
+        {"name": "LCNO", "position": 0, "type": "Edm.String", "visible": true, "required": false, "width": "120px", "hideOnChange": false, "showable": true, "sort": "Ascending",
+            "valueHelp": {"show": false, "source": "", "value": "", "desc": ""}}
+    ],
+    "MLCDTLS":[
+        {"name": "LCNO", "position": 0, "type": "Edm.String", "visible": true, "required": false, "width": "120px", "hideOnChange": false, "showable": true, "sort": "Ascending",
+            "valueHelp": {"show": false, "source": "", "value": "", "desc": ""}}
+    ]
+}

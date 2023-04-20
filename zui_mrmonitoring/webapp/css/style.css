@@ -1,0 +1,3 @@
+.sapMLabelRequired, .sapMLabelRequired::before {
+    color: #c75858 !important;
+}

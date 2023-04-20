@@ -1,0 +1,43 @@
+<core:FragmentDefinition
+	xmlns="sap.ui.comp.valuehelpdialog"
+	xmlns:m="sap.m"
+	xmlns:fb="sap.ui.comp.filterbar"
+	xmlns:core="sap.ui.core">
+	<ValueHelpDialog id="_IDGenValueHelpDialog1"
+		title="Product"
+		ok=".onValueHelpOkPress"
+		cancel=".onValueHelpCancelPress"
+		afterClose=".onValueHelpAfterClose"
+		supportRanges="true"
+		key="Hutyp"
+		descriptionKey="Name"
+	>
+		<filterBar>
+			<fb:FilterBar id="_IDGenFilterBar1" advancedMode="true" search=".onFilterBarSearch">
+				<fb:filterGroupItems>
+					<fb:FilterGroupItem id="_IDGenFilterGroupItem1"
+						groupName="__$INTERNAL$"
+						name="Hutyp"
+						label="HU Type"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Input id="_IDGenInput1" name="ProductId" />
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem id="_IDGenFilterGroupItem2"
+						groupName="__$INTERNAL$"
+						name="Shorttext"
+						label="Shorttext"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Input id="_IDGenInput2" name="Name" />
+						</fb:control>
+					</fb:FilterGroupItem>
+
+				</fb:filterGroupItems>
+			</fb:FilterBar>
+		</filterBar>
+	</ValueHelpDialog>
+</core:FragmentDefinition>

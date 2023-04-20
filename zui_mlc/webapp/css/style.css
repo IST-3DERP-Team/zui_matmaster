@@ -1,0 +1,56 @@
+/* Enter your custom styles here */
+.selHdrKeyFontStyle {
+    font-style: italic;
+}
+
+.activeRow {
+    background-color: #e1ebf3 !important;
+}
+
+.requiredField {
+    color: red !important;
+}
+
+.shipdocdtl .sapUiRespGrid {
+    padding: 0.25rem !important;
+}
+
+.shipdocdtl .titleFontStyle {
+    font-weight: bold;
+}
+
+.shipdocdtl .hdrTitleBgColor {
+    background-color: lightgrey;
+}
+
+.shipdocdtl .sapMITBHead {
+    margin: 0 0.75rem 0 0.25rem !important;
+}
+
+.shipdocdtl .sapMITBInLine.sapMITBTextOnly>.sapMITBVertical {
+    height: 2.5rem !important;
+}
+
+.shipdocdtl .sapMITBInLine .sapMITBFilter>.sapMITBText {
+    margin: 0.5rem 0 0.1875rem 0 !important;
+}
+
+.shipdocdtl .sapMITBInLine.sapMITBTextOnly>.sapMITBVertical.sapMITBFilter>.sapMITBText + .sapMITBContentArrow {
+    height: 0.5rem !important;
+}
+
+.dtlToolbarBorderTop {
+    border-top: 1px solid lightgrey;
+}
+
+.mainHeader .headerTitle {
+    background-color: bisque !important;
+    padding: 0.15rem 0.5rem !important;
+    border-radius: 0.5rem !important;
+    font-weight: bold !important;
+    font-size: 1rem !important;
+}
+
+.sapMLabelRequired, .sapMLabelRequired::before {
+    color: #c75858 !important;
+}

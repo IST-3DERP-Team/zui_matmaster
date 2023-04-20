@@ -1,0 +1,154 @@
+<mvc:View controllerName="zuiprodoutput.controller.main"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:c="zuiprodoutput.control"
+    xmlns:core="sap.ui.core"
+    xmlns:uiL="sap.ui.layout"
+    xmlns:uiT="sap.ui.table"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:semantic="sap.m.semantic"
+    xmlns:smartfilterbar="sap.ui.comp.smartfilterbar"
+    xmlns:cards="sap.f.cards"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:sv="sap.ui.comp.smartvariants"
+    xmlns:layout="sap.ui.layout"
+    xmlns:t="sap.ui.table" 
+    xmlns:plugins="sap.ui.table.plugins" 
+    xmlns:fb="sap.ui.comp.filterbar" 
+    displayBlock="true"> 
+    <Page id="page" title="{i18n>title}" showHeader="false">
+        <content>
+            <VBox fitContainer="true">
+                <smartfilterbar:SmartFilterBar id="smartFilterBar" entitySet="ZVB_3DERP_IO_FILTER" search="onSearch" persistencyKey="3DERP_StylesPKey"  filterContainerWidth="7rem" useToolbar="true" useDateRangeType="true">
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration key="SBU" mandatory="mandatory" controlType="dropDownList" filterType="single" groupId="_BASIC" label="{i18n>SBU}" preventInitialDataFetchInValueHelpDialog="false">
+                          </smartfilterbar:ControlConfiguration>
+                    </smartfilterbar:controlConfiguration>
+
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration key="SEASONCD" mandatory="notMandatory" groupId="_BASIC" label="{i18n>SEASONCD}" preventInitialDataFetchInValueHelpDialog="false">
+                            </smartfilterbar:ControlConfiguration>
+                    </smartfilterbar:controlConfiguration>
+
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration key="PLANPLANT" mandatory="notMandatory" groupId="_BASIC" label="Plant" preventInitialDataFetchInValueHelpDialog="false">
+                        </smartfilterbar:ControlConfiguration>
+                    </smartfilterbar:controlConfiguration>
+
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration key="IOTYPE" mandatory="notMandatory" groupId="_BASIC" label="{i18n>IOTYPE}" preventInitialDataFetchInValueHelpDialog="false">
+                        </smartfilterbar:ControlConfiguration>
+                    </smartfilterbar:controlConfiguration>
+
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration key="STYLECD" mandatory="notMandatory" groupId="_BASIC" label="{i18n>STYLECD}" preventInitialDataFetchInValueHelpDialog="false">
+                        </smartfilterbar:ControlConfiguration>
+                    </smartfilterbar:controlConfiguration>
+
+                    <!-- SMART FILTER BAR LAYOUT DATA-->
+                    <smartfilterbar:layoutData>
+                        <FlexItemData growFactor="0"/>
+                    </smartfilterbar:layoutData>
+
+                </smartfilterbar:SmartFilterBar>
+
+                <uiT:Table id="mainTab"
+                    class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                    visibleRowCountMode="Auto"
+                    showColumnVisibilityMenu="true"
+                    rows="{PRDOUTPUTHDR>/results}"
+                    enableColumnFreeze="true"
+                    selectionMode="MultiToggle"
+                    cellClick="onCellClickHdr"
+                    sort="onSorted">
+                    <uiT:extension>
+                        <Toolbar>
+                            <ToolbarSpacer/>
+                            <SearchField
+                                id="searchFieldMain"
+                                placeholder="Search"
+                                value=""
+                                search="filterGlobally"
+                                width="15rem"/>
+                            <ToolbarSeparator />
+                            <Button id="btnRefreshMain" 
+                                    icon="sap-icon://refresh"
+                                    press=".onRefreshMain"
+                                    visible="true" />
+                            <Button id="btnUploadOutput" 
+                                    text="Upload Output"
+                                    press=".onPrintMain"
+                                    visible="true" />
+                        </Toolbar>
+                    </uiT:extension>
+                    <uiT:layoutData>
+                        <FlexItemData growFactor="1" baseSize="0%"/>
+                    </uiT:layoutData>                        
+                </uiT:Table>
+                <uiT:Table id="detailsTab"
+                    class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                    visibleRowCountMode="Auto"
+                    showColumnVisibilityMenu="true"
+                    rows="{PRDOUTPUTDTL>/results}"
+                    enableColumnFreeze="true"
+                    selectionMode="MultiToggle"
+                    cellClick="onCellClickDtls"
+                    sort="onSorted">
+                    <uiT:extension>
+                        <Toolbar>
+                            <Text id="txtProcess" text="Process:" class="selHdrKeyFontStyle" />
+                            <ComboBox id="cboxProcess"
+                                    change="onProcessChange"
+                                    items="{processData>/results}"
+                                    selectedKey="{ui>/process}">
+                                    <core:Item key="{processData>PROCESSCD}" text="{processData>DESC1}" />
+                            </ComboBox>       
+                            <Text id="txtIONO" text="IO Number: {ui>/activeIONO}" class="selHdrKeyFontStyle" />
+                            <ToolbarSpacer/>
+                            <SearchField
+                                id="searchFieldDtls"
+                                placeholder="Search"
+                                value=""
+                                search="filterGlobally"
+                                width="15rem"/>
+                            <ToolbarSeparator />
+                            <Button id="btnNew" 
+                                icon="sap-icon://add"
+                                press=".onNewDtls"
+                                visible="true"/>
+                            <Button id="btnSave" 
+                                icon="sap-icon://save"
+                                press="onSaveDtls()"
+                                visible="false" />
+                            <Button id="btnCancel" 
+                                icon="sap-icon://sys-cancel"
+                                press="onCancel()"
+                                visible="false" />
+                            <Button id="btnEdit" 
+                                icon="sap-icon://edit"
+                                press=".onEditDtls"
+                                tooltip="Edit"
+                                visible="true"/>
+                            <Button id="btnOutputBreakdown" 
+                                    text="Output Breakdown"
+                                    press=".outputBreakdown"
+                                    visible="true" />
+                            <Button id="btnDelete" 
+                                icon="sap-icon://delete"
+                                press=".onDeleteDtls"
+                                tooltip="Delete"
+                                visible="true"/>
+                            <Button id="btnRefreshDtls" 
+                                    icon="sap-icon://refresh"
+                                    press=".onRefreshDtls"
+                                    visible="true" />
+                        </Toolbar>
+                    </uiT:extension>
+                    <uiT:layoutData>
+                        <FlexItemData growFactor="1" baseSize="0%"/>
+                    </uiT:layoutData>                        
+                </uiT:Table>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

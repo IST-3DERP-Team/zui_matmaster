@@ -1,0 +1,14 @@
+{
+    "PRDOUTPUTHDR":[
+        {"name": "IONO", "position": 0, "type": "Edm.String", "visible": true, "required": false, "width": "120px", "hideOnChange": false, "showable": true, "sort": "Ascending",
+            "valueHelp": {"show": false, "source": "", "value": "", "desc": ""}}
+    ],
+    "PRDOUTPUTDTL":[
+        {"name": "IONO", "position": 0, "type": "Edm.String", "visible": true, "required": false, "width": "120px", "hideOnChange": false, "showable": true, "sort": "Ascending",
+            "valueHelp": {"show": false, "source": "", "value": "", "desc": ""}}
+    ],
+    "PRODOB":[
+        {"name": "IONO", "position": 0, "type": "Edm.String", "visible": true, "required": false, "width": "120px", "hideOnChange": false, "showable": true, "sort": "Ascending",
+            "valueHelp": {"show": false, "source": "", "value": "", "desc": ""}}
+    ]
+}
