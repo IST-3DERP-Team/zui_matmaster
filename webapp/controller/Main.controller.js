@@ -2045,7 +2045,7 @@ sap.ui.define([
                                     });
                                 })
                             }else{
-                                MessageBox.error("Plant Code of Material is not Valid!");
+                                MessageBox.error("No valid Purchasing Plant found.");
                             }
 
                         }
