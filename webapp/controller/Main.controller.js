@@ -2042,8 +2042,13 @@ sap.ui.define([
                                     matModel.create("/MatExtendSet", oParam, {
                                         method: "POST",
                                         success: function(oData, oResponse){
-                                            if(oData.N_Messtab.results[0].Message !== undefined || oData.N_Messtab.results[0].Message !== "" || oData.N_Messtab.results[0].Message !== null){
+                                            // if(oData.N_Messtab.results[0].Message !== undefined || oData.N_Messtab.results[0].Message !== "" || oData.N_Messtab.results[0].Message !== null){
+                                            if(oData.N_Messtab.results[0].Type === "S"){
                                                 MessageBox.information(oData.N_Messtab.results[0].Message);
+                                            }
+                                            // }
+                                            else if(oData.N_Messtab.results[0].Type === "E"){
+                                                MessageBox.error(Object.values(oData.N_Messtab.results).pop().Message);
                                             }
                                             resolve();
                                         },error: function(error){
@@ -2053,7 +2058,7 @@ sap.ui.define([
                                     });
                                 })
                             }else{
-                                MessageBox.error("Plant Code of Material is not Valid!");
+                                MessageBox.error("No valid Purchasing Plant found.");
                             }
 
                         }
