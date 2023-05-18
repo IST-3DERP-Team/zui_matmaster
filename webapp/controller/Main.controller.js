@@ -76,6 +76,8 @@ sap.ui.define([
                     const shellHash = urlParsing.parseShellHash(fullHash); 
                     const sAction = shellHash.action;
 
+                    this._appAction = sAction;
+
                     if (sAction === "display") {
                         this.byId("btnAddMM").setVisible(false);
                         this.byId("btnEditMM").setVisible(false);
@@ -630,40 +632,42 @@ sap.ui.define([
                 }
             },
             onEditMM(){
-                this.byId("cboxSBU").setEnabled(false);
-                this.byId("btnAddMM").setVisible(false);
-                this.byId("btnEditMM").setVisible(false);
-                this.byId("btnSaveMM").setVisible(true);
-                this.byId("btnCancelMM").setVisible(true);
-                this.byId("btnDeleteMM").setVisible(false);
-                this.byId("btnRefreshMM").setVisible(false);
-                this.byId("btnSortMM").setVisible(false);
-                this.byId("btnFilterMM").setVisible(false);
-                this.byId("btnFullScreenHdr").setVisible(false);
-                this.byId("btnColPropMM").setVisible(false);
-                this.byId("searchFieldMM").setVisible(false);
-                this.onTableResize("Hdr","Max");
-                this.byId("btnExitFullScreenHdr").setVisible(false);
-                this._oDataBeforeChange = jQuery.extend(true, {}, this.getView().getModel("matMaster").getData());
-
-                var oTable = this.byId("matMasterTab");
-                var aSelIndices = oTable.getSelectedIndices();
-                var aData = this.getView().getModel("matMaster").getData().results;
-                var aDataToEdit = [];
-
-                if (aSelIndices.length > 0) {
-                    aSelIndices.forEach(item => {
-                        aDataToEdit.push(aData.at(item));
-                    })
+                if (this._appAction !== "display") {
+                    this.byId("cboxSBU").setEnabled(false);
+                    this.byId("btnAddMM").setVisible(false);
+                    this.byId("btnEditMM").setVisible(false);
+                    this.byId("btnSaveMM").setVisible(true);
+                    this.byId("btnCancelMM").setVisible(true);
+                    this.byId("btnDeleteMM").setVisible(false);
+                    this.byId("btnRefreshMM").setVisible(false);
+                    this.byId("btnSortMM").setVisible(false);
+                    this.byId("btnFilterMM").setVisible(false);
+                    this.byId("btnFullScreenHdr").setVisible(false);
+                    this.byId("btnColPropMM").setVisible(false);
+                    this.byId("searchFieldMM").setVisible(false);
+                    this.onTableResize("Hdr","Max");
+                    this.byId("btnExitFullScreenHdr").setVisible(false);
+                    this._oDataBeforeChange = jQuery.extend(true, {}, this.getView().getModel("matMaster").getData());
+    
+                    var oTable = this.byId("matMasterTab");
+                    var aSelIndices = oTable.getSelectedIndices();
+                    var aData = this.getView().getModel("matMaster").getData().results;
+                    var aDataToEdit = [];
+    
+                    if (aSelIndices.length > 0) {
+                        aSelIndices.forEach(item => {
+                            aDataToEdit.push(aData.at(item));
+                        })
+                    }
+                    else aDataToEdit = aData;
+    
+                    aDataToEdit = aDataToEdit.filter(item => item.Deleted === false);
+                    
+                    this.getView().getModel("matMaster").setProperty("/results", aDataToEdit);
+                    this.setRowEditMode("matMaster");
+    
+                    this.getView().getModel("ui").setProperty("/dataMode", 'EDIT');
                 }
-                else aDataToEdit = aData;
-
-                aDataToEdit = aDataToEdit.filter(item => item.Deleted === false);
-                
-                this.getView().getModel("matMaster").setProperty("/results", aDataToEdit);
-                this.setRowEditMode("matMaster");
-
-                this.getView().getModel("ui").setProperty("/dataMode", 'EDIT');
             },
             onEditCustomInfo(){
                 this.byId("btnEditCustomInfo").setVisible(false);
@@ -700,141 +704,143 @@ sap.ui.define([
                 this.getView().getModel("ui").setProperty("/dataMode", 'EDIT');
             },
             onCreateMM() {
-                //this.getView().byId("idOfYourComboBox").getSelectedItem().setEnabled(false);
-                this.byId("cboxSBU").setEnabled(false);
-                this.byId("btnAddMM").setVisible(false);
-                this.byId("btnEditMM").setVisible(false);
-                this.byId("btnSaveMM").setVisible(true);
-                this.byId("btnCancelMM").setVisible(true);
-                this.byId("btnDeleteMM").setVisible(false);
-                this.byId("btnRefreshMM").setVisible(false);
-                this.byId("btnSortMM").setVisible(false);
-                this.byId("btnFilterMM").setVisible(false);
-                this.byId("btnFullScreenHdr").setVisible(false);
-                this.byId("btnColPropMM").setVisible(false);
-                this.byId("searchFieldMM").setVisible(false);
-                this.onTableResize("Hdr","Max");
-                this.byId("btnExitFullScreenHdr").setVisible(false);
-                this._oDataBeforeChange = jQuery.extend(true, {}, this.getView().getModel("matMaster").getData());
-                this.byId("cboxSBU").setEnabled(false);
+                if (this._appAction !== "display") {
+                    //this.getView().byId("idOfYourComboBox").getSelectedItem().setEnabled(false);
+                    this.byId("cboxSBU").setEnabled(false);
+                    this.byId("btnAddMM").setVisible(false);
+                    this.byId("btnEditMM").setVisible(false);
+                    this.byId("btnSaveMM").setVisible(true);
+                    this.byId("btnCancelMM").setVisible(true);
+                    this.byId("btnDeleteMM").setVisible(false);
+                    this.byId("btnRefreshMM").setVisible(false);
+                    this.byId("btnSortMM").setVisible(false);
+                    this.byId("btnFilterMM").setVisible(false);
+                    this.byId("btnFullScreenHdr").setVisible(false);
+                    this.byId("btnColPropMM").setVisible(false);
+                    this.byId("searchFieldMM").setVisible(false);
+                    this.onTableResize("Hdr","Max");
+                    this.byId("btnExitFullScreenHdr").setVisible(false);
+                    this._oDataBeforeChange = jQuery.extend(true, {}, this.getView().getModel("matMaster").getData());
+                    this.byId("cboxSBU").setEnabled(false);
 
-                var aNewRow = [];
-                var oNewRow = {};
-                var oTable = this.byId("matMasterTab");     
-                /*var iCellIndexToFocus = -1;
+                    var aNewRow = [];
+                    var oNewRow = {};
+                    var oTable = this.byId("matMasterTab");     
+                    /*var iCellIndexToFocus = -1;
 
-                if (oTable.getBinding("rows").aApplicationFilters.length > 0) {
-                    this._aMultiFiltersBeforeChange = this._aFilterableColumns["matmaster"].filter(fItem => fItem.value !== "");                   
-                    oTable.getBinding("rows").filter("", "Application");
-                }
-                
-                if (oTable.getBinding().aFilters.length > 0) {
-                    this._aFiltersBeforeChange = jQuery.extend(true, [], oTable.getBinding().aFilters);
-                    oTable.getBinding().aFilters = [];
-                }
-                
-                var oColumns = oTable.getColumns();
-
-                for (var i = 0, l = oColumns.length; i < l; i++) {
-                    var isFiltered = oColumns[i].getFiltered();
-                    // console.log(oColumns[i].getFiltered())
-                    if (isFiltered) {
-                        oColumns[i].filter("");
+                    if (oTable.getBinding("rows").aApplicationFilters.length > 0) {
+                        this._aMultiFiltersBeforeChange = this._aFilterableColumns["matmaster"].filter(fItem => fItem.value !== "");                   
+                        oTable.getBinding("rows").filter("", "Application");
                     }
-                }*/
 
-                oTable.getColumns().forEach((col, idx) => {
-                    this._aColumns["matMaster"].filter(item => item.label === col.getLabel().getText())
-                        .forEach(ci => {
-                            console.log(ci.type)
-                            if (!ci.hideOnChange && ci.creatable) {
-                                if (ci.type === "Edm.Boolean") {
-                                    col.setTemplate(new sap.m.CheckBox({selected: "{matMaster>" + ci.name + "}", editable: true}));
-                                }
-                                else if (ci.valueHelp["show"]) {
-                                    col.setTemplate(new sap.m.Input({
-                                        // id: "ipt" + ci.name,
-                                        type: "Text",
-                                        value: "{matMaster>" + ci.name + "}",
-                                        maxLength: +ci.maxLength,
-                                        showValueHelp: true,
-                                        valueHelpRequest: this.handleValueHelp.bind(this),
-                                        showSuggestion: true,
-                                        maxSuggestionWidth: ci.valueHelp["suggestionItems"].additionalText !== undefined ? ci.valueHelp["suggestionItems"].maxSuggestionWidth : "1px",
-                                        suggestionItems: {
-                                            path: ci.valueHelp["suggestionItems"].path,
-                                            length: 1000,
-                                            template: new sap.ui.core.ListItem({
-                                                key: ci.valueHelp["suggestionItems"].text,
-                                                text: ci.valueHelp["suggestionItems"].text,
-                                                additionalText: ci.valueHelp["suggestionItems"].additionalText !== undefined ? ci.valueHelp["suggestionItems"].additionalText : '',
-                                            }),
-                                            templateShareable: false
-                                        },
-                                        change: this.onValueHelpLiveInputChange.bind(this)
-                                    }));
-                                }
-                                else if (ci.type === "Edm.Number") {
-                                    col.setTemplate(new sap.m.Input({
-                                        type: sap.m.InputType.Number,
-                                        textAlign: sap.ui.core.TextAlign.Right,
-                                        value: "{path:'matMaster>" + ci.name + "}', type:'sap.ui.model.odata.type.Decimal', formatOptions:{ minFractionDigits:" + ci.scale + ", maxFractionDigits:" + ci.scale + " }, constraints:{ precision:" + ci.precision + ", scale:" + ci.scale + " }}",
-                                        liveChange: this.onNumberLiveChange.bind(this)
-                                    }));
-                                }
-                                else {
-                                    if (ci.maxLength !== null) {
+                    if (oTable.getBinding().aFilters.length > 0) {
+                        this._aFiltersBeforeChange = jQuery.extend(true, [], oTable.getBinding().aFilters);
+                        oTable.getBinding().aFilters = [];
+                    }
+
+                    var oColumns = oTable.getColumns();
+
+                    for (var i = 0, l = oColumns.length; i < l; i++) {
+                        var isFiltered = oColumns[i].getFiltered();
+                        // console.log(oColumns[i].getFiltered())
+                        if (isFiltered) {
+                            oColumns[i].filter("");
+                        }
+                    }*/
+
+                    oTable.getColumns().forEach((col, idx) => {
+                        this._aColumns["matMaster"].filter(item => item.label === col.getLabel().getText())
+                            .forEach(ci => {
+                                console.log(ci.type)
+                                if (!ci.hideOnChange && ci.creatable) {
+                                    if (ci.type === "Edm.Boolean") {
+                                        col.setTemplate(new sap.m.CheckBox({selected: "{matMaster>" + ci.name + "}", editable: true}));
+                                    }
+                                    else if (ci.valueHelp["show"]) {
                                         col.setTemplate(new sap.m.Input({
-                                            value: "{matMaster>" + ci.name + "}", 
+                                            // id: "ipt" + ci.name,
+                                            type: "Text",
+                                            value: "{matMaster>" + ci.name + "}",
                                             maxLength: +ci.maxLength,
-                                            liveChange: this.onInputLiveChange.bind(this)
+                                            showValueHelp: true,
+                                            valueHelpRequest: this.handleValueHelp.bind(this),
+                                            showSuggestion: true,
+                                            maxSuggestionWidth: ci.valueHelp["suggestionItems"].additionalText !== undefined ? ci.valueHelp["suggestionItems"].maxSuggestionWidth : "1px",
+                                            suggestionItems: {
+                                                path: ci.valueHelp["suggestionItems"].path,
+                                                length: 1000,
+                                                template: new sap.ui.core.ListItem({
+                                                    key: ci.valueHelp["suggestionItems"].text,
+                                                    text: ci.valueHelp["suggestionItems"].text,
+                                                    additionalText: ci.valueHelp["suggestionItems"].additionalText !== undefined ? ci.valueHelp["suggestionItems"].additionalText : '',
+                                                }),
+                                                templateShareable: false
+                                            },
+                                            change: this.onValueHelpLiveInputChange.bind(this)
+                                        }));
+                                    }
+                                    else if (ci.type === "Edm.Number") {
+                                        col.setTemplate(new sap.m.Input({
+                                            type: sap.m.InputType.Number,
+                                            textAlign: sap.ui.core.TextAlign.Right,
+                                            value: "{path:'matMaster>" + ci.name + "}', type:'sap.ui.model.odata.type.Decimal', formatOptions:{ minFractionDigits:" + ci.scale + ", maxFractionDigits:" + ci.scale + " }, constraints:{ precision:" + ci.precision + ", scale:" + ci.scale + " }}",
+                                            liveChange: this.onNumberLiveChange.bind(this)
                                         }));
                                     }
                                     else {
-                                        col.setTemplate(new sap.m.Input({
-                                            value: "{matMaster>" + ci.name + "}", 
-                                            liveChange: this.onInputLiveChange.bind(this)
-                                        }));
+                                        if (ci.maxLength !== null) {
+                                            col.setTemplate(new sap.m.Input({
+                                                value: "{matMaster>" + ci.name + "}", 
+                                                maxLength: +ci.maxLength,
+                                                liveChange: this.onInputLiveChange.bind(this)
+                                            }));
+                                        }
+                                        else {
+                                            col.setTemplate(new sap.m.Input({
+                                                value: "{matMaster>" + ci.name + "}", 
+                                                liveChange: this.onInputLiveChange.bind(this)
+                                            }));
+                                        }
                                     }
+                                } 
+
+                                if (ci.required) {
+                                    col.getLabel().addStyleClass("requiredField");
                                 }
-                            } 
 
-                            if (ci.required) {
-                                col.getLabel().addStyleClass("requiredField");
-                            }
+                                if (ci.type === "Edm.String") oNewRow[ci.name] = "";
+                                else if (ci.type === "Edm.Number") oNewRow[ci.name] = 0;
+                                else if (ci.type === "Edm.Decimal") oNewRow[ci.name] = 0.0;
+                                else if (ci.type === "Edm.Boolean") oNewRow[ci.name] = false;
+                            })
+                    })
+                    oNewRow["New"] = true;
+                    aNewRow.push(oNewRow);
+                    this.getView().getModel("matMaster").setProperty("/results", aNewRow);
+                    this.getView().getModel("ui").setProperty("/dataMode", 'NEW');
+                    // console.log(aNewRow)
+                    // console.log(this.getView().getModel("gmc"))
+                    // console.log(oTable.getBinding())
 
-                            if (ci.type === "Edm.String") oNewRow[ci.name] = "";
-                            else if (ci.type === "Edm.Number") oNewRow[ci.name] = 0;
-                            else if (ci.type === "Edm.Decimal") oNewRow[ci.name] = 0.0;
-                            else if (ci.type === "Edm.Boolean") oNewRow[ci.name] = false;
-                        })
-                })
-                oNewRow["New"] = true;
-                aNewRow.push(oNewRow);
-                this.getView().getModel("matMaster").setProperty("/results", aNewRow);
-                this.getView().getModel("ui").setProperty("/dataMode", 'NEW');
-                // console.log(aNewRow)
-                // console.log(this.getView().getModel("gmc"))
-                // console.log(oTable.getBinding())
+                    if (oTable.getBinding()) {
+                        this._aFiltersBeforeChange = jQuery.extend(true, [], oTable.getBinding().aFilters);
 
-                if (oTable.getBinding()) {
-                    this._aFiltersBeforeChange = jQuery.extend(true, [], oTable.getBinding().aFilters);
-
-                    // oTable.getBinding().aSorters = null;
-                    oTable.getBinding().aFilters = null;
-                }
-                // console.log(this._aFiltersBeforeChange)
-                var oColumns = oTable.getColumns();
-
-                for (var i = 0, l = oColumns.length; i < l; i++) {
-                    var isFiltered = oColumns[i].getFiltered();
-                    // console.log(oColumns[i].getFiltered())
-                    if (isFiltered) {
-                        oColumns[i].filter("");
+                        // oTable.getBinding().aSorters = null;
+                        oTable.getBinding().aFilters = null;
                     }
-                }
+                    // console.log(this._aFiltersBeforeChange)
+                    var oColumns = oTable.getColumns();
 
-                oTable.getModel().refresh(true);
+                    for (var i = 0, l = oColumns.length; i < l; i++) {
+                        var isFiltered = oColumns[i].getFiltered();
+                        // console.log(oColumns[i].getFiltered())
+                        if (isFiltered) {
+                            oColumns[i].filter("");
+                        }
+                    }
+
+                    oTable.getModel().refresh(true);
+                }                
             },
             setRowEditMode(arg) {
                 this.getView().getModel(arg).getData().results.forEach(item => item.Edited = false);
@@ -1465,45 +1471,47 @@ sap.ui.define([
                 }
             },
             onDeleteMM() {
-                var oModel = this.getOwnerComponent().getModel();
-                var oTable = this.byId("matMasterTab");
-                var aSelRows = oTable.getSelectedIndices();
-                // var iDelCount = 0;
-                // var _this = this;
-                
-                if (aSelRows.length === 0) {
-                    MessageBox.information("No record(s) have been selected for deletion.");
-                }
-                else {
-                    MessageBox.confirm("Proceed to delete " + aSelRows.length + " record(s)?", {
-                        actions: ["Yes", "No"],
-                        onClose: function (sAction) {
-                            if (sAction === "Yes") {
-                                aSelRows.forEach(rec => {
-                                    var oContext = oTable.getContextByIndex(rec);
-                                    var oModelMM = oContext.getModel();
-                                    var sPath = oContext.getPath();
-                                    var vMaterialno = oContext.getObject().Materialno;
-                                    var oEntitySet = "/MaterialSet('" + vMaterialno + "')";
-                                    var oParam = {
-                                        "Deleted": "X"
-                                    };
-    
-                                    setTimeout(() => {
-                                        oModel.update(oEntitySet, oParam, {
-                                            method: "PUT",
-                                            success: function(data, oResponse) {
-                                                oModelMM.setProperty(sPath + '/Deleted', true);
-                                            },
-                                            error: function() {
-                                                // alert("Error");
-                                            }
-                                        });
-                                    }, 500)
-                                });                            
+                if (this._appAction !== "display") {
+                    var oModel = this.getOwnerComponent().getModel();
+                    var oTable = this.byId("matMasterTab");
+                    var aSelRows = oTable.getSelectedIndices();
+                    // var iDelCount = 0;
+                    // var _this = this;
+                    
+                    if (aSelRows.length === 0) {
+                        MessageBox.information("No record(s) have been selected for deletion.");
+                    }
+                    else {
+                        MessageBox.confirm("Proceed to delete " + aSelRows.length + " record(s)?", {
+                            actions: ["Yes", "No"],
+                            onClose: function (sAction) {
+                                if (sAction === "Yes") {
+                                    aSelRows.forEach(rec => {
+                                        var oContext = oTable.getContextByIndex(rec);
+                                        var oModelMM = oContext.getModel();
+                                        var sPath = oContext.getPath();
+                                        var vMaterialno = oContext.getObject().Materialno;
+                                        var oEntitySet = "/MaterialSet('" + vMaterialno + "')";
+                                        var oParam = {
+                                            "Deleted": "X"
+                                        };
+        
+                                        setTimeout(() => {
+                                            oModel.update(oEntitySet, oParam, {
+                                                method: "PUT",
+                                                success: function(data, oResponse) {
+                                                    oModelMM.setProperty(sPath + '/Deleted', true);
+                                                },
+                                                error: function() {
+                                                    // alert("Error");
+                                                }
+                                            });
+                                        }, 500)
+                                    });                            
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             },
             onDeleteCustomInfo() {
