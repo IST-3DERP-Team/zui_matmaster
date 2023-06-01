@@ -163,7 +163,7 @@
             "routes": [
                 {
                     "name": "RouteMain",
-                    "pattern": ":?query:",
+                    "pattern": ":sbu:/:matno:",
                     "target": [
                         "TargetMain"
                     ]

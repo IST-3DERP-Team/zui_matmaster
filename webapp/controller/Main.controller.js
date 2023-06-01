@@ -25,6 +25,8 @@ sap.ui.define([
                 this.getAppAction();
                 var oModel = this.getOwnerComponent().getModel();
                 var _this = this;
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+
                 this.validationErrors = [];
                 this.showLoadingDialog('Loading...');
                 _this.getView().setModel(new JSONModel({
@@ -68,7 +70,22 @@ sap.ui.define([
                 this._isMMEdited=false;
                 this._isCustomInfo=false;
                 this._cancelMM = false;
+
+                oRouter.getRoute("RouteMain").attachPatternMatched(this._onPatternMatched, this);
             },
+
+            _onPatternMatched : function (oEvent) {
+                this._pSBU =  oEvent.getParameter("arguments").sbu;
+                this._pMatno =  oEvent.getParameter("arguments").matno;
+                console.log("SBU: " + this._pSBU);
+                console.log("MATNO: " + this._pMatno);
+
+                if (this._pMatno !== undefined) {
+                    this.getView().getModel("ui").setProperty("/sbu", this._pSBU);
+                    this.onSBUChange();
+                }
+            },
+
             getAppAction: async function() {
                 if (sap.ushell.Container !== undefined) {
                     const fullHash = new HashChanger().getHash(); 
@@ -146,7 +163,14 @@ sap.ui.define([
                     },
                     success: function (data, response) {
                         var oJSONModel = new sap.ui.model.json.JSONModel();
+                        var oResult = data.results;
+
                         if (data.results.length > 0) {
+                            if (_this._pMatno !== undefined) {
+                                oResult = data.results.filter(fItem => fItem.Materialno === _this._pMatno);
+                                data["results"] = oResult;
+                            }
+
                             data.results.forEach((item, index) => {
                                 item.Hasgmc = item.Hasgmc === "X" ? true : false;
                                 item.Deleted = item.Deleted === "X" ? true : false;
