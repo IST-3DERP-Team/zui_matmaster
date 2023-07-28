@@ -247,20 +247,20 @@ sap.ui.define([
                         else {
                             _this.closeLoadingDialog();
 
-                            var oCBoxSBU = _this.byId('cboxSBU');
-                            if (!_this._oPopover) {
-                                Fragment.load({
-                                    name: "zuimatmaster.view.Popover",
-                                    controller: this
-                                }).then(function(oPopover){
-                                    _this._oPopover = oPopover;
-                                    _this.getView().addDependent(_this._oPopover);                                    
-                                    _this._oPopover.openBy(oCBoxSBU);
-                                    _this._oPopover.setTitle("Select SBU");
-                                }.bind(_this));
-                            } else {
-                                this._oPopover.openBy(oCBoxSBU);
-                            }   
+                            // var oCBoxSBU = _this.byId('cboxSBU');
+                            // if (!_this._oPopover) {
+                            //     Fragment.load({
+                            //         name: "zuimatmaster.view.Popover",
+                            //         controller: this
+                            //     }).then(function(oPopover){
+                            //         _this._oPopover = oPopover;
+                            //         _this.getView().addDependent(_this._oPopover);                                    
+                            //         _this._oPopover.openBy(oCBoxSBU);
+                            //         _this._oPopover.setTitle("Select SBU");
+                            //     }.bind(_this));
+                            // } else {
+                            //     this._oPopover.openBy(oCBoxSBU);
+                            // }   
                                      
                             _this.byId("btnAddMM").setEnabled(false);
                             _this.byId("btnEditMM").setEnabled(false);
