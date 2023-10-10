@@ -5,6 +5,8 @@
     xmlns="sap.m"
     height="100%"
     xmlns:uiL="sap.ui.layout"
+    xmlns:smartfilterbar="sap.ui.comp.smartfilterbar"
+    xmlns:fb="sap.ui.comp.filterbar"
     xmlns:uiT="sap.ui.table"> 
     <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false">
         <dependents>
@@ -329,6 +331,30 @@
                 </uiL:flexContent>
             </uiL:FixFlex>   -->
             <VBox fitContainer="true" class="sidePadding">
+            <smartfilterbar:SmartFilterBar id="smartFilterBar" entitySet="ZVB_3DERP_MM_FILTERS" search="onSearch" persistencyKey="3DERP_StylesPKey" filterContainerWidth="15rem" showClearOnFB="true">
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration1" key="SBU" groupId="_BASIC" label="SBU" mandatory="mandatory" class="mandatoryFontColor" width="50px">
+                            <smartfilterbar:customControl>
+                              <ComboBox id="cboxSBU1"
+                                    selectedKey="{ui>/sbu}"
+                                    items="{                                                                            
+                                        path: '/ZVB_3DERP_SBU_SH'
+                                    }">
+                                    <core:Item id="_IDGenItem1" key="{SBU}" text="{SBU}" />
+                                </ComboBox>        
+                            </smartfilterbar:customControl>
+                        </smartfilterbar:ControlConfiguration>
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration2" key="Materialtype" label="Material Type" groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration3" key="Gmc" label="GMC" groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:layoutData>
+                        <FlexItemData id="_IDGenFlexItemData1" growFactor="0" />
+                    </smartfilterbar:layoutData>
+                </smartfilterbar:SmartFilterBar>
                 <uiT:Table id="matMasterTab"
                         rows="{matMaster>/results}"
                         visibleRowCountMode="Auto"
@@ -343,7 +369,7 @@
                     </uiT:rowSettingsTemplate>
                     <uiT:extension>
                         <Toolbar>
-                            <Label text="SBU:" />
+                            <!-- <Label text="SBU:" />
                             <ComboBox id="cboxSBU"
                                 width="100px"
                                 enabled="true"
@@ -354,7 +380,7 @@
                                 selectedKey="{ui>/sbu}"
                                 class="marginTopNone">
                                 <core:Item key="{SBU}" text="{SBU}" />
-                            </ComboBox>
+                            </ComboBox> -->
                             <ToolbarSpacer/>
                             <SearchField
                                 id="searchFieldMM"
@@ -499,6 +525,19 @@
                                             icon="sap-icon://refresh"
                                             press=".onRefreshBatch"
                                             visible="true" />
+                                        <Button id="btnEditBatch" 
+                                            icon="sap-icon://edit"
+                                            press="onEditBatch"
+                                            tooltip="Edit"
+                                            visible="true"/>
+                                        <Button id="btnSaveBatch" 
+                                            icon="sap-icon://save"
+                                            press=".onSaveBatch()" 
+                                            visible="false" />
+                                        <Button id="btnCancelBatch" 
+                                            icon="sap-icon://sys-cancel"
+                                            press="onCancelBatch()" 
+                                            visible="false" /> 
                                         <Button id="btnSortBatch" 
                                             icon="sap-icon://sort"
                                             press=".onColSort"

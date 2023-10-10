@@ -14,7 +14,8 @@
         "@ui5/cli": "^2.14.1",
         "@sap/ux-ui5-tooling": "1",
         "@sap/ux-ui5-fe-mockserver-middleware": "1",
-        "rimraf": "3.0.2"
+        "rimraf": "3.0.2",
+        "ui5-task-flatten-library": "0.2.5"
     },
     "scripts": {
         "start": "fiori run --open \"test/flpSandbox.html?sap-client=888&sap-ui-xx-viewCache=false#zuimatmaster-display\"",
@@ -33,7 +34,8 @@
     "ui5": {
         "dependencies": [
             "@sap/ux-ui5-tooling",
-            "@sap/ux-ui5-fe-mockserver-middleware"
+            "@sap/ux-ui5-fe-mockserver-middleware",
+            "ui5-task-flatten-library"
         ]
     },
     "sapuxLayer": "CUSTOMER_BASE"
