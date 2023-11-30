@@ -1789,18 +1789,17 @@ sap.ui.define([
                             oParam['N_Messtab'] = [];
 
                             if (oParamData.length > 0) {
-                                console.log("payload",oParam);
                                 await new Promise((resolve, reject) => {
                                     matModel.create("/MatExtendSet", oParam, {
                                         method: "POST",
                                         success: function (oData, oResponse) {
                                             // if(oData.N_Messtab.results[0].Message !== undefined || oData.N_Messtab.results[0].Message !== "" || oData.N_Messtab.results[0].Message !== null){
-                                            console.log(oData);
-                                            if (oData.N_Messtab.results[0].Type === "S") {
+                                            const lastKey = oData.N_Messtab.results.length - 1;
+                                            if (oData.N_Messtab.results[lastKey].Type === "S") {
                                                 MessageBox.information(oData.N_Messtab.results[0].Message);
                                             }
                                             // }
-                                            else if (oData.N_Messtab.results[0].Type === "E") {
+                                            else if (oData.N_Messtab.results[lastKey].Type === "E") {
                                                 MessageBox.error(Object.values(oData.N_Messtab.results).pop().Message);
                                             }
                                             resolve();
