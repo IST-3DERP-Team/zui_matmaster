@@ -1,0 +1,1 @@
+sap.ui.define(["zui_matmaster/controller/Main.controller"],function(t){"use strict";QUnit.module("Main Controller");QUnit.test("I should test the Main controller",function(n){var o=new t;o.onInit();n.ok(o)})});
