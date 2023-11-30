@@ -1752,7 +1752,7 @@ sap.ui.define([
                         oTmpSelectedIndices.push(oTable.getBinding("rows").aIndices[item])
                     });
                     aSelIndices = oTmpSelectedIndices;
-                    for (var item in aSelIndices) {
+                    for (var item of aSelIndices) {
                         await new Promise((resolve, reject) => {
                             iCounter++;
                             oModel.read("/ExtendMaterialVldMatChkSet", {
