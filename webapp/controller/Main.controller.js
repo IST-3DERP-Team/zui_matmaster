@@ -71,7 +71,8 @@ sap.ui.define([
                     attributes: 0,
                     batch: 0,
                     customInfo: 0,
-                    plant: 0
+                    plant: 0,
+                    unit: 0,
                 }
 
                 this.getView().setModel(new JSONModel(this._counts), "counts");
@@ -106,6 +107,12 @@ sap.ui.define([
                         rows: []
                     }));
 
+                this.byId("unitTab")
+                    .setModel(new JSONModel({
+                        columns: [],
+                        rows: []
+                    }));
+
                 var oDDTextParam = [], oDDTextResult = {};
                 var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
 
@@ -126,6 +133,8 @@ sap.ui.define([
                 oDDTextParam.push({ CODE: "INFO_CHECK_INVALID_ENTRIES" });
                 oDDTextParam.push({ CODE: "ADD" });
                 oDDTextParam.push({ CODE: "EDIT" });
+                oDDTextParam.push({ CODE: "ADDROW" });
+                oDDTextParam.push({ CODE: "REMOVEROW" });
                 oDDTextParam.push({ CODE: "SAVE" });
                 oDDTextParam.push({ CODE: "CANCEL" });
                 oDDTextParam.push({ CODE: "DELETE" });
@@ -173,6 +182,7 @@ sap.ui.define([
                 this.byId("batchTab").addEventDelegate(oTableEventDelegate);
                 this.byId("customInfoTab").addEventDelegate(oTableEventDelegate);
                 this.byId("plantTab").addEventDelegate(oTableEventDelegate);
+                this.byId("unitTab").addEventDelegate(oTableEventDelegate);
                 this.getColumnProp();
 
                 this.byId("headerTab").attachBrowserEvent("mousemove", function (oEvent) {
@@ -289,6 +299,10 @@ sap.ui.define([
 
                 setTimeout(() => {
                     this.getDynamicColumns("MMPLANT", "MARC", "plantTab", oColumns);
+                }, 100);
+
+                setTimeout(() => {
+                    this.getDynamicColumns("MMUNIT", "ZDV_MAT_UNIT", "unitTab", oColumns);
                 }, 100);
             },
             getDynamicColumns(arg1, arg2, arg3, arg4) {
@@ -542,6 +556,7 @@ sap.ui.define([
                                 me.getBatch(item.MATERIALNO);
                                 me.getCustomInfo(item.MATERIALNO);
                                 me.getPlant(item.MATERIALNO);
+                                me.getUnit(item.MATERIALNO);
                             }
                         });
                         me.byId("headerTab").getModel().setProperty("/rows", data.results);
@@ -673,6 +688,35 @@ sap.ui.define([
                     }
                 })
             },
+            getUnit(arg) {
+                var oModel = this.getOwnerComponent().getModel();
+                var oEntitySet = "/UnitMeasureSet";
+                oModel.read(oEntitySet, {
+                    urlParameters: {
+                        "$filter": "MATNO eq '" + arg + "'"
+                    },
+                    success: function (data, response) {
+                        // if (data.results.length > 0) {
+                        //     data.results.forEach(item => {
+                        //         if (item.CREATEDDT !== null) {
+                        //             item.CREATEDDT = dateFormat.format(new Date(item.CREATEDDT));
+                        //         }
+
+                        //         if (item.UPDATEDDT !== null) {
+                        //             item.UPDATEDDT = dateFormat.format(new Date(item.UPDATEDDT));
+                        //         }
+                        //     })
+                        // }
+                        me.byId("unitTab").getModel().setProperty("/rows", data.results);
+                        me.byId("unitTab").bindRows("/rows");
+                        me.getView().getModel("counts").setProperty("/unit", data.results.length);
+                        Common.closeLoadingDialog(me);
+                    },
+                    error: function (err) {
+                        Common.closeLoadingDialog(me);
+                    }
+                })
+            },
             //******************************************* */
             // Column Filtering
             //******************************************* */
@@ -749,6 +793,8 @@ sap.ui.define([
                         this.byId("btnEditHdr").setVisible(false);
                         this.byId("btnDeleteHdr").setVisible(false);
                         this.byId("btnRefreshHdr").setVisible(false);
+                        this.byId("btnAddRowHdr").setVisible(true);
+                        this.byId("btnRemoveRowHdr").setVisible(true);
                         this.byId("btnSaveHdr").setVisible(true);
                         this.byId("btnCancelHdr").setVisible(true);
                         //this.byId("searchFieldHdr").setVisible(false);
@@ -963,6 +1009,7 @@ sap.ui.define([
                 })
 
                 oNewRow["NEW"] = true;
+                aNewRow = this.byId(this._sActiveTable).getModel().getProperty("/rows").filter(item => item.NEW === true);
                 aNewRow.push(oNewRow);
 
                 this.byId(this._sActiveTable).getModel().setProperty("/rows", aNewRow);
@@ -1278,6 +1325,16 @@ sap.ui.define([
                 if (this._sActiveTable === "headerTab") this._bHdrChanged = true;
                 else if (this._sActiveTable === "detailTab") this._bDtlChanged = true;
             },
+            onAddRow() {
+                this.setRowCreateMode();
+            },
+            onRemoveRow() {
+                var oTable = this.byId(this._sActiveTable);
+                var aNewRow = oTable.getModel().getProperty("/rows").filter(item => item.NEW === true);
+                aNewRow.splice(oTable.getSelectedIndices(), 1);
+                oTable.getModel().setProperty("/rows", aNewRow);
+                oTable.bindRows("/rows");
+            },
             onSaveHdr() {
                 var aNewRows = this.byId(this._sActiveTable).getModel().getData().rows.filter(item => item.NEW === true);
                 var oModel = this.getOwnerComponent().getModel();
@@ -1479,6 +1536,8 @@ sap.ui.define([
                                 me.onTableResize('Hdr', 'Min');
                                 me.byId("btnAddHdr").setVisible(true);
                                 me.byId("btnEditHdr").setVisible(true);
+                                me.byId("btnAddRowHdr").setVisible(false);
+                                me.byId("btnRemoveRowHdr").setVisible(false);
                                 me.byId("btnSaveHdr").setVisible(false);
                                 me.byId("btnCancelHdr").setVisible(false);
                                 me.byId("btnDeleteHdr").setVisible(true);
@@ -1535,6 +1594,8 @@ sap.ui.define([
                             me.byId("btnAddHdr").setVisible(true);
                             me.byId("btnEditHdr").setVisible(true);
                             //me.byId("btnAddNewHdr").setVisible(false);
+                            me.byId("btnAddRowHdr").setVisible(false);
+                            me.byId("btnRemoveRowHdr").setVisible(false);
                             me.byId("btnSaveHdr").setVisible(false);
                             me.byId("btnCancelHdr").setVisible(false);
                             me.byId("btnDeleteHdr").setVisible(true);
@@ -1570,6 +1631,8 @@ sap.ui.define([
                         me.byId("btnAddHdr").setVisible(true);
                         me.byId("btnEditHdr").setVisible(true);
                         //me.byId("btnAddNewHdr").setVisible(false);
+                        me.byId("btnAddRowHdr").setVisible(false);
+                        me.byId("btnRemoveRowHdr").setVisible(false);
                         me.byId("btnSaveHdr").setVisible(false);
                         me.byId("btnCancelHdr").setVisible(false);
                         me.byId("btnDeleteHdr").setVisible(true);
@@ -1611,6 +1674,7 @@ sap.ui.define([
                         me.getBatch(vMATNO);
                         me.getCustomInfo(vMATNO);
                         me.getPlant(vMATNO);
+                        me.getUnit(vMATNO);
                         if (this._dataMode === "READ") this._sActiveTable = "headerTab";
                     }
                     else {

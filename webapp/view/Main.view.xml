@@ -76,6 +76,16 @@
                                 press="onEdit"
                                 tooltip="{ddtext>/EDIT}"
                                 visible="true"/>
+                            <Button id="btnAddRowHdr" 
+                                icon="sap-icon://add"
+                                press="onAddRow"
+                                tooltip="{ddtext>/ADDROW}"
+                                visible="false" />
+                            <Button id="btnRemoveRowHdr" 
+                                icon="sap-icon://less"
+                                press="onRemoveRow"
+                                tooltip="{ddtext>/REMOVEROW}"
+                                visible="false" />
                             <Button id="btnSaveHdr" 
                                 icon="sap-icon://save"
                                 press=".onSaveHdr" 
@@ -388,6 +398,57 @@
                                 </uiT:extension>
                                 <uiT:layoutData>
                                     <FlexItemData id="_IDGenFlexItemData14" growFactor="1" baseSize="0%"/>
+                                </uiT:layoutData> 
+                            </uiT:Table>
+                        </IconTabFilter>
+                        <IconTabFilter id="_IDGenIconTabFilter11" text="Units Of Measure">
+                            <uiT:Table id="unitTab"
+                                        class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                                        visibleRowCountMode="Auto"
+                                        showColumnVisibilityMenu="true"
+                                        enableColumnFreeze="true"
+                                        selectionMode="MultiToggle"
+                                        firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                        cellClick="onCellClick"
+                                        alternateRowColors="true"
+                                        sort="onSort"
+                                        filter="onFilter"
+                                        columnFreeze="onColumnUpdated"
+                                        columnMove="onColumnUpdated"
+                                        columnResize="onColumnUpdated"
+                                        columnSelect="onColumnUpdated"
+                                        columnVisibility="onColumnUpdated">
+                                <uiT:rowSettingsTemplate>
+                                    <uiT:RowSettings id="_IDGenRowSettings12" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
+                                </uiT:rowSettingsTemplate>
+                                <uiT:extension>
+                                    <Toolbar id="_IDGenToolbar13">
+                                        <Text id="_IDGenText14" text="{counts>/unit} Unit of Measure/s" class="selHdrKeyFontStyle" />
+                                        <ToolbarSeparator/> 
+                                        <Text id="unitMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
+                                        <ToolbarSpacer id="_IDGenToolbarSpacer12"/>
+                                        <ToolbarSeparator/>
+                                        <Button id="btnRefreshUnit" 
+                                            icon="sap-icon://refresh"
+                                            press=".onRefreshUnit"
+                                            visible="true" />
+                                        <Button id="btnFullScreenUnit" 
+                                            icon="sap-icon://full-screen"
+                                            press="onTableResize('Unit','Max')"
+                                            visible="true" />
+                                        <Button id="btnExitFullScreenUnit" 
+                                            icon="sap-icon://exit-full-screen"
+                                            press="onTableResize('Unit','Min')"
+                                            visible="false" />
+                                        <Button id="btnColPropUnit" 
+                                            icon="sap-icon://table-column"
+                                            press="onColumnProp"
+                                            tooltip="Columns"
+                                            visible="true" /> 
+                                    </Toolbar>
+                                </uiT:extension>
+                                <uiT:layoutData>
+                                    <FlexItemData id="_IDGenFlexItemData12" growFactor="1" baseSize="0%"/>
                                 </uiT:layoutData> 
                             </uiT:Table>
                         </IconTabFilter>

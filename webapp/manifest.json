@@ -20,18 +20,18 @@
                 "uri": "/sap/opu/odata/sap/ZGW_3DERP_MATMASTER_SRV/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "2.0",
                     "annotations": [],
-                    "localUri": "localService/mainService/metadata.xml"
+                    "localUri": "localService/mainService/metadata.xml",
+                    "odataVersion": "2.0"
                 }
             },
             "ZGW_3DERP_MATERIAL_SRV": {
                 "uri": "/sap/opu/odata/sap/ZGW_3DERP_MATERIAL_SRV/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "2.0",
                     "annotations": [],
-                    "localUri": "localService/ZGW_3DERP_MATERIAL_SRV/metadata.xml"
+                    "localUri": "localService/ZGW_3DERP_MATERIAL_SRV/metadata.xml",
+                    "odataVersion": "2.0"
                 }
             },
             "ZGW_3DERP_COMMON_SRV": {
