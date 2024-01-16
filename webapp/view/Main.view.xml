@@ -430,7 +430,7 @@
                                         <ToolbarSeparator/>
                                         <Button id="btnRefreshUnit" 
                                             icon="sap-icon://refresh"
-                                            press=".onRefreshUnit"
+                                            press=".onRefresh"
                                             visible="true" />
                                         <Button id="btnFullScreenUnit" 
                                             icon="sap-icon://full-screen"
