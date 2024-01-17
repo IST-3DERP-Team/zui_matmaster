@@ -20,6 +20,6 @@ builder:
           name: ZUIMATMASTER
           description: Material Master
           package: ZPK_LTH_3DERP
-          transport: LTDK916609
+          transport: LTDK916806
         exclude:
           - /test/

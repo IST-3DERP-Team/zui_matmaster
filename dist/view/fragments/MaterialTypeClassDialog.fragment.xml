@@ -5,7 +5,7 @@
         xmlns:uit="sap.ui.table"
         id="fragment-1" 
         fragmentName="fragment1">
-    <Dialog contentWidth="1000px"
+    <Dialog contentWidth="1300px"
         contentHeight="500px"
         title="Material Classifications"
         resizable="true"
@@ -23,6 +23,12 @@
             visibleRowCount="{/rowCount}"
             paste="onPaste">
             <uit:columns>
+                <uit:Column width="10rem">
+                    <Label text="Material Type" />
+                    <uit:template>
+                        <Text text="{mtClassModel>Mattyp}" wrapping="false" />
+                    </uit:template>
+                </uit:Column>
                 <uit:Column width="7rem">
                     <Label text="Classification" />
                     <uit:template>

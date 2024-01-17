@@ -71,7 +71,8 @@ sap.ui.define([
                     attributes: 0,
                     batch: 0,
                     customInfo: 0,
-                    plant: 0
+                    plant: 0,
+                    unit: 0,
                 }
 
                 this.getView().setModel(new JSONModel(this._counts), "counts");
@@ -106,6 +107,12 @@ sap.ui.define([
                         rows: []
                     }));
 
+                this.byId("unitTab")
+                    .setModel(new JSONModel({
+                        columns: [],
+                        rows: []
+                    }));
+
                 var oDDTextParam = [], oDDTextResult = {};
                 var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
 
@@ -126,6 +133,8 @@ sap.ui.define([
                 oDDTextParam.push({ CODE: "INFO_CHECK_INVALID_ENTRIES" });
                 oDDTextParam.push({ CODE: "ADD" });
                 oDDTextParam.push({ CODE: "EDIT" });
+                oDDTextParam.push({ CODE: "ADDROW" });
+                oDDTextParam.push({ CODE: "REMOVEROW" });
                 oDDTextParam.push({ CODE: "SAVE" });
                 oDDTextParam.push({ CODE: "CANCEL" });
                 oDDTextParam.push({ CODE: "DELETE" });
@@ -173,11 +182,12 @@ sap.ui.define([
                 this.byId("batchTab").addEventDelegate(oTableEventDelegate);
                 this.byId("customInfoTab").addEventDelegate(oTableEventDelegate);
                 this.byId("plantTab").addEventDelegate(oTableEventDelegate);
+                this.byId("unitTab").addEventDelegate(oTableEventDelegate);
                 this.getColumnProp();
 
                 this.byId("headerTab").attachBrowserEvent("mousemove", function (oEvent) {
                     //get your model and do whatever you want:
-                    console.log("mouseenter")
+                    //console.log("mouseenter")
                 });
                 //this.getMain();
 
@@ -289,6 +299,10 @@ sap.ui.define([
 
                 setTimeout(() => {
                     this.getDynamicColumns("MMPLANT", "MARC", "plantTab", oColumns);
+                }, 100);
+
+                setTimeout(() => {
+                    this.getDynamicColumns("MMUNIT", "ZDV_MAT_UNIT", "unitTab", oColumns);
                 }, 100);
             },
             getDynamicColumns(arg1, arg2, arg3, arg4) {
@@ -542,6 +556,7 @@ sap.ui.define([
                                 me.getBatch(item.MATERIALNO);
                                 me.getCustomInfo(item.MATERIALNO);
                                 me.getPlant(item.MATERIALNO);
+                                me.getUnit(item.MATERIALNO);
                             }
                         });
                         me.byId("headerTab").getModel().setProperty("/rows", data.results);
@@ -673,6 +688,35 @@ sap.ui.define([
                     }
                 })
             },
+            getUnit(arg) {
+                var oModel = this.getOwnerComponent().getModel();
+                var oEntitySet = "/UnitMeasureSet";
+                oModel.read(oEntitySet, {
+                    urlParameters: {
+                        "$filter": "MATNO eq '" + arg + "'"
+                    },
+                    success: function (data, response) {
+                        // if (data.results.length > 0) {
+                        //     data.results.forEach(item => {
+                        //         if (item.CREATEDDT !== null) {
+                        //             item.CREATEDDT = dateFormat.format(new Date(item.CREATEDDT));
+                        //         }
+
+                        //         if (item.UPDATEDDT !== null) {
+                        //             item.UPDATEDDT = dateFormat.format(new Date(item.UPDATEDDT));
+                        //         }
+                        //     })
+                        // }
+                        me.byId("unitTab").getModel().setProperty("/rows", data.results);
+                        me.byId("unitTab").bindRows("/rows");
+                        me.getView().getModel("counts").setProperty("/unit", data.results.length);
+                        Common.closeLoadingDialog(me);
+                    },
+                    error: function (err) {
+                        Common.closeLoadingDialog(me);
+                    }
+                })
+            },
             //******************************************* */
             // Column Filtering
             //******************************************* */
@@ -726,6 +770,10 @@ sap.ui.define([
                     if (this._sActiveTable === "headerTab") {
                         this.getMain();
                     }
+                    else if(this._sActiveTable === "unitTab") {
+                        var sMatNo = this.getView().getModel("ui").getProperty("/acitveMatno");
+                        this.getUnit(sMatNo);
+                    }
                     // else if (this._sActiveTable === "detailTab") {
                     //     Common.openLoadingDialog(me);
                     //     var vHUID = this.getView().getModel("ui").getData().HUID;
@@ -749,6 +797,8 @@ sap.ui.define([
                         this.byId("btnEditHdr").setVisible(false);
                         this.byId("btnDeleteHdr").setVisible(false);
                         this.byId("btnRefreshHdr").setVisible(false);
+                        this.byId("btnAddRowHdr").setVisible(true);
+                        this.byId("btnRemoveRowHdr").setVisible(true);
                         this.byId("btnSaveHdr").setVisible(true);
                         this.byId("btnCancelHdr").setVisible(true);
                         //this.byId("searchFieldHdr").setVisible(false);
@@ -805,6 +855,9 @@ sap.ui.define([
                     }
                     else if (col.mAggregations.template.mBindingInfos.selected !== undefined) {
                         sColName = col.mAggregations.template.mBindingInfos.selected.parts[0].path;
+                    }
+                    else if (col.mAggregations.template.mBindingInfos.value !== undefined) {
+                        sColName = col.mAggregations.template.mBindingInfos.value.parts[0].path;
                     }
 
                     this._aColumns[this._sActiveTable.replace("Tab", "")].filter(item => item.ColumnName === sColName)
@@ -963,6 +1016,7 @@ sap.ui.define([
                 })
 
                 oNewRow["NEW"] = true;
+                aNewRow = this.byId(this._sActiveTable).getModel().getProperty("/rows").filter(item => item.NEW === true);
                 aNewRow.push(oNewRow);
 
                 this.byId(this._sActiveTable).getModel().setProperty("/rows", aNewRow);
@@ -1046,6 +1100,18 @@ sap.ui.define([
                         this.byId("headerTab").setVisible(true);
                         this.byId("btnFullScreenAttr").setVisible(true);
                         this.byId("btnExitFullScreenAttr").setVisible(false);
+                    }
+                }
+                else if (arg1 === 'Unit') {
+                    if (arg2 === 'Max') {
+                        this.byId("headerTab").setVisible(false);
+                        this.byId("btnFullScreenUnit").setVisible(false);
+                        this.byId("btnExitFullScreenUnit").setVisible(true);
+                    }
+                    else {
+                        this.byId("headerTab").setVisible(true);
+                        this.byId("btnFullScreenUnit").setVisible(true);
+                        this.byId("btnExitFullScreenUnit").setVisible(false);
                     }
                 }
                 else {
@@ -1278,30 +1344,55 @@ sap.ui.define([
                 if (this._sActiveTable === "headerTab") this._bHdrChanged = true;
                 else if (this._sActiveTable === "detailTab") this._bDtlChanged = true;
             },
+            onAddRow() {
+                this.setRowCreateMode();
+            },
+            onRemoveRow() {
+                var oTable = this.byId(this._sActiveTable);
+                var aNewRow = oTable.getModel().getProperty("/rows").filter(item => item.NEW === true);
+                aNewRow.splice(oTable.getSelectedIndices(), 1);
+                oTable.getModel().setProperty("/rows", aNewRow);
+                oTable.bindRows("/rows");
+            },
             onSaveHdr() {
                 var aNewRows = this.byId(this._sActiveTable).getModel().getData().rows.filter(item => item.NEW === true);
                 var oModel = this.getOwnerComponent().getModel();
+                var oModel1 = this.getOwnerComponent().getModel();
                 var oJSONModel = new JSONModel();
+                var oJSONModel1 = new JSONModel();
                 var vSBU = 'VER';
+                var oData = {
+                    results: []
+                };
 
-                console.log("aNewRows", aNewRows);
-                this.onMaterialTypeClassDialog(aNewRows[0]);
-
-                oModel.read('/MRPTypeSet', {
-                    urlParameters: {
-                        "$filter": "Screencode eq 'BAPI_MATNR' and Mtart eq '" + aNewRows[0].MATERIALTYPE + "'"
-                    },
-                    success: function (data, response) {
-                        oJSONModel.setData(data);
-                        me.getView().setModel(oJSONModel, "mrpTypeClass");
-                    },
-                    error: function (err) {
-                        MessageBox.information(err);
-                    }
+                aNewRows.forEach((item, idx) => {
+                    item.NEWSEQ = idx;
                 })
 
-                var oModel1 = this.getOwnerComponent().getModel();
-                var oJSONModel1 = new JSONModel();
+                console.log("aNewRows", aNewRows);
+                this.onMaterialTypeClassDialog(aNewRows);
+
+                aNewRows.forEach((item, idx) => {
+                    oModel.read('/MRPTypeSet', {
+                        urlParameters: {
+                            "$filter": "Screencode eq 'BAPI_MATNR' and Mtart eq '" + item.MATERIALTYPE + "'"
+                        },
+                        success: function (data, response) {
+                            if (data.results.length > 0) {
+                                oData.results.push(data.results[0]);
+                            }
+
+                            if (idx == aNewRows.length - 1) {
+                                oJSONModel.setData(oData);
+                                me.getView().setModel(oJSONModel, "mrpTypeClass");
+                            }
+                        },
+                        error: function (err) {
+                            MessageBox.information(err);
+                        }
+                    })
+                })
+
                 oModel1.read('/MatPlantSet', {
                     urlParameters: {
                         "$filter": "SBU eq '" + vSBU + "'"
@@ -1320,37 +1411,54 @@ sap.ui.define([
                 var oModel = this.getOwnerComponent().getModel();
                 var oJSONModel = new JSONModel();
                 var _this = this;
-                this.newMattyp = args.MATERIALTYPE;
-                oModel.read('/MatTypeClassSet', {
-                    urlParameters: {
-                        "$filter": "Mattyp eq '" + this.newMattyp + "'"
-                    },
-                    success: function (data, response) {
-                        data.results.forEach(item => {
-                            item.Descen = '';
-                            item.Desczh = '';
-                            item.Attrib = item.Attrib === "X" ? true : false;
-                            item.Createddt = dateFormat.format(item.Createddt);
-                            item.Updateddt = dateFormat.format(item.Updateddt);
-                            item.DescInput = item.Attrib === "X" ? false : true;
-                        })
+                var aData = { results: [] };
 
-                        oJSONModel.setData(data);
-                        _this.getView().setModel(oJSONModel, "mtClassModel");
-
-                        _this.createViewSettingsDialog("matTypeClass",
-                            new JSONModel({
-                                items: data.results,
-                                rowCount: data.results.length
+                //var aMatType = [...new Set(args.map(item => item.MATERIALTYPE))];
+                var aMatType = args.map(item => item.MATERIALTYPE);
+                console.log("aMatType", aMatType)
+                aMatType.forEach((item, idx) => {
+                    this.newMattyp = item;
+                    oModel.read('/MatTypeClassSet', {
+                        urlParameters: {
+                            "$filter": "Mattyp eq '" + this.newMattyp + "'"
+                        },
+                        success: function (data, response) {
+                            console.log(data)
+                            var aDataMatTClass = JSON.parse(JSON.stringify(data));
+                            aDataMatTClass.results.forEach(itemMatClass => {
+                                itemMatClass.Descen = '';
+                                itemMatClass.Desczh = '';
+                                itemMatClass.Attrib = itemMatClass.Attrib === "X" ? true : false;
+                                itemMatClass.Createddt = dateFormat.format(new Date(itemMatClass.Createddt));
+                                itemMatClass.Updateddt = dateFormat.format(new Date(itemMatClass.Updateddt));
+                                itemMatClass.DescInput = itemMatClass.Attrib === "X" ? false : true;
                             })
-                        );
+                            
+                            aData.results.push(...aDataMatTClass.results);
 
-                        var oDialog = _this._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"];
-                        oDialog.getModel().setProperty("/items", data.results);
-                        oDialog.getModel().setProperty("/rowCount", data.results.length);
-                        oDialog.open();
-                    },
-                    error: function (err) { }
+                            if (idx == aMatType.length - 1) {
+                                aData.results.forEach((itemMatClass, idxMatClass) => {
+                                    itemMatClass.NEWSEQ = idxMatClass;
+                                })
+
+                                oJSONModel.setData(aData);
+                                _this.getView().setModel(oJSONModel, "mtClassModel");
+        
+                                _this.createViewSettingsDialog("matTypeClass",
+                                    new JSONModel({
+                                        items: aData.results,
+                                        rowCount: aData.results.length
+                                    })
+                                );
+        
+                                var oDialog = _this._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"];
+                                oDialog.getModel().setProperty("/items", aData.results);
+                                oDialog.getModel().setProperty("/rowCount", aData.results.length);
+                                oDialog.open();
+                            }
+                        },
+                        error: function (err) { }
+                    })
                 })
             },
             createViewSettingsDialog: function (arg1, arg2) {
@@ -1383,6 +1491,7 @@ sap.ui.define([
                 this._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
             },
             onCreateMMSave() {
+                var vSBU = 'VER';
                 var _aDescen = [], _aDesczh = [];
                 var _this = this;
 
@@ -1401,102 +1510,263 @@ sap.ui.define([
                 else {
                     Common.openProcessingDialog(me, "Processing...");
 
-                    var _descen = _aDescen.join(', ');
-                    var _desczh = _aDesczh.join(', ');
-                    var _param = {};
-                    var dismm = '';
-                    var _MatImportParamSet = [];
                     var aNewRows = this.byId(this._sActiveTable).getModel().getData().rows.filter(item => item.NEW === true);
-                    var _paramAttrib = [];
+                    var sMessage = "";
+                    var bError = false;
+                    var iTimeOut = 0;
 
-                    this.getView().getModel("mtClassModel").getData().results.forEach((item, index) => {
-                        _paramAttrib.push({
-                            "Seq": "1",
-                            "Seqno": (index + 1) + "",
-                            "Mattypcls": item.Mattypcls,
-                            "Attribcd": item.Attribcd,
-                            "Descen": item.Descen,
-                            "Desczh": item.Desczh
-                        })
-                    });
+                    aNewRows.forEach((item, idx) => {
 
-                    _MatImportParamSet.push({
-                        "Seq": "1",
-                        "Seqno": "1",
-                        "Ind_sector": "J",
-                        "Matl_type": aNewRows[0].MATERIALTYPE,
-                        "Matl_group": aNewRows[0].MATERIALGROUP,
-                        "Old_mat_no": aNewRows[0].OLDMATERIALNO,
-                        "Base_uom": aNewRows[0].BASEUOM,
-                        "Batch_mgmt": "X",
-                        "Net_weight": aNewRows[0].NETWT,
-                        "Unit_of_wt": aNewRows[0].WTUOM,
-                        "Po_unit": aNewRows[0].ORDERUOM,
-                        "Pur_valkey": aNewRows[0].PURCHVALUEKEY,
-                        "Plant": this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
-                        "Mrp_type": this.getView().getModel("mrpTypeClass").getData().results[0].Dismm,
-                        "Period_ind": "M",
-                        "Proc_type": "F",
-                        "Availcheck": "KP",
-                        "Profit_ctr": this.getView().getModel("matPlantClass").getData().results[0].PROFITCTR,
-                        "Val_area": this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
-                        "Price_ctrl": (aNewRows[0].MATERIALGROUP === "ACC" || aNewRows[0].MATERIALGROUP === "FAB") ? "V" : "",
-                        "Moving_pr": "0",
-                        "Price_unit": "1",
-                        "Val_class": this.getView().getModel("mrpTypeClass").getData().results[0].Bklas
-                    })
+                        _aDescen = [];
+                        _aDesczh = [];
 
-                    _param = {
-                        "Seq": "1",
-                        "Mattyp": aNewRows[0].MATERIALTYPE,
-                        "Gmc": aNewRows[0].GMC,
-                        "Descen": _descen,
-                        "Desczh": _desczh,
-                        "Processcd": aNewRows[0].PROCESSCODE,
-                        "Cusmatno": aNewRows[0].CUSMATCODE,
-                        "Grswt": aNewRows[0].GROSSWT,
-                        "Volume": aNewRows[0].VOLUME,
-                        "Voluom": aNewRows[0].VOLUMEUOM,
-                        "Length": aNewRows[0].LENGTH + '',
-                        "Width": aNewRows[0].WIDTH + '',
-                        "Height": aNewRows[0].HEIGHT + '',
-                        "Dimuom": aNewRows[0].DIMENSIONUOM,
-                        "Remarks": "",
-                        "MatAttribParamSet": _paramAttrib,
-                        "MatImportParamSet": _MatImportParamSet,
-                        "RetMsgSet": [{ "Seq": "1" }]
-                    }
-                    console.log("_param", _param);
-
-                    var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_MATERIAL_SRV");
-                    oModel.create("/MaterialHdrSet", _param, {
-                        method: "POST",
-                        success: function (res, oResponse) {
-                            Common.closeProcessingDialog(me);
-                            if (res.RetMsgSet.results[0].Type === "S") {
-                                me._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
-                                me.getMain();
-                                me.onTableResize('Hdr', 'Min');
-                                me.byId("btnAddHdr").setVisible(true);
-                                me.byId("btnEditHdr").setVisible(true);
-                                me.byId("btnSaveHdr").setVisible(false);
-                                me.byId("btnCancelHdr").setVisible(false);
-                                me.byId("btnDeleteHdr").setVisible(true);
-                                me.byId("btnSettingsHdr").setVisible(true);
-                                me.byId("btnFullScreenHdr").setVisible(true);
-                                me.setRowReadMode();
-                                me._dataMode = "READ";
+                        _this.getView().getModel("mtClassModel").getData().results.forEach(itemMatClass => {
+                            if (itemMatClass.Mattyp == item.MATERIALTYPE && itemMatClass.NEWSEQ == item.NEWSEQ) {
+                                if (itemMatClass.Desczh === '') itemMatClass.Desczh = itemMatClass.Descen;
+        
+                                if (itemMatClass.Inclindesc === 'X') {
+                                    if (itemMatClass.Descen !== '') _aDescen.push(itemMatClass.Descen);
+                                    if (itemMatClass.Desczh !== '') _aDesczh.push(itemMatClass.Desczh);
+                                }
                             }
+                        })
+    
+                        var _descen = _aDescen.join(', ');
+                        var _desczh = _aDesczh.join(', ');
+                        var _param = {};
+                        var dismm = '';
+                        var _MatImportParamSet = [];
+                        var _paramAttrib = [];
 
-                            MessageBox.information(res.RetMsgSet.results[0].Message);
-                        },
-                        error: function () {
-                            Common.closeProcessingDialog(me);
-                            // alert("Error");
+                        _this.getView().getModel("mtClassModel").getData().results.forEach((itemMatClass, idxMatClass) => {
+                            if (itemMatClass.Mattyp == item.MATERIALTYPE && itemMatClass.NEWSEQ == item.NEWSEQ) {
+                                _paramAttrib.push({
+                                    "Seq": "1",
+                                    "Seqno": (idxMatClass + 1) + "",
+                                    "Mattypcls": itemMatClass.Mattypcls,
+                                    "Attribcd": itemMatClass.Attribcd,
+                                    "Descen": itemMatClass.Descen,
+                                    "Desczh": itemMatClass.Desczh
+                                })
+                            }
+                        })
+
+                        var oMrpTypeClass = _this.getView().getModel("mrpTypeClass").getData().results.filter(
+                            x => x.Mtart == item.MATERIALTYPE)[0];
+
+                        _MatImportParamSet.push({
+                            "Seq": "1",
+                            "Seqno": "1",
+                            "Ind_sector": "J",
+                            "Matl_type": item.MATERIALTYPE,
+                            "Matl_group": item.MATERIALGROUP,
+                            "Old_mat_no": item.OLDMATERIALNO,
+                            "Base_uom": item.BASEUOM,
+                            "Batch_mgmt": "X",
+                            "Net_weight": item.NETWT,
+                            "Unit_of_wt": item.WTUOM,
+                            "Po_unit": item.ORDERUOM,
+                            "Pur_valkey": item.PURCHVALUEKEY,
+                            "Plant": _this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
+                            "Mrp_type": oMrpTypeClass.Dismm,
+                            "Period_ind": "M",
+                            "Proc_type": "F",
+                            "Availcheck": "KP",
+                            "Profit_ctr": _this.getView().getModel("matPlantClass").getData().results[0].PROFITCTR,
+                            "Val_area": _this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
+                            "Price_ctrl": (item.MATERIALGROUP === "ACC" || item.MATERIALGROUP === "FAB") ? "V" : "",
+                            "Moving_pr": "0",
+                            "Price_unit": "1",
+                            "Val_class": oMrpTypeClass.Bklas
+                        })
+
+                        _param = {
+                            "Seq": "1",
+                            "Mattyp": item.MATERIALTYPE,
+                            "Gmc": item.GMC,
+                            "Descen": _descen,
+                            "Desczh": _desczh,
+                            "Processcd": item.PROCESSCODE,
+                            "Cusmatno": item.CUSMATCODE,
+                            "Grswt": item.GROSSWT,
+                            "Volume": item.VOLUME,
+                            "Voluom": item.VOLUMEUOM,
+                            "Length": item.LENGTH + '',
+                            "Width": item.WIDTH + '',
+                            "Height": item.HEIGHT + '',
+                            "Dimuom": item.DIMENSIONUOM,
+                            "Remarks": "",
+                            "MatAttribParamSet": _paramAttrib,
+                            "MatImportParamSet": _MatImportParamSet,
+                            "RetMsgSet": [{ "Seq": "1" }]
                         }
+
+                        console.log("_param", _param);
+                        iTimeOut += 100;
+
+                        setTimeout(() => {
+                            var oModel = _this.getOwnerComponent().getModel("ZGW_3DERP_MATERIAL_SRV");
+
+                            oModel.setHeaders({
+                                sbu: vSBU
+                            });
+    
+                            oModel.create("/MaterialHdrSet", _param, {
+                                method: "POST",
+                                success: function (res, oResponse) {
+                                    Common.closeProcessingDialog(me);
+    
+                                    if (res.RetMsgSet.results[0].Type != "S") bError = true;
+                                    
+                                    sMessage += res.RetMsgSet.results[0].Message + "\n";
+    
+                                    if (idx == aNewRows.length - 1) {
+                                        if (bError == false) {
+                                            me._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
+                                            me.getMain();
+                                            me.onTableResize('Hdr', 'Min');
+                                            me.byId("btnAddHdr").setVisible(true);
+                                            me.byId("btnEditHdr").setVisible(true);
+                                            me.byId("btnAddRowHdr").setVisible(false);
+                                            me.byId("btnRemoveRowHdr").setVisible(false);
+                                            me.byId("btnSaveHdr").setVisible(false);
+                                            me.byId("btnCancelHdr").setVisible(false);
+                                            me.byId("btnDeleteHdr").setVisible(true);
+                                            me.byId("btnSettingsHdr").setVisible(true);
+                                            me.byId("btnFullScreenHdr").setVisible(true);
+                                            me.setRowReadMode();
+                                            me._dataMode = "READ";
+                                        }
+        
+                                        MessageBox.information(sMessage);
+                                        Common.closeProcessingDialog(me);
+                                    }
+                                },
+                                error: function () {
+                                    Common.closeProcessingDialog(me);
+                                    // alert("Error");
+                                }
+                            });
+                        }, iTimeOut);
+                        
                     });
                 }
             },
+            // onCreateMMSave() {
+            //     var _aDescen = [], _aDesczh = [];
+            //     var _this = this;
+
+            //     this.getView().getModel("mtClassModel").getData().results.forEach(item => {
+            //         if (item.Desczh === '') item.Desczh = item.Descen;
+
+            //         if (item.Inclindesc === 'X') {
+            //             if (item.Descen !== '') _aDescen.push(item.Descen);
+            //             if (item.Desczh !== '') _aDesczh.push(item.Desczh);
+            //         }
+            //     })
+
+            //     if (_aDescen.join('') === '') {
+            //         MessageBox.information("At least one description should be specified.");
+            //     }
+            //     else {
+            //         Common.openProcessingDialog(me, "Processing...");
+
+            //         var _descen = _aDescen.join(', ');
+            //         var _desczh = _aDesczh.join(', ');
+            //         var _param = {};
+            //         var dismm = '';
+            //         var _MatImportParamSet = [];
+            //         var aNewRows = this.byId(this._sActiveTable).getModel().getData().rows.filter(item => item.NEW === true);
+            //         var _paramAttrib = [];
+
+            //         this.getView().getModel("mtClassModel").getData().results.forEach((item, index) => {
+            //             _paramAttrib.push({
+            //                 "Seq": "1",
+            //                 "Seqno": (index + 1) + "",
+            //                 "Mattypcls": item.Mattypcls,
+            //                 "Attribcd": item.Attribcd,
+            //                 "Descen": item.Descen,
+            //                 "Desczh": item.Desczh
+            //             })
+            //         });
+
+            //         _MatImportParamSet.push({
+            //             "Seq": "1",
+            //             "Seqno": "1",
+            //             "Ind_sector": "J",
+            //             "Matl_type": aNewRows[0].MATERIALTYPE,
+            //             "Matl_group": aNewRows[0].MATERIALGROUP,
+            //             "Old_mat_no": aNewRows[0].OLDMATERIALNO,
+            //             "Base_uom": aNewRows[0].BASEUOM,
+            //             "Batch_mgmt": "X",
+            //             "Net_weight": aNewRows[0].NETWT,
+            //             "Unit_of_wt": aNewRows[0].WTUOM,
+            //             "Po_unit": aNewRows[0].ORDERUOM,
+            //             "Pur_valkey": aNewRows[0].PURCHVALUEKEY,
+            //             "Plant": this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
+            //             "Mrp_type": this.getView().getModel("mrpTypeClass").getData().results[0].Dismm,
+            //             "Period_ind": "M",
+            //             "Proc_type": "F",
+            //             "Availcheck": "KP",
+            //             "Profit_ctr": this.getView().getModel("matPlantClass").getData().results[0].PROFITCTR,
+            //             "Val_area": this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
+            //             "Price_ctrl": (aNewRows[0].MATERIALGROUP === "ACC" || aNewRows[0].MATERIALGROUP === "FAB") ? "V" : "",
+            //             "Moving_pr": "0",
+            //             "Price_unit": "1",
+            //             "Val_class": this.getView().getModel("mrpTypeClass").getData().results[0].Bklas
+            //         })
+
+            //         _param = {
+            //             "Seq": "1",
+            //             "Mattyp": aNewRows[0].MATERIALTYPE,
+            //             "Gmc": aNewRows[0].GMC,
+            //             "Descen": _descen,
+            //             "Desczh": _desczh,
+            //             "Processcd": aNewRows[0].PROCESSCODE,
+            //             "Cusmatno": aNewRows[0].CUSMATCODE,
+            //             "Grswt": aNewRows[0].GROSSWT,
+            //             "Volume": aNewRows[0].VOLUME,
+            //             "Voluom": aNewRows[0].VOLUMEUOM,
+            //             "Length": aNewRows[0].LENGTH + '',
+            //             "Width": aNewRows[0].WIDTH + '',
+            //             "Height": aNewRows[0].HEIGHT + '',
+            //             "Dimuom": aNewRows[0].DIMENSIONUOM,
+            //             "Remarks": "",
+            //             "MatAttribParamSet": _paramAttrib,
+            //             "MatImportParamSet": _MatImportParamSet,
+            //             "RetMsgSet": [{ "Seq": "1" }]
+            //         }
+            //         console.log("_param", _param);
+
+            //         var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_MATERIAL_SRV");
+            //         oModel.create("/MaterialHdrSet", _param, {
+            //             method: "POST",
+            //             success: function (res, oResponse) {
+            //                 Common.closeProcessingDialog(me);
+            //                 if (res.RetMsgSet.results[0].Type === "S") {
+            //                     me._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
+            //                     me.getMain();
+            //                     me.onTableResize('Hdr', 'Min');
+            //                     me.byId("btnAddHdr").setVisible(true);
+            //                     me.byId("btnEditHdr").setVisible(true);
+            //                     me.byId("btnSaveHdr").setVisible(false);
+            //                     me.byId("btnCancelHdr").setVisible(false);
+            //                     me.byId("btnDeleteHdr").setVisible(true);
+            //                     me.byId("btnSettingsHdr").setVisible(true);
+            //                     me.byId("btnFullScreenHdr").setVisible(true);
+            //                     me.setRowReadMode();
+            //                     me._dataMode = "READ";
+            //                 }
+
+            //                 MessageBox.information(res.RetMsgSet.results[0].Message);
+            //             },
+            //             error: function () {
+            //                 Common.closeProcessingDialog(me);
+            //                 // alert("Error");
+            //             }
+            //         });
+            //     }
+            // },
             onCancel: function (oEvent) {
                 var oTable = oEvent.getSource().oParent.oParent;
                 var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
@@ -1535,6 +1805,8 @@ sap.ui.define([
                             me.byId("btnAddHdr").setVisible(true);
                             me.byId("btnEditHdr").setVisible(true);
                             //me.byId("btnAddNewHdr").setVisible(false);
+                            me.byId("btnAddRowHdr").setVisible(false);
+                            me.byId("btnRemoveRowHdr").setVisible(false);
                             me.byId("btnSaveHdr").setVisible(false);
                             me.byId("btnCancelHdr").setVisible(false);
                             me.byId("btnDeleteHdr").setVisible(true);
@@ -1570,6 +1842,8 @@ sap.ui.define([
                         me.byId("btnAddHdr").setVisible(true);
                         me.byId("btnEditHdr").setVisible(true);
                         //me.byId("btnAddNewHdr").setVisible(false);
+                        me.byId("btnAddRowHdr").setVisible(false);
+                        me.byId("btnRemoveRowHdr").setVisible(false);
                         me.byId("btnSaveHdr").setVisible(false);
                         me.byId("btnCancelHdr").setVisible(false);
                         me.byId("btnDeleteHdr").setVisible(true);
@@ -1611,6 +1885,7 @@ sap.ui.define([
                         me.getBatch(vMATNO);
                         me.getCustomInfo(vMATNO);
                         me.getPlant(vMATNO);
+                        me.getUnit(vMATNO);
                         if (this._dataMode === "READ") this._sActiveTable = "headerTab";
                     }
                     else {
