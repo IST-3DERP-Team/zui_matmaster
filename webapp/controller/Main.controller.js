@@ -187,7 +187,7 @@ sap.ui.define([
 
                 this.byId("headerTab").attachBrowserEvent("mousemove", function (oEvent) {
                     //get your model and do whatever you want:
-                    console.log("mouseenter")
+                    //console.log("mouseenter")
                 });
                 //this.getMain();
 
@@ -856,7 +856,7 @@ sap.ui.define([
                     else if (col.mAggregations.template.mBindingInfos.selected !== undefined) {
                         sColName = col.mAggregations.template.mBindingInfos.selected.parts[0].path;
                     }
-
+                    console.log(sColName, col.mAggregations.template.mBindingInfos)
                     this._aColumns[this._sActiveTable.replace("Tab", "")].filter(item => item.ColumnName === sColName)
                         .forEach(ci => {
                             console.log(ci)
