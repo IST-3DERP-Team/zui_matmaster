@@ -856,10 +856,12 @@ sap.ui.define([
                     else if (col.mAggregations.template.mBindingInfos.selected !== undefined) {
                         sColName = col.mAggregations.template.mBindingInfos.selected.parts[0].path;
                     }
-                    console.log(sColName, col.mAggregations.template.mBindingInfos)
+                    else if (col.mAggregations.template.mBindingInfos.value !== undefined) {
+                        sColName = col.mAggregations.template.mBindingInfos.value.parts[0].path;
+                    }
+
                     this._aColumns[this._sActiveTable.replace("Tab", "")].filter(item => item.ColumnName === sColName)
                         .forEach(ci => {
-                            console.log(ci)
                             if (ci.Editable || ci.Creatable) {
                                 if (ci.ValueHelp !== undefined) oValueHelp = ci.ValueHelp["show"];
 
@@ -1012,8 +1014,6 @@ sap.ui.define([
                             }
                         })
                 })
-
-                console.log(oNewRow, this._sActiveTable, oTable, this._aColumns[this._sActiveTable.replace("Tab", "")])
 
                 oNewRow["NEW"] = true;
                 aNewRow = this.byId(this._sActiveTable).getModel().getProperty("/rows").filter(item => item.NEW === true);
