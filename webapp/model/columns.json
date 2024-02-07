@@ -14,12 +14,13 @@
         "ValueHelp": {"show": true, "items": {"path": "MATERIALGRP_MODEL", "value": "Matkl", "text": "Wgbez"},
             "SuggestionItems": {"path": "MATERIALGRP_MODEL>/", "text": "{MATERIALGRP_MODEL>Matkl}", "additionalText": "{MATERIALGRP_MODEL>Wgbez}", "maxSuggestionWidth": "500px"},
             "columns": "tvh_materialgrp"
-        }},
+            }, "TextFormatMode": "ValueKey"
+        },
         {"ColumnName": "BASEUOM", 
         "ValueHelp": {"show": true, "items": {"path": "BASEUOM_MODEL", "value": "Msehi", "text": "Msehl"},
             "SuggestionItems": {"path": "BASEUOM_MODEL>/", "text": "{BASEUOM_MODEL>Msehi}", "additionalText": "{BASEUOM_MODEL>Msehl}", "maxSuggestionWidth": "500px"},
             "columns": "tvh_baseuom"
-        }},
+        }, "TextFormatMode": "ValueKey"},
         {"ColumnName": "WTUOM", 
         "ValueHelp": {"show": true, "items": {"path": "WTUOM_MODEL", "value": "MSehi", "text": "Msehl"},
             "SuggestionItems": {"path": "WTUOM_MODEL>/", "text": "{WTUOM_MODEL>MSehi}", "additionalText": "{WTUOM_MODEL>Msehl}", "maxSuggestionWidth": "500px"},
@@ -34,22 +35,22 @@
         "ValueHelp": {"show": true, "items": {"path": "DIMUOM_MODEL", "value": "MSehi", "text": "Msehl"},
             "SuggestionItems": {"path": "DIMUOM_MODEL>/", "text": "{DIMUOM_MODEL>MSehi}", "additionalText": "{DIMUOM_MODEL>Msehl}", "maxSuggestionWidth": "500px"},
             "columns": "tvh_dimuom"
-        }},
+        }, "TextFormatMode": "ValueKey"},
         {"ColumnName": "ORDERUOM", 
         "ValueHelp": {"show": true, "items": {"path": "BASEUOM_MODEL", "value": "Msehi", "text": "Msehl"},
             "SuggestionItems": {"path": "BASEUOM_MODEL>/", "text": "{BASEUOM_MODEL>Msehi}", "additionalText": "{BASEUOM_MODEL>Msehl}", "maxSuggestionWidth": "500px"},
             "columns": "tvh_baseuom"
-        }},
+        }, "TextFormatMode": "ValueKey"},
         {"ColumnName": "PROCESSCODE", 
         "ValueHelp": {"show": true, "items": {"path": "PROCESSCD_MODEL", "value": "Processcd", "text": "Desc1"},
             "SuggestionItems": {"path": "PROCESSCD_MODEL>/", "text": "{PROCESSCD_MODEL>Processcd}", "additionalText": "{PROCESSCD_MODEL>Desc1}", "maxSuggestionWidth": "500px"},
             "columns": "tvh_processcode"
-        }},
+        }, "TextFormatMode": "ValueKey"},
         {"ColumnName": "PURCHVALUEKEY", 
         "ValueHelp": {"show": true, "items": {"path": "PURCHASEVALUE_MODEL", "value": "Ekwsl", "text": "Untto"},
             "SuggestionItems": {"path": "PURCHASEVALUE_MODEL>/", "text": "{PURCHASEVALUE_MODEL>Ekwsl}", "additionalText": "{PURCHASEVALUE_MODEL>Untto}", "maxSuggestionWidth": "500px"},
             "columns": "tvh_purchvalue"
-        }}
+        }, "TextFormatMode": "ValueKey"}
     ],
     "tvh_mtyp":[
         {"ColumnName": "Mattyp", "DataType": "STRING", "ColumnWidth": "200px", "Visible": true, "Key": true, "Value": false},

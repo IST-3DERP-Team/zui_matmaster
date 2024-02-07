@@ -46,6 +46,34 @@ sap.ui.define([
                 this._tableFilter = TableFilter;
                 this._colFilters = {};
 
+                this._oTableLayout = {
+                    headerTab: {
+                        type: "MMHDR",
+                        tabname: "ZDVZERPMATL"
+                    },
+                    attributesTab: {
+                        type: "MMATTRIB",
+                        tabname: "ZERP_MATATTRIB"
+                    },
+                    batchTab: {
+                        type: "MMBATCH",
+                        tabname: "ZERP_MATBATCH"
+                    },
+                    customInfoTab: {
+                        type: "MMCUSTOMINFO",
+                        tabname: "ZERP_MATCUSINFO"
+                    },
+                    plantTab: {
+                        type: "MMPLANT",
+                        tabname: "MARC"
+                    },
+                    unitTab: {
+                        type: "MMUNIT",
+                        tabname: "ZDV_MAT_UNIT"
+                    },
+                }
+
+
                 //Common.openLoadingDialog(this);
                 this.setSmartFilterModel();
                 var oModel = this.getOwnerComponent().getModel("ZVB_3DERP_MM_FILTERS_CDS");
@@ -63,7 +91,25 @@ sap.ui.define([
                 });
 
                 this.getView().setModel(new JSONModel({
-                    acitveMatno: ""
+                    acitveMatno: "",
+                    smartfiltergf: 0,
+                    splittergf: 0.94,
+                    fullscreen: {
+                        header: false,
+                        detail: false
+                    },
+                    splitter: {
+                        header: "50%",
+                        detail: "50%"
+                    },
+                    dataWrap: {
+                        headerTab: false,
+                        attributesTab: false,
+                        batchTab: false,
+                        customInfoTab: false,
+                        plantTab: false,
+                        unitTab: false
+                    }
                 }), "ui");
 
                 this._counts = {
@@ -144,6 +190,8 @@ sap.ui.define([
                 oDDTextParam.push({ CODE: "INFO_INPUT_REQD_FIELDS" });
                 oDDTextParam.push({ CODE: "INFO_NO_DATA_MODIFIED" });
                 oDDTextParam.push({ CODE: "INFO_DATA_COPIED" });
+                oDDTextParam.push({ CODE: "WRAP" });
+                oDDTextParam.push({ CODE: "UNWRAP" });
 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam }, {
                     method: "POST",
@@ -507,6 +555,55 @@ sap.ui.define([
                 if (this._dataMode === "READ") this._sActiveTable = sTabId;
                 // console.log(this._sActiveTable);
             },
+            onSaveTableLayout: function (oEvent) {
+                //saving of the layout of table
+                this._sActiveTable = oEvent.getSource().data("TableId");
+                var oTable = this.byId(this._sActiveTable);
+                var oColumns = oTable.getColumns();
+                var vSBU = "VER"; //this.getView().getModel("ui").getData().sbu;
+                var me = this;
+                var ctr = 1;
+
+                var oParam = {
+                    "SBU": vSBU,
+                    "TYPE": this._oTableLayout[this._sActiveTable].type,
+                    "TABNAME": this._oTableLayout[this._sActiveTable].tabname,
+                    "TableLayoutToItems": []
+                };
+
+                //get information of columns, add to payload
+                oColumns.forEach((column) => {
+                    oParam.TableLayoutToItems.push({
+                        // COLUMNNAME: column.sId,
+                        COLUMNNAME: column.mProperties.sortProperty,
+                        ORDER: ctr.toString(),
+                        SORTED: column.mProperties.sorted,
+                        SORTORDER: column.mProperties.sortOrder,
+                        SORTSEQ: "1",
+                        VISIBLE: column.mProperties.visible,
+                        WIDTH: column.mProperties.width.replace('px', '')
+                        //WRAPTEXT: this.getView().getModel("ui").getData().dataWrap[this._sActiveTable] === true ? "X" : ""
+                    });
+
+                    ctr++;
+                });
+
+                console.log(oParam)
+
+
+                //call the layout save
+                var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
+
+                oModel.create("/TableLayoutSet", oParam, {
+                    method: "POST",
+                    success: function (data, oResponse) {
+                        MessageBox.information(me.getView().getModel("ddtext").getData()["INFO_LAYOUT_SAVE"]);
+                    },
+                    error: function (err) {
+                        MessageBox.error(err);
+                    }
+                });
+            },
             onAfterTableRendering: function (oEvent) {
                 if (this._tableRendered !== "") {
                     this.setActiveRowHighlightByTableId(this._tableRendered);
@@ -545,18 +642,25 @@ sap.ui.define([
                         }
                         data.results.forEach((item, index) => {
                             item.HASGMC = item.HASGMC === "X" ? true : false;
-                            if (item.CREATEDDT !== null)
-                                item.CREATEDDT = dateFormat.format(new Date(item.CREATEDDT));
+                             if (item.CREATEDDT !== null)
+                                 item.CREATEDDT = dateFormat.format(new Date(item.CREATEDDT));
+                            //if (item.CREATEDDT !== null) { item.CREATEDDT = dateFormat.format(item.CREATEDDT) + " " + me.formatTimeOffSet(item.CREATEDTM.ms); }
+                            //if (item.UPDATEDDT !== null) { item.UPDATEDDT = dateFormat.format(item.UPDATEDDT) + " " + _this.formatTimeOffSet(item.UPDATEDTM.ms); }
 
                             if (item.UPDATEDDATE !== null)
-                                item.UPDATEDDATE = dateFormat.format(new Date(item.UPDATEDDATE));
+                                 item.UPDATEDDATE = dateFormat.format(new Date(item.UPDATEDDATE));
+
                             if (index === 0) {
+                                item.ACTIVE = "X";
                                 me.getView().getModel("ui").setProperty("/acitveMatno", item.MATERIALNO);
                                 me.getAttributes(item.MATERIALNO);
                                 me.getBatch(item.MATERIALNO);
                                 me.getCustomInfo(item.MATERIALNO);
                                 me.getPlant(item.MATERIALNO);
                                 me.getUnit(item.MATERIALNO);
+                            }
+                            else{
+                                item.ACTIVE = "";
                             }
                         });
                         me.byId("headerTab").getModel().setProperty("/rows", data.results);
@@ -766,12 +870,24 @@ sap.ui.define([
                 if (this._dataMode === "READ") {
                     this._aColFilters = this.byId(this._sActiveTable).getBinding("rows").aFilters;
                     this._aColSorters = this.byId(this._sActiveTable).getBinding("rows").aSorters;
-
+                    var sMatNo = this.getView().getModel("ui").getProperty("/acitveMatno");
+                    Common.openLoadingDialog(this);
                     if (this._sActiveTable === "headerTab") {
                         this.getMain();
                     }
-                    else if(this._sActiveTable === "unitTab") {
-                        var sMatNo = this.getView().getModel("ui").getProperty("/acitveMatno");
+                    else if (this._sActiveTable === "attributesTab") {
+                        this.getAttributes(sMatNo);
+                    }
+                    else if (this._sActiveTable === "batchTab") {
+                        this.getBatch(sMatNo);
+                    }
+                    else if (this._sActiveTable === "customInfoTab") {
+                        this.getCustomInfo(sMatNo);
+                    }
+                    else if (this._sActiveTable === "plantTab") {
+                        this.getPlant(sMatNo);
+                    }
+                    else if (this._sActiveTable === "unitTab") {
                         this.getUnit(sMatNo);
                     }
                     // else if (this._sActiveTable === "detailTab") {
@@ -782,12 +898,28 @@ sap.ui.define([
                     // }
                 }
             },
+            onWrapText: function (oEvent) {
+                this._sActiveTable = oEvent.getSource().data("TableId");
+                var vWrap = this.getView().getModel("ui").getData().dataWrap[this._sActiveTable];
+                this.byId(this._sActiveTable).getColumns().forEach(col => {
+                    var oTemplate = col.getTemplate();
+                    if (oTemplate instanceof sap.m.Text) {
+                        oTemplate.setWrapping(!vWrap);
+                        col.setTemplate(oTemplate);
+                    }
+
+                })
+
+                this.getView().getModel("ui").setProperty("/dataWrap/" + [this._sActiveTable], !vWrap);
+            },
             onCreate: function (oEvent) {
                 var oTable = oEvent.getSource().oParent.oParent;
                 var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
                 this._sActiveTable = sTabId;
-                this.onTableResize("Hdr", "Max");
+                //this.onTableResize("Hdr", "Max");
                 //this.byId("btnExitFullScreenDtls").setVisible(false);
+                this.byId("splitterHdr").setProperty("size", "100%");
+                this.byId("splitterDtl").setProperty("size", "0%");
                 this.createData();
             },
             createData() {
@@ -804,8 +936,9 @@ sap.ui.define([
                         //this.byId("searchFieldHdr").setVisible(false);
                         this.byId("btnFullScreenHdr").setVisible(false);
                         this.byId("btnExitFullScreenHdr").setVisible(false);
+                        this.byId("smartFilterBar").setVisible(false);
 
-                        this.byId("btnSettingsHdr").setVisible(false);
+                        //this.byId("btnSettingsHdr").setVisible(false);
                     }
 
                     var oTable = this.byId(this._sActiveTable);
@@ -1089,44 +1222,73 @@ sap.ui.define([
 
                 this.byId(this._sActiveTable).getModel().getData().rows.forEach(item => item.EDITED = false);
             },
-            onTableResize(arg1, arg2) {
-                if (arg1 === 'Attr') {
-                    if (arg2 === 'Max') {
-                        this.byId("headerTab").setVisible(false);
-                        this.byId("btnFullScreenAttr").setVisible(false);
-                        this.byId("btnExitFullScreenAttr").setVisible(true);
+            // onTableResize(arg1, arg2) {
+            //     if (arg1 === 'Attr') {
+            //         if (arg2 === 'Max') {
+            //             this.byId("headerTab").setVisible(false);
+            //             this.byId("btnFullScreenAttr").setVisible(false);
+            //             this.byId("btnExitFullScreenAttr").setVisible(true);
+            //         }
+            //         else {
+            //             this.byId("headerTab").setVisible(true);
+            //             this.byId("btnFullScreenAttr").setVisible(true);
+            //             this.byId("btnExitFullScreenAttr").setVisible(false);
+            //         }
+            //     }
+            //     else if (arg1 === 'Unit') {
+            //         if (arg2 === 'Max') {
+            //             this.byId("headerTab").setVisible(false);
+            //             this.byId("btnFullScreenUnit").setVisible(false);
+            //             this.byId("btnExitFullScreenUnit").setVisible(true);
+            //         }
+            //         else {
+            //             this.byId("headerTab").setVisible(true);
+            //             this.byId("btnFullScreenUnit").setVisible(true);
+            //             this.byId("btnExitFullScreenUnit").setVisible(false);
+            //         }
+            //     }
+            //     else {
+            //         if (arg2 === 'Max') {
+            //             this.byId("itbDetail").setVisible(false);
+            //             this.byId("btnFullScreenHdr").setVisible(false);
+            //             this.byId("btnExitFullScreenHdr").setVisible(true);
+            //         }
+            //         else {
+            //             this.byId("itbDetail").setVisible(true);
+            //             this.byId("btnFullScreenHdr").setVisible(true);
+            //             this.byId("btnExitFullScreenHdr").setVisible(false);
+            //         }
+            //     }
+
+            // },
+            onTableResize: function (oEvent) {
+                // console.log(this.byId("splitterHdr"))
+                this._sActiveTable = oEvent.getSource().data("TableId");
+
+                var vFullScreen = oEvent.getSource().data("Max") === "1" ? true : false;
+                var vSuffix = oEvent.getSource().data("ButtonIdSuffix");
+                var vHeader = oEvent.getSource().data("Header");
+                var me = this;
+
+                // this.byId("smartFilterBar").setFilterBarExpanded(!vFullScreen);
+                this.byId("btnFullScreen" + vSuffix).setVisible(!vFullScreen);
+                this.byId("btnExitFullScreen" + vSuffix).setVisible(vFullScreen);
+                // this._oTables.filter(fItem => fItem.TableId !== me._sActiveTable).forEach(item => me.byId(item.TableId).setVisible(!vFullScreen));
+
+                if (vFullScreen) {
+                    if (vHeader === "1") {
+                        this.byId("splitterHdr").setProperty("size", "100%");
+                        this.byId("splitterDtl").setProperty("size", "0%");
                     }
                     else {
-                        this.byId("headerTab").setVisible(true);
-                        this.byId("btnFullScreenAttr").setVisible(true);
-                        this.byId("btnExitFullScreenAttr").setVisible(false);
-                    }
-                }
-                else if (arg1 === 'Unit') {
-                    if (arg2 === 'Max') {
-                        this.byId("headerTab").setVisible(false);
-                        this.byId("btnFullScreenUnit").setVisible(false);
-                        this.byId("btnExitFullScreenUnit").setVisible(true);
-                    }
-                    else {
-                        this.byId("headerTab").setVisible(true);
-                        this.byId("btnFullScreenUnit").setVisible(true);
-                        this.byId("btnExitFullScreenUnit").setVisible(false);
+                        this.byId("splitterHdr").setProperty("size", "0%");
+                        this.byId("splitterDtl").setProperty("size", "100%");
                     }
                 }
                 else {
-                    if (arg2 === 'Max') {
-                        this.byId("itbDetail").setVisible(false);
-                        this.byId("btnFullScreenHdr").setVisible(false);
-                        this.byId("btnExitFullScreenHdr").setVisible(true);
-                    }
-                    else {
-                        this.byId("itbDetail").setVisible(true);
-                        this.byId("btnFullScreenHdr").setVisible(true);
-                        this.byId("btnExitFullScreenHdr").setVisible(false);
-                    }
+                    this.byId("splitterHdr").setProperty("size", "50%");
+                    this.byId("splitterDtl").setProperty("size", "50%");
                 }
-
             },
             onInputLiveChange: function (oEvent) {
 
@@ -1408,6 +1570,7 @@ sap.ui.define([
             },
             createDialog: null,
             onMaterialTypeClassDialog(args) {
+                console.log("args",args);
                 var oModel = this.getOwnerComponent().getModel();
                 var oJSONModel = new JSONModel();
                 var _this = this;
@@ -1433,7 +1596,7 @@ sap.ui.define([
                                 itemMatClass.Updateddt = dateFormat.format(new Date(itemMatClass.Updateddt));
                                 itemMatClass.DescInput = itemMatClass.Attrib === "X" ? false : true;
                             })
-                            
+
                             aData.results.push(...aDataMatTClass.results);
 
                             if (idx == aMatType.length - 1) {
@@ -1443,14 +1606,14 @@ sap.ui.define([
 
                                 oJSONModel.setData(aData);
                                 _this.getView().setModel(oJSONModel, "mtClassModel");
-        
+
                                 _this.createViewSettingsDialog("matTypeClass",
                                     new JSONModel({
                                         items: aData.results,
                                         rowCount: aData.results.length
                                     })
                                 );
-        
+
                                 var oDialog = _this._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"];
                                 oDialog.getModel().setProperty("/items", aData.results);
                                 oDialog.getModel().setProperty("/rowCount", aData.results.length);
@@ -1523,14 +1686,14 @@ sap.ui.define([
                         _this.getView().getModel("mtClassModel").getData().results.forEach(itemMatClass => {
                             if (itemMatClass.Mattyp == item.MATERIALTYPE && itemMatClass.NEWSEQ == item.NEWSEQ) {
                                 if (itemMatClass.Desczh === '') itemMatClass.Desczh = itemMatClass.Descen;
-        
+
                                 if (itemMatClass.Inclindesc === 'X') {
                                     if (itemMatClass.Descen !== '') _aDescen.push(itemMatClass.Descen);
                                     if (itemMatClass.Desczh !== '') _aDesczh.push(itemMatClass.Desczh);
                                 }
                             }
                         })
-    
+
                         var _descen = _aDescen.join(', ');
                         var _desczh = _aDesczh.join(', ');
                         var _param = {};
@@ -1610,21 +1773,24 @@ sap.ui.define([
                             oModel.setHeaders({
                                 sbu: vSBU
                             });
-    
+
                             oModel.create("/MaterialHdrSet", _param, {
                                 method: "POST",
                                 success: function (res, oResponse) {
                                     Common.closeProcessingDialog(me);
-    
+
                                     if (res.RetMsgSet.results[0].Type != "S") bError = true;
-                                    
+
                                     sMessage += res.RetMsgSet.results[0].Message + "\n";
-    
+
                                     if (idx == aNewRows.length - 1) {
                                         if (bError == false) {
                                             me._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
                                             me.getMain();
-                                            me.onTableResize('Hdr', 'Min');
+                                            //me.onTableResize('Hdr', 'Min');
+                                            me.byId("smartFilterBar").setVisible(true);
+                                            me.byId("splitterHdr").setProperty("size", "50%");
+                                            me.byId("splitterDtl").setProperty("size", "50%");
                                             me.byId("btnAddHdr").setVisible(true);
                                             me.byId("btnEditHdr").setVisible(true);
                                             me.byId("btnAddRowHdr").setVisible(false);
@@ -1632,12 +1798,12 @@ sap.ui.define([
                                             me.byId("btnSaveHdr").setVisible(false);
                                             me.byId("btnCancelHdr").setVisible(false);
                                             me.byId("btnDeleteHdr").setVisible(true);
-                                            me.byId("btnSettingsHdr").setVisible(true);
+                                            //me.byId("btnSettingsHdr").setVisible(true);
                                             me.byId("btnFullScreenHdr").setVisible(true);
                                             me.setRowReadMode();
                                             me._dataMode = "READ";
                                         }
-        
+
                                         MessageBox.information(sMessage);
                                         Common.closeProcessingDialog(me);
                                     }
@@ -1648,7 +1814,7 @@ sap.ui.define([
                                 }
                             });
                         }, iTimeOut);
-                        
+
                     });
                 }
             },
@@ -1767,11 +1933,50 @@ sap.ui.define([
             //         });
             //     }
             // },
+            onCloseConfirmDialog: function (oEvent) {
+                if (this._ConfirmDialog.getModel().getData().Action === "update-cancel") {
+                    if (this._sActiveTable === "headerTab") {
+                        this.byId("smartFilterBar").setVisible(true);
+                        // this.byId("btnAddHdr").setVisible(true);
+                        // this.byId("btnEditHdr").setVisible(true);
+                        // this.byId("btnDeleteHdr").setVisible(true);
+                        // this.byId("btnRefreshHdr").setVisible(true);
+                        // this.byId("btnSaveHdr").setVisible(false);
+                        // this.byId("btnCancelHdr").setVisible(false);
+                        // this.byId("btnCopyHdr").setVisible(true);
+                        //this.byId("btnAddNewDtl").setVisible(false);
+                        me.byId("btnAddHdr").setVisible(true);
+                            me.byId("btnEditHdr").setVisible(true);
+                            //me.byId("btnAddNewHdr").setVisible(false);
+                            me.byId("btnAddRowHdr").setVisible(false);
+                            me.byId("btnRemoveRowHdr").setVisible(false);
+                            me.byId("btnSaveHdr").setVisible(false);
+                            me.byId("btnCancelHdr").setVisible(false);
+                            me.byId("btnDeleteHdr").setVisible(true);
+                            //me.byId("btnSettingsHdr").setVisible(true);
+                            me.byId("btnRefreshHdr").setVisible(true);
+                            me.byId("btnFullScreenHdr").setVisible(true);
+                    }
+
+                    this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
+                    this.byId(this._sActiveTable).bindRows("/rows");
+
+                    if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
+                    if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
+                    //this.onTableResize('Dtls', 'Min');
+                    this.setRowReadMode();
+                    this._dataMode = "READ";
+                    this.setActiveRowHighlightByTableId(this._sActiveTable);
+                }
+
+                this._ConfirmDialog.close();
+            },
             onCancel: function (oEvent) {
                 var oTable = oEvent.getSource().oParent.oParent;
                 var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
                 this._sActiveTable = sTabId;
                 //this.onTableResize('Dtls', 'Min');
+                this.byId("smartFilterBar").setVisible(true);
                 this.cancelData();
             },
             cancelData() {
@@ -1779,7 +1984,7 @@ sap.ui.define([
                     var bChanged = false;
 
                     if (this._sActiveTable === "headerTab") bChanged = this._bHdrChanged;
-                //     else if (this._sActiveTable === "detailTab") bChanged = this._bDtlChanged;
+                    //     else if (this._sActiveTable === "detailTab") bChanged = this._bDtlChanged;
 
                     if (bChanged) {
                         var oData = {
@@ -1810,10 +2015,11 @@ sap.ui.define([
                             me.byId("btnSaveHdr").setVisible(false);
                             me.byId("btnCancelHdr").setVisible(false);
                             me.byId("btnDeleteHdr").setVisible(true);
-                            me.byId("btnSettingsHdr").setVisible(true);
+                            //me.byId("btnSettingsHdr").setVisible(true);
                             me.byId("btnRefreshHdr").setVisible(true);
                             me.byId("btnFullScreenHdr").setVisible(true);
-                            this.onTableResize('Hdr', 'Min');
+                            //this.onTableResize('Hdr', 'Min');
+
                         }
                         // else if (this._sActiveTable === "detailTab") {
                         //     me.byId("btnRefreshDtl").setVisible(true);
@@ -1827,50 +2033,197 @@ sap.ui.define([
 
                         if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
                         if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
-
+                        this.byId("splitterHdr").setProperty("size", "50%");
+                        this.byId("splitterDtl").setProperty("size", "50%");
                         this.setRowReadMode();
                         this._dataMode = "READ";
                     }
                 }
             },
+            onEdit() {
+                if (this._dataMode === "READ") {
+                    if (this._sActiveTable === "headerTab") { this.onEditMain(); }
+                    
+                }
+            },
+            onEditMain() {
+                var oModel = this.getOwnerComponent().getModel();
+                var oEntitySet = "/MaterialSet";
+                var me = this;
+                var oTable = this.byId("headerTab");
+                var aSelIndices = oTable.getSelectedIndices();
+                var oTmpSelectedIndices = [];
+                var aData = oTable.getModel().getData().rows; //this.getView().getModel().getData().results;
+                var aDataToEdit = [];
+                var bDeleted = false, bWithMaterial = false;
+                var iCounter = 0;
+                // console.log(this.getView().getModel("materials").getData().results.length)
+                // console.log(aSelIndices)
+                if (aSelIndices.length > 0) {
+                    aSelIndices.forEach(item => {
+                        oTmpSelectedIndices.push(oTable.getBinding("rows").aIndices[item])
+                    })
+
+                    aSelIndices = oTmpSelectedIndices;
+
+                    aSelIndices.forEach((item, index) => {
+                        // if (aData.at(item).DELETED === true) {
+                        //     iCounter++;
+                        //     bDeleted = true;
+
+                        //     if (aSelIndices.length === iCounter) {
+                        //         if (aDataToEdit.length === 0) {
+                        //             MessageBox.information(me.getView().getModel("ddtext").getData()["INFO_GMC_NO_EDIT"]);
+                        //         }
+                        //         else {
+                        //             me.byId("btnAddGMC").setVisible(false);
+                        //             me.byId("btnEditGMC").setVisible(false);
+                        //             me.byId("btnSaveGMC").setVisible(true);
+                        //             me.byId("btnCancelGMC").setVisible(true);
+                        //             me.byId("btnDeleteGMC").setVisible(false);
+                        //             me.byId("btnRefreshGMC").setVisible(false);
+                        //             me.byId("btnSortGMC").setVisible(false);
+                        //             // me.byId("btnFilterGMC").setVisible(false);
+                        //             me.byId("btnExitFullScreenHdr").setVisible(false);
+                        //             // me.byId("btnColPropGMC").setVisible(false);
+                        //             me.byId("searchFieldGMC").setVisible(false);
+                        //             // me.onTableResize("Hdr","Max");
+                        //             me.byId("btnExitFullScreenHdr").setVisible(false);
+                        //             me.byId("btnTabLayoutGMC").setVisible(false);
+                        //             me.byId("btnDataWrapGMC").setVisible(false);
+                        //             me.byId("cboxSBU").setEnabled(false);
+                        //             me.setScreenSize("header", true, "100%", "0%");
+
+                        //             me._oDataBeforeChange = jQuery.extend(true, {}, me.getView().getModel("gmc").getData());
+                
+                        //             me.getView().getModel("gmc").setProperty("/results", aDataToEdit);
+                        //             me.setRowEditMode("gmc");
+                    
+                        //             me.getView().getModel("ui").setProperty("/dataMode", 'EDIT');
+                        //             me.getView().getModel("ui").setProperty("/updTable", "gmc");
+                        //             me._isGMCEdited = false;
+                        //             if (sap.ushell.Container !== undefined) { sap.ushell.Container.setDirtyFlag(false); }
+                        //         }
+                        //     }
+                        // }
+                        // else {
+                            oModel.read(oEntitySet, {
+                                urlParameters: {
+                                    "$filter": "MATERIALNO eq '" + aData.at(item).MATERIALNO + "'"
+                                },
+                                success: function (data, response) {
+                                    iCounter++;
+                                    console.log(data.results)
+                                    if (data.results.length > 0) { 
+                                        bWithMaterial = true; 
+                                        aData.at(item).WMAT = true;
+                                    }
+                                    else {
+                                        aData.at(item).WMAT = false;
+                                    }
+
+                                    aDataToEdit.push(aData.at(item));
+
+                                    if (aSelIndices.length === iCounter) {
+                                        if (!me._GMCDescZHAuth && aDataToEdit.filter(fItem => fItem.WMAT === false).length === 0) {
+                                            MessageBox.information(me.getView().getModel("ddtext").getData()["INFO_GMC_NO_EDIT"]);
+                                        }
+                                        else {
+                                            me.byId("btnAddGMC").setVisible(false);
+                                            me.byId("btnEditGMC").setVisible(false);
+                                            me.byId("btnSaveGMC").setVisible(true);
+                                            me.byId("btnCancelGMC").setVisible(true);
+                                            me.byId("btnDeleteGMC").setVisible(false);
+                                            me.byId("btnRefreshGMC").setVisible(false);
+                                            me.byId("btnSortGMC").setVisible(false);
+                                            // me.byId("btnFilterGMC").setVisible(false);
+                                            me.byId("btnExitFullScreenHdr").setVisible(false);
+                                            // me.byId("btnColPropGMC").setVisible(false);
+                                            me.byId("searchFieldGMC").setVisible(false);
+                                            // me.onTableResize("Hdr","Max");
+                                            me.byId("btnExitFullScreenHdr").setVisible(false);
+                                            me.byId("btnTabLayoutGMC").setVisible(false);
+                                            me.byId("btnDataWrapGMC").setVisible(false);
+                                            me.byId("cboxSBU").setEnabled(false);
+                                            me.setScreenSize("header", true, "100%", "0%");
+
+                                            me._oDataBeforeChange = jQuery.extend(true, {}, me.getView().getModel("gmc").getData());
+                        
+                                            me.getView().getModel("gmc").setProperty("/results", aDataToEdit);
+                                            me.setRowEditMode("gmc");
+                            
+                                            me.getView().getModel("ui").setProperty("/dataMode", 'EDIT');
+                                            me.getView().getModel("ui").setProperty("/updTable", "gmc");
+                                            me._isGMCEdited = false;
+                                            if (sap.ushell.Container !== undefined) { sap.ushell.Container.setDirtyFlag(false); }
+                                        }
+                                    }                                    
+                                },
+                                error: function (err) {
+                                    iCounter++;
+                                }
+                            })
+                        //}
+                    })
+                }
+                else {
+                    // aDataToEdit = aData;
+                    MessageBox.information(this.getView().getModel("ddtext").getData()["INFO_NO_SEL_RECORD_TO_PROC"]);
+                }
+                // aDataToEdit = aDataToEdit.filter(item => item.Deleted === false);
+            },
             onCancelConfirmDialog: function (oEvent) {
+                var oTable = oEvent.getSource().oParent.oParent;
+                var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
+                this._sActiveTable = sTabId;
+                //this.onTableResize('Dtls', 'Min');
+                this.byId("smartFilterBar").setVisible(true);
                 this._ConfirmDialog.close();
+                this.cancelData();
+                
             },
             onCloseConfirmDialog: function (oEvent) {
-                if (this._ConfirmDialog.getModel().getData().Action === "update-cancel") {
-                    if (this._sActiveTable === "headerTab") {
-                        me.byId("btnAddHdr").setVisible(true);
-                        me.byId("btnEditHdr").setVisible(true);
-                        //me.byId("btnAddNewHdr").setVisible(false);
-                        me.byId("btnAddRowHdr").setVisible(false);
-                        me.byId("btnRemoveRowHdr").setVisible(false);
-                        me.byId("btnSaveHdr").setVisible(false);
-                        me.byId("btnCancelHdr").setVisible(false);
-                        me.byId("btnDeleteHdr").setVisible(true);
-                        me.byId("btnSettingsHdr").setVisible(true);
-                        me.byId("btnRefreshHdr").setVisible(true);
-                        me.byId("btnFullScreenHdr").setVisible(true);
-                        this.onTableResize('Hdr', 'Min');
-                    }
-                    // else if (this._sActiveTable === "detailTab") {
-                    //     me.byId("btnRefreshDtl").setVisible(true);
-                    //     me.byId("searchFieldDtl").setVisible(true);
-                    //     me.byId("btnRefreshHdr").setEnabled(true);
-                    //     me.byId("searchFieldHdr").setEnabled(true);
-                    //     this.onTableResize('Dtls', 'Min');
-                    // }
-
-                    this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
-                    this.byId(this._sActiveTable).bindRows("/rows");
-
-                    if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
-                    if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
-                    this.setRowReadMode();
-                    this._dataMode = "READ";
-                    this.setActiveRowHighlightByTableId(this._sActiveTable);
-                }
-
+                 var oTable = oEvent.getSource().oParent.oParent;
+                var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
+                this._sActiveTable = sTabId;
+                //this.onTableResize('Dtls', 'Min');
+                this.byId("smartFilterBar").setVisible(true);
                 this._ConfirmDialog.close();
+                this.cancelData();
+                // if (this._ConfirmDialog.getModel().getData().Action === "update-cancel") {
+                //     if (this._sActiveTable === "headerTab") {
+                //         me.byId("btnAddHdr").setVisible(true);
+                //         me.byId("btnEditHdr").setVisible(true);
+                //         //me.byId("btnAddNewHdr").setVisible(false);
+                //         me.byId("btnAddRowHdr").setVisible(false);
+                //         me.byId("btnRemoveRowHdr").setVisible(false);
+                //         me.byId("btnSaveHdr").setVisible(false);
+                //         me.byId("btnCancelHdr").setVisible(false);
+                //         me.byId("btnDeleteHdr").setVisible(true);
+                //         //me.byId("btnSettingsHdr").setVisible(true);
+                //         me.byId("btnRefreshHdr").setVisible(true);
+                //         me.byId("btnFullScreenHdr").setVisible(true);
+                //         this.onTableResize('Hdr', 'Min');
+                //     }
+                //     // else if (this._sActiveTable === "detailTab") {
+                //     //     me.byId("btnRefreshDtl").setVisible(true);
+                //     //     me.byId("searchFieldDtl").setVisible(true);
+                //     //     me.byId("btnRefreshHdr").setEnabled(true);
+                //     //     me.byId("searchFieldHdr").setEnabled(true);
+                //     //     this.onTableResize('Dtls', 'Min');
+                //     // }
+
+                //     this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
+                //     this.byId(this._sActiveTable).bindRows("/rows");
+
+                //     if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
+                //     if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
+                //     this.setRowReadMode();
+                //     this._dataMode = "READ";
+                //     this.setActiveRowHighlightByTableId(this._sActiveTable);
+                // }
+
+                // this._ConfirmDialog.close();
             },
             onCellClick: function (oEvent) {
                 if (oEvent.getParameters().rowBindingContext) {
@@ -2098,6 +2451,72 @@ sap.ui.define([
                     MessageBox.warning("No Selected Record!");
                 }
 
+            },
+            formatValueHelp: function(sValue, sPath, sKey, sText, sFormat) {
+                // console.log(sValue, sPath, sKey, sText, sFormat);
+                // console.log(this.getView().getModel(sPath))
+
+                if (this.getView().getModel(sPath) === undefined) {
+                    return sValue;
+                }
+
+                var oValue = this.getView().getModel(sPath).getData().filter(v => v[sKey] === sValue);
+
+                if (oValue && oValue.length > 0) {
+                    if (sFormat === "Value") {
+                        return oValue[0][sText];
+                    }
+                    else if (sFormat === "ValueKey") {
+                        return oValue[0][sText] + " (" + sValue + ")";
+                    }
+                    else if (sFormat === "KeyValue") {
+                        return sValue + " (" + oValue[0][sText] + ")";
+                    }
+                    else {
+                        return sValue;
+                    }
+                }
+                else return sValue;
+            },
+            onKeyUp(oEvent) {
+                if ((oEvent.key === "ArrowUp" || oEvent.key === "ArrowDown") && oEvent.srcControl.sParentAggregationName === "rows") {
+                    var oTable = this.byId(oEvent.srcControl.sId).oParent;
+
+                    if (this.byId(oEvent.srcControl.sId).getBindingContext()) {
+                        var sRowPath = this.byId(oEvent.srcControl.sId).getBindingContext().sPath;
+                        var MATERIALNO = oTable.getModel().getProperty(sRowPath + "/MATERIALNO");
+                        oTable.getModel().getData().rows.forEach(row => row.ACTIVE = "");
+                        oTable.getModel().setProperty(sRowPath + "/ACTIVE", "X");
+                        me.getView().getModel("ui").setProperty("/acitveMatno", MATERIALNO);
+
+                        oTable.getRows().forEach(row => {
+                            if (row.getBindingContext() && row.getBindingContext().sPath.replace("/rows/", "") === sRowPath.replace("/rows/", "")) {
+                                row.addStyleClass("activeRow");
+                            }
+                            else row.removeStyleClass("activeRow")
+                        })
+
+                        me.getAttributes(MATERIALNO);
+                        me.getBatch(MATERIALNO);
+                        me.getCustomInfo(MATERIALNO);
+                        me.getPlant(MATERIALNO);
+                        me.getUnit(MATERIALNO);
+                    }
+
+                    if (oTable.getId().indexOf("headerTab") >= 0) {
+                        var oTableDetail = this.byId("detailTab");
+                        var oColumns = oTableDetail.getColumns();
+
+                        for (var i = 0, l = oColumns.length; i < l; i++) {
+                            if (oColumns[i].getSorted()) {
+                                oColumns[i].setSorted(false);
+                            }
+                        }
+                    }
+                }
+                else if (oEvent.key === "Enter" && oEvent.srcControl.sParentAggregationName === "cells") {
+                    if (this._dataMode === "NEW") this.onAddNewRow();
+                }               
             },
             onDelete: function (oEvent) {
                 var oTable = oEvent.getSource().oParent.oParent;

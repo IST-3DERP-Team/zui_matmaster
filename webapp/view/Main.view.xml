@@ -29,434 +29,603 @@
                         <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration2" key="MATERIALTYPE" label="Material Type" groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
                     </smartfilterbar:controlConfiguration>
                     <smartfilterbar:controlConfiguration>
+                        <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration9" key="MATERIALNO" label="Material No." groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
+                    </smartfilterbar:controlConfiguration>
+                    <smartfilterbar:controlConfiguration>
                         <smartfilterbar:ControlConfiguration id="_IDGenControlConfiguration3" key="GMC" label="GMC" groupId="_BASIC" preventInitialDataFetchInValueHelpDialog="false" />
                     </smartfilterbar:controlConfiguration>
                     <smartfilterbar:layoutData>
                         <FlexItemData id="_IDGenFlexItemData1" growFactor="0" />
                     </smartfilterbar:layoutData>
                 </smartfilterbar:SmartFilterBar>
-                <uiT:Table id="headerTab"
-                    class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
-                    visibleRowCountMode="Auto"
-                    showColumnVisibilityMenu="true"
-                    enableColumnFreeze="true"
-                    selectionMode="MultiToggle"
-                    firstVisibleRowChanged="onFirstVisibleRowChanged"
-                    cellClick="onCellClick"
-                    alternateRowColors="true"
-                    sort="onSort"
-                    filter="onFilter"
-                    columnFreeze="onColumnUpdated"
-                    columnMove="onColumnUpdated"
-                    columnResize="onColumnUpdated"
-                    columnSelect="onColumnUpdated"
-                    columnVisibility="onColumnUpdated">
-                    <uiT:rowSettingsTemplate>
-                        <uiT:RowSettings id="_IDGenRowSettings1" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
-                    </uiT:rowSettingsTemplate>
-                    <uiT:extension>
-                        <Toolbar id="_IDGenToolbar1">
-                            <Text id="_IDGenText1" text="{counts>/header} Material/s" class="selHdrKeyFontStyle" />
-                            <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
-                            <!-- <SearchField
-                                id="searchFieldHdr"
-                                placeholder="Filter"
-                                value=""
-                                search="filterGlobally"
-                                visible="true"
-                                width="15rem"/> -->
-                            <ToolbarSeparator id="_IDGenToolbarSeparator1"/> 
-                            <Button id="btnAddHdr" 
-                                icon="sap-icon://add"
-                                press="onCreate" 
-                                tooltip="{ddtext>/ADD}"
-                                visible="true"/>
-                            <Button id="btnEditHdr" 
-                                icon="sap-icon://edit"
-                                press="onEdit"
-                                tooltip="{ddtext>/EDIT}"
-                                visible="true"/>
-                            <Button id="btnAddRowHdr" 
-                                icon="sap-icon://add"
-                                press="onAddRow"
-                                tooltip="{ddtext>/ADDROW}"
-                                visible="false" />
-                            <Button id="btnRemoveRowHdr" 
-                                icon="sap-icon://less"
-                                press="onRemoveRow"
-                                tooltip="{ddtext>/REMOVEROW}"
-                                visible="false" />
-                            <Button id="btnSaveHdr" 
-                                icon="sap-icon://save"
-                                press=".onSaveHdr" 
-                                tooltip="{ddtext>/SAVE}"
-                                visible="false" />
-                            <Button id="btnCancelHdr" 
-                                icon="sap-icon://sys-cancel"
-                                press="onCancel" 
-                                tooltip="{ddtext>/CANCEL}"
-                                visible="false" /> 
-                            <Button id="btnDeleteHdr" 
-                                icon="sap-icon://delete"
-                                press="onDelete"
-                                tooltip="{ddtext>/DELETE}"
-                                visible="true"/>
-                            <Button id="btnSettingsHdr" 
-                                icon="sap-icon://settings"
-                                press="onSettings"
-                                tooltip="{ddtext>/Settings}"
-                                visible="true"/>
-                            <Button id="btnRefreshHdr" 
-                                icon="sap-icon://refresh"
-                                press="onRefresh"
-                                tooltip="{ddtext>/REFRESH}"
-                                visible="true"/>
-                            <Button id="btnFullScreenHdr" 
-                                    icon="sap-icon://full-screen"
-                                    press="onTableResize('Hdr','Max')"
-                                    visible="true" />
-                            <Button id="btnExitFullScreenHdr" 
-                                icon="sap-icon://exit-full-screen"
-                                press="onTableResize('Hdr','Min')"
-                                visible="false" />
-                        </Toolbar>
-                    </uiT:extension>
-                    <uiT:layoutData>
-                        <FlexItemData id="_IDGenFlexItemData2" growFactor="1" baseSize="0%"/>
-                    </uiT:layoutData> 
-                </uiT:Table>
-                <IconTabBar id="itbDetail"
-                    class="sapUiNoContentPadding"
-                    expanded="{device>/isNoPhone}" 
-                    expandable="false" 
-                    select="onSelectTab"
-                    stretchContentHeight="true" 
-                    applyContentPadding="false">
-                    <items>
-                        <IconTabFilter id="_IDGenIconTabFilter1" text="Attributes">
-                            <uiT:Table id="attributesTab"
-                                        class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
-                                        visibleRowCountMode="Auto"
-                                        showColumnVisibilityMenu="true"
-                                        enableColumnFreeze="true"
-                                        selectionMode="MultiToggle"
-                                        firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                        cellClick="onCellClick"
-                                        alternateRowColors="true"
-                                        sort="onSort"
-                                        filter="onFilter"
-                                        columnFreeze="onColumnUpdated"
-                                        columnMove="onColumnUpdated"
-                                        columnResize="onColumnUpdated"
-                                        columnSelect="onColumnUpdated"
-                                        columnVisibility="onColumnUpdated">
-                                <uiT:rowSettingsTemplate>
-                                    <uiT:RowSettings id="_IDGenRowSettings2" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
-                                </uiT:rowSettingsTemplate>
-                                <uiT:extension>
-                                    <Toolbar id="_IDGenToolbar2">
-                                        <Text id="_IDGenText2" text="{counts>/attributes} Attributes/s" class="selHdrKeyFontStyle" />
-                                        <ToolbarSeparator/> 
-                                        <Text id="attribMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
-                                        <ToolbarSpacer id="_IDGenToolbarSpacer2"/>
-                                        <!-- <SearchField
-                                                        id="searchFieldAttr"
-                                                        placeholder="Filter"
-                                                        value=""
-                                                        search="filterGlobally"
-                                                        visible="true"
-                                                        width="15rem"/> -->
-                                                    <ToolbarSeparator/>
-                                                    <Button id="btnRefreshAttr" 
-                                                        icon="sap-icon://refresh"
-                                                        press=".onRefreshAttr"
-                                                        visible="true" />
-                                                    <Button id="btnFullScreenAttr" 
-                                                        icon="sap-icon://full-screen"
-                                                        press="onTableResize('Attr','Max')"
-                                                        visible="true" />
-                                                    <Button id="btnExitFullScreenAttr" 
-                                                        icon="sap-icon://exit-full-screen"
-                                                        press="onTableResize('Attr','Min')"
-                                                        visible="false" />
-                                                    <Button id="btnColPropAttr" 
-                                                        icon="sap-icon://table-column"
-                                                        press="onColumnProp"
-                                                        tooltip="Columns"
-                                                        visible="true" /> 
-                                    </Toolbar>
-                                </uiT:extension>
-                                <uiT:layoutData>
-                                    <FlexItemData id="_IDGenFlexItemData3" growFactor="1" baseSize="0%"/>
-                                </uiT:layoutData> 
-                            </uiT:Table>
-                        </IconTabFilter>
-                        <IconTabFilter id="_IDGenIconTabFilter2" text="Batch">
-                            <uiT:Table id="batchTab"
-                                        class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
-                                        visibleRowCountMode="Auto"
-                                        showColumnVisibilityMenu="true"
-                                        enableColumnFreeze="true"
-                                        selectionMode="MultiToggle"
-                                        firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                        cellClick="onCellClick"
-                                        alternateRowColors="true"
-                                        sort="onSort"
-                                        filter="onFilter"
-                                        columnFreeze="onColumnUpdated"
-                                        columnMove="onColumnUpdated"
-                                        columnResize="onColumnUpdated"
-                                        columnSelect="onColumnUpdated"
-                                        columnVisibility="onColumnUpdated">
-                                <uiT:rowSettingsTemplate>
-                                    <uiT:RowSettings id="_IDGenRowSettings3" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
-                                </uiT:rowSettingsTemplate>
-                                <uiT:extension>
-                                    <Toolbar id="_IDGenToolbar3">
-                                        <Text id="_IDGenText3" text="{counts>/batch} Batch/s" class="selHdrKeyFontStyle" />
-                                        <ToolbarSeparator/> 
-                                        <Text id="batchMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
-                                        <ToolbarSpacer id="_IDGenToolbarSpacer3"/>
-                                        <!-- <SearchField
-                                                        id="searchFieldBatch"
-                                                        placeholder="Filter"
-                                                        value=""
-                                                        search="filterGlobally"
-                                                        visible="true"
-                                                        width="15rem"/> -->
-                                                    <ToolbarSeparator/>
-                                                    <Button id="btnRefreshBatch" 
-                                                        icon="sap-icon://refresh"
-                                                        press=".onRefreshBatch"
-                                                        visible="true" />
-                                                    <Button id="btnEditBatch" 
-                                                        icon="sap-icon://edit"
-                                                        press="onEditBatch"
-                                                        tooltip="Edit"
-                                                        visible="true"/>
-                                                    <Button id="btnSaveBatch" 
-                                                        icon="sap-icon://save"
-                                                        press=".onSaveBatch()" 
-                                                        visible="false" />
-                                                    <Button id="btnCancelBatch" 
-                                                        icon="sap-icon://sys-cancel"
-                                                        press="onCancelBatch()" 
-                                                        visible="false" />
-                                                    <Button id="btnFullScreenBatch" 
-                                                        icon="sap-icon://full-screen"
-                                                        press="onTableResize('Attr','Max')"
-                                                        visible="true" />
-                                                    <Button id="btnExitFullScreenBatch" 
-                                                        icon="sap-icon://exit-full-screen"
-                                                        press="onTableResize('Attr','Min')"
-                                                        visible="false" />
-                                                    <Button id="btnColPropBatch" 
-                                                        icon="sap-icon://table-column"
-                                                        press="onColumnProp"
-                                                        tooltip="Columns"
-                                                        visible="true" />
-                                    </Toolbar>
-                                </uiT:extension>
-                                <uiT:layoutData>
-                                    <FlexItemData id="_IDGenFlexItemData5" growFactor="1" baseSize="0%"/>
-                                </uiT:layoutData> 
-                            </uiT:Table>
-                        </IconTabFilter>
-                        <IconTabFilter id="_IDGenIconTabFilter6" text="Custom Info">
-                            <uiT:Table id="customInfoTab"
-                                        class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
-                                        visibleRowCountMode="Auto"
-                                        showColumnVisibilityMenu="true"
-                                        enableColumnFreeze="true"
-                                        selectionMode="MultiToggle"
-                                        firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                        cellClick="onCellClick"
-                                        alternateRowColors="true"
-                                        sort="onSort"
-                                        filter="onFilter"
-                                        columnFreeze="onColumnUpdated"
-                                        columnMove="onColumnUpdated"
-                                        columnResize="onColumnUpdated"
-                                        columnSelect="onColumnUpdated"
-                                        columnVisibility="onColumnUpdated">
-                                <uiT:rowSettingsTemplate>
-                                    <uiT:RowSettings id="_IDGenRowSettings7" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
-                                </uiT:rowSettingsTemplate>
-                                <uiT:extension>
-                                    <Toolbar id="_IDGenToolbar8">
-                                        <Text id="_IDGenText9" text="{counts>/customInfo} Customer Info/s" class="selHdrKeyFontStyle" />
-                                        <ToolbarSeparator/> 
-                                        <Text id="customInfoMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
-                                        <ToolbarSpacer id="_IDGenToolbarSpacer8"/>
-                                        <!-- <SearchField
-                                                        id="searchFieldCustomInfo"
-                                                        placeholder="Filter"
-                                                        value=""
-                                                        search="filterGlobally"
-                                                        visible="false"
-                                                        width="15rem"/> -->
-                                                    <!-- <ToolbarSeparator/> -->
-                                                    <Button id="btnEditCustomInfo" 
-                                                        icon="sap-icon://edit"
-                                                        press="onEditCustomInfo"
-                                                        tooltip="Edit"
-                                                        visible="true"/>
-                                                    <Button id="btnSaveCustomInfo" 
-                                                        icon="sap-icon://save"
-                                                        press=".onSaveCustomInfo()" 
-                                                        visible="false" />
-                                                    <Button id="btnCancelCustomInfo" 
-                                                        icon="sap-icon://sys-cancel"
-                                                        press="onCancelCustomInfo()" 
-                                                        visible="false" /> 
-                                                    <Button id="btnDeleteCustomInfo" 
-                                                        icon="sap-icon://delete"
-                                                        press="onDeleteCustomInfo"
-                                                        visible="true"/>
-                                                    <Button id="btnRefreshCustomInfo" 
-                                                        icon="sap-icon://refresh"
-                                                        press=".onRefreshCustomInfo"
-                                                        visible="true" />
-                                                    <Button id="btnFullScreenCustomInfo" 
-                                                        icon="sap-icon://full-screen"
-                                                        press="onTableResize('Attr','Max')"
-                                                        visible="true" />
-                                                    <Button id="btnExitFullScreenCustomInfo" 
-                                                        icon="sap-icon://exit-full-screen"
-                                                        press="onTableResize('Attr','Min')"
-                                                        visible="false" />
-                                                    <Button id="btnColPropCustomInfo" 
-                                                        icon="sap-icon://table-column"
-                                                        press="onColumnProp"
-                                                        tooltip="Columns"
-                                                        visible="true" />
-                                    </Toolbar>
-                                </uiT:extension>
-                                <uiT:layoutData>
-                                    <FlexItemData id="_IDGenFlexItemData9" growFactor="1" baseSize="0%"/>
-                                </uiT:layoutData> 
-                            </uiT:Table>
-                        </IconTabFilter>
-                        <IconTabFilter id="_IDGenIconTabFilter10" text="Plant">
-                            <uiT:Table id="plantTab"
-                                        class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
-                                        visibleRowCountMode="Auto"
-                                        showColumnVisibilityMenu="true"
-                                        enableColumnFreeze="true"
-                                        selectionMode="MultiToggle"
-                                        firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                        cellClick="onCellClick"
-                                        alternateRowColors="true"
-                                        sort="onSort"
-                                        filter="onFilter"
-                                        columnFreeze="onColumnUpdated"
-                                        columnMove="onColumnUpdated"
-                                        columnResize="onColumnUpdated"
-                                        columnSelect="onColumnUpdated"
-                                        columnVisibility="onColumnUpdated">
-                                <uiT:rowSettingsTemplate>
-                                    <uiT:RowSettings id="_IDGenRowSettings11" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
-                                </uiT:rowSettingsTemplate>
-                                <uiT:extension>
-                                    <Toolbar id="_IDGenToolbar12">
-                                        <Text id="_IDGenText13" text="{counts>/plant} Plant/s" class="selHdrKeyFontStyle" />
-                                        <ToolbarSeparator/> 
-                                        <Text id="plantMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
-                                        <ToolbarSpacer id="_IDGenToolbarSpacer13"/>
-                                        <!-- <SearchField
-                                                        id="searchFieldPlant"
-                                                        placeholder="Filter"
-                                                        value=""
-                                                        search="filterGlobally"
-                                                        visible="false"
-                                                        width="15rem"/> -->
-                                                    <!-- <ToolbarSeparator/> -->
-                                                    <Button id="btnExtendMat" 
-                                                        text="Extend Material"
-                                                        icon="sap-icon://add-coursebook"
-                                                        tooltip="Extend Material"
-                                                        press=".onExtendMaterial"
-                                                        visible="true" />
-                                                    <Button id="btnRefreshPlant" 
-                                                        icon="sap-icon://refresh"
-                                                        press=".onRefreshPlant"
-                                                        visible="true" />
-                                                    <Button id="btnFullScreenPlant" 
-                                                        icon="sap-icon://full-screen"
-                                                        press="onTableResize('Attr','Max')"
-                                                        visible="true" />
-                                                    <Button id="btnExitFullScreenPlant" 
-                                                        icon="sap-icon://exit-full-screen"
-                                                        press="onTableResize('Attr','Min')"
-                                                        visible="false" />
-                                                    <Button id="btnColPropPlant" 
-                                                        icon="sap-icon://table-column"
-                                                        press="onColumnProp"
-                                                        tooltip="Columns"
-                                                        visible="true" />
-                                    </Toolbar>
-                                </uiT:extension>
-                                <uiT:layoutData>
-                                    <FlexItemData id="_IDGenFlexItemData14" growFactor="1" baseSize="0%"/>
-                                </uiT:layoutData> 
-                            </uiT:Table>
-                        </IconTabFilter>
-                        <IconTabFilter id="_IDGenIconTabFilter11" text="Units Of Measure">
-                            <uiT:Table id="unitTab"
-                                        class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
-                                        visibleRowCountMode="Auto"
-                                        showColumnVisibilityMenu="true"
-                                        enableColumnFreeze="true"
-                                        selectionMode="MultiToggle"
-                                        firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                        cellClick="onCellClick"
-                                        alternateRowColors="true"
-                                        sort="onSort"
-                                        filter="onFilter"
-                                        columnFreeze="onColumnUpdated"
-                                        columnMove="onColumnUpdated"
-                                        columnResize="onColumnUpdated"
-                                        columnSelect="onColumnUpdated"
-                                        columnVisibility="onColumnUpdated">
-                                <uiT:rowSettingsTemplate>
-                                    <uiT:RowSettings id="_IDGenRowSettings12" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
-                                </uiT:rowSettingsTemplate>
-                                <uiT:extension>
-                                    <Toolbar id="_IDGenToolbar13">
-                                        <Text id="_IDGenText14" text="{counts>/unit} Unit of Measure/s" class="selHdrKeyFontStyle" />
-                                        <ToolbarSeparator/> 
-                                        <Text id="unitMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
-                                        <ToolbarSpacer id="_IDGenToolbarSpacer12"/>
-                                        <ToolbarSeparator/>
-                                        <Button id="btnRefreshUnit" 
-                                            icon="sap-icon://refresh"
-                                            press=".onRefresh"
-                                            visible="true" />
-                                        <Button id="btnFullScreenUnit" 
-                                            icon="sap-icon://full-screen"
-                                            press="onTableResize('Unit','Max')"
-                                            visible="true" />
-                                        <Button id="btnExitFullScreenUnit" 
-                                            icon="sap-icon://exit-full-screen"
-                                            press="onTableResize('Unit','Min')"
-                                            visible="false" />
-                                        <Button id="btnColPropUnit" 
-                                            icon="sap-icon://table-column"
-                                            press="onColumnProp"
-                                            tooltip="Columns"
-                                            visible="true" /> 
-                                    </Toolbar>
-                                </uiT:extension>
-                                <uiT:layoutData>
-                                    <FlexItemData id="_IDGenFlexItemData12" growFactor="1" baseSize="0%"/>
-                                </uiT:layoutData> 
-                            </uiT:Table>
-                        </IconTabFilter>
-                    </items>
+                <uiL:Splitter id="_IDGenSplitter1" orientation="Vertical" height="100%">
+                <Panel id="panelHdr" width="100%" height="100%" class="sapUiNoContentPadding">
+                    <uiT:Table id="headerTab"
+                        class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                        visibleRowCountMode="Auto"
+                        showColumnVisibilityMenu="true"
+                        enableColumnFreeze="true"
+                        selectionMode="MultiToggle"
+                        firstVisibleRowChanged="onFirstVisibleRowChanged"
+                        cellClick="onCellClick"
+                        alternateRowColors="true"
+                        sort="onSort"
+                        filter="onFilter"
+                        columnFreeze="onColumnUpdated"
+                        columnMove="onColumnUpdated"
+                        columnResize="onColumnUpdated"
+                        columnSelect="onColumnUpdated"
+                        columnVisibility="onColumnUpdated">
+                        <uiT:rowSettingsTemplate>
+                            <uiT:RowSettings id="_IDGenRowSettings1" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
+                        </uiT:rowSettingsTemplate>
+                        <uiT:extension>
+                            <Toolbar id="_IDGenToolbar1">
+                                <Text id="_IDGenText1" text="{counts>/header} Material/s" class="selHdrKeyFontStyle" />
+                                <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
+                                <!-- <SearchField
+                                    id="searchFieldHdr"
+                                    placeholder="Filter"
+                                    value=""
+                                    search="filterGlobally"
+                                    visible="true"
+                                    width="15rem"/> -->
+                                <ToolbarSeparator id="_IDGenToolbarSeparator1"/> 
+                                <Button id="btnAddHdr" 
+                                    icon="sap-icon://add"
+                                    press="onCreate" 
+                                    tooltip="{ddtext>/ADD}"
+                                    visible="true"/>
+                                <Button id="btnEditHdr" 
+                                    icon="sap-icon://edit"
+                                    press="onEdit"
+                                    tooltip="{ddtext>/EDIT}"
+                                    visible="true"/>
+                                <Button id="btnAddRowHdr" 
+                                    icon="sap-icon://add"
+                                    press="onAddRow"
+                                    tooltip="{ddtext>/ADDROW}"
+                                    visible="false" />
+                                <Button id="btnRemoveRowHdr" 
+                                    icon="sap-icon://less"
+                                    press="onRemoveRow"
+                                    tooltip="{ddtext>/REMOVEROW}"
+                                    visible="false" />
+                                <Button id="btnSaveHdr" 
+                                    icon="sap-icon://save"
+                                    press=".onSaveHdr" 
+                                    tooltip="{ddtext>/SAVE}"
+                                    visible="false" />
+                                <Button id="btnCancelHdr" 
+                                    icon="sap-icon://sys-cancel"
+                                    press="onCancel" 
+                                    tooltip="{ddtext>/CANCEL}"
+                                    visible="false" /> 
+                                <Button id="btnDeleteHdr" 
+                                    icon="sap-icon://delete"
+                                    press="onDelete"
+                                    tooltip="{ddtext>/DELETE}"
+                                    visible="true"/>
+                                <!-- <Button id="btnSettingsHdr" 
+                                    icon="sap-icon://settings"
+                                    press="onSettings"
+                                    tooltip="{ddtext>/Settings}"
+                                    visible="true"/> -->
+                                <Button id="btnRefreshHdr" 
+                                    icon="sap-icon://refresh"
+                                    press="onRefresh"
+                                    tooltip="{ddtext>/REFRESH}"
+                                    visible="true"/>
+                                <!-- <Button id="btnFullScreenHdr" 
+                                        icon="sap-icon://full-screen"
+                                        press="onTableResize('Hdr','Max')"
+                                        visible="true" />
+                                <Button id="btnExitFullScreenHdr" 
+                                    icon="sap-icon://exit-full-screen"
+                                    press="onTableResize('Hdr','Min')"
+                                    visible="false" /> -->
+                                <Button id="btnFullScreenHdr" 
+                                        icon="sap-icon://full-screen"
+                                        press="onTableResize"
+                                        tooltip="{ddtext>/FULLSCREEN}"
+                                        visible="true" >
+                                        <customData>
+                                            <core:CustomData key="Max" value="1" />
+                                            <core:CustomData key="TableId" value="headerTab" />
+                                            <core:CustomData key="ButtonIdSuffix" value="Hdr" />
+                                            <core:CustomData key="Header" value="1" />
+                                        </customData>
+                                    </Button>
+                                    <Button id="btnExitFullScreenHdr" 
+                                        icon="sap-icon://exit-full-screen"
+                                        press="onTableResize"
+                                        tooltip="{ddtext>/EXITFULLSCREEN}"
+                                        visible="false" >
+                                        <customData>
+                                            <core:CustomData key="Max" value="0" />
+                                            <core:CustomData key="TableId" value="headerTab" />
+                                            <core:CustomData key="ButtonIdSuffix" value="Hdr" />
+                                            <core:CustomData key="Header" value="1" />
+                                        </customData>
+                                    </Button>
+                                <Button id="btnTabLayoutHdr"
+                                        icon="sap-icon://grid" 
+                                        tooltip="{ddtext>/SAVELAYOUT}" 
+                                        press="onSaveTableLayout" >
+                                        <customData>
+                                            <core:CustomData key="TableId" value="headerTab" />
+                                        </customData>
+                                </Button>
+                                <Button id="btnDataWrapHdr" 
+                                    text="{= ${ui>/dataWrap/headerTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                    press="onWrapText"
+                                    tooltip="{= ${ui>/dataWrap/headerTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                    visible="true" >
+                                    <customData>
+                                        <core:CustomData key="TableId" value="headerTab" />
+                                    </customData>
+                                </Button>
+                            </Toolbar>
+                        </uiT:extension>
+                        <uiT:layoutData>
+                            <FlexItemData id="_IDGenFlexItemData2" growFactor="1" baseSize="0%"/>
+                        </uiT:layoutData> 
+                    </uiT:Table>
                     <layoutData>
-                        <FlexItemData id="_IDGenFlexItemData4" growFactor="1" baseSize="0%"/>
-                    </layoutData>
-                </IconTabBar>
+                            <uiL:SplitterLayoutData size="50%" id="splitterHdr" />
+                        </layoutData> 
+                </Panel>
+                <Panel id="panelDtl" width="100%" height="100%" class="sapUiNoContentPadding">
+                    <IconTabBar id="itbDetail"
+                        class="sapUiNoContentPadding"
+                        expanded="{device>/isNoPhone}" 
+                        expandable="false" 
+                        select="onSelectTab"
+                        stretchContentHeight="true" 
+                        applyContentPadding="false">
+                        <items>
+                            <IconTabFilter id="_IDGenIconTabFilter1" text="Attributes">
+                                <uiT:Table id="attributesTab"
+                                            class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            selectionMode="MultiToggle"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            alternateRowColors="true"
+                                            sort="onSort"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated">
+                                    <uiT:rowSettingsTemplate>
+                                        <uiT:RowSettings id="_IDGenRowSettings2" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
+                                    </uiT:rowSettingsTemplate>
+                                    <uiT:extension>
+                                        <Toolbar id="_IDGenToolbar2">
+                                            <Text id="_IDGenText2" text="{counts>/attributes} Attributes/s" class="selHdrKeyFontStyle" />
+                                            <ToolbarSeparator/> 
+                                            <Text id="attribMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
+                                            <ToolbarSpacer id="_IDGenToolbarSpacer2"/>
+                                            <!-- <SearchField
+                                                            id="searchFieldAttr"
+                                                            placeholder="Filter"
+                                                            value=""
+                                                            search="filterGlobally"
+                                                            visible="true"
+                                                            width="15rem"/> -->
+                                                        <ToolbarSeparator/>
+                                                        <Button id="btnRefreshAttr" 
+                                                            icon="sap-icon://refresh"
+                                                            press=".onRefresh"
+                                                            visible="true" />
+                                                        <!-- <Button id="btnFullScreenAttr" 
+                                                            icon="sap-icon://full-screen"
+                                                            press="onTableResize('Attr','Max')"
+                                                            visible="true" />
+                                                        <Button id="btnExitFullScreenAttr" 
+                                                            icon="sap-icon://exit-full-screen"
+                                                            press="onTableResize('Attr','Min')"
+                                                            visible="false" /> -->
+                                                        <!-- <Button id="btnColPropAttr" 
+                                                            icon="sap-icon://table-column"
+                                                            press="onColumnProp"
+                                                            tooltip="Columns"
+                                                            visible="true" />  -->
+                                                        <Button id="btnFullScreenAttr" 
+                                                            icon="sap-icon://full-screen"
+                                                            press="onTableResize"
+                                                            tooltip="{ddtext>/FULLSCREEN}"
+                                                            visible="true" >
+                                                            <customData>
+                                                                <core:CustomData key="Max" value="1" />
+                                                                <core:CustomData key="TableId" value="attributesTab" />
+                                                                <core:CustomData key="ButtonIdSuffix" value="Hdr" />
+                                                                <core:CustomData key="Attrib" value="1" />
+                                                            </customData>
+                                                        </Button>
+                                                        <Button id="btnExitFullScreenAttr" 
+                                                            icon="sap-icon://exit-full-screen"
+                                                            press="onTableResize"
+                                                            tooltip="{ddtext>/EXITFULLSCREEN}"
+                                                            visible="false" >
+                                                            <customData>
+                                                                <core:CustomData key="Max" value="0" />
+                                                                <core:CustomData key="TableId" value="attributesTab" />
+                                                                <core:CustomData key="ButtonIdSuffix" value="Hdr" />
+                                                                <core:CustomData key="Attrib" value="1" />
+                                                            </customData>
+                                                        </Button>
+                                                        <Button id="btnTabLayoutAttr"
+                                        icon="sap-icon://grid" 
+                                        tooltip="{ddtext>/SAVELAYOUT}" 
+                                        press="onSaveTableLayout" >
+                                        <customData>
+                                            <core:CustomData key="TableId" value="attributesTab" />
+                                        </customData>
+                                </Button>
+                                                        <Button id="btnDataWrapAttr" 
+                                                            text="{= ${ui>/dataWrap/attributesTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            press="onWrapText"
+                                                            tooltip="{= ${ui>/dataWrap/attributesTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            visible="true" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="attributesTab" />
+                                                            </customData>
+                                                        </Button>
+                                        </Toolbar>
+                                    </uiT:extension>
+                                    <uiT:layoutData>
+                                        <FlexItemData id="_IDGenFlexItemData3" growFactor="1" baseSize="0%"/>
+                                    </uiT:layoutData> 
+                                </uiT:Table>
+                                
+                            </IconTabFilter>
+                            <IconTabFilter id="_IDGenIconTabFilter2" text="Batch">
+                                <uiT:Table id="batchTab"
+                                            class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            selectionMode="MultiToggle"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            alternateRowColors="true"
+                                            sort="onSort"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated">
+                                    <uiT:rowSettingsTemplate>
+                                        <uiT:RowSettings id="_IDGenRowSettings3" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
+                                    </uiT:rowSettingsTemplate>
+                                    <uiT:extension>
+                                        <Toolbar id="_IDGenToolbar3">
+                                            <Text id="_IDGenText3" text="{counts>/batch} Batch/s" class="selHdrKeyFontStyle" />
+                                            <ToolbarSeparator/> 
+                                            <Text id="batchMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
+                                            <ToolbarSpacer id="_IDGenToolbarSpacer3"/>
+                                            <!-- <SearchField
+                                                            id="searchFieldBatch"
+                                                            placeholder="Filter"
+                                                            value=""
+                                                            search="filterGlobally"
+                                                            visible="true"
+                                                            width="15rem"/> -->
+                                                        <ToolbarSeparator/>
+                                                        <Button id="btnRefreshBatch" 
+                                                            icon="sap-icon://refresh"
+                                                            press=".onRefresh"
+                                                            visible="true" />
+                                                        <Button id="btnEditBatch" 
+                                                            icon="sap-icon://edit"
+                                                            press="onEditBatch"
+                                                            tooltip="Edit"
+                                                            visible="true"/>
+                                                        <Button id="btnSaveBatch" 
+                                                            icon="sap-icon://save"
+                                                            press=".onSaveBatch()" 
+                                                            visible="false" />
+                                                        <Button id="btnCancelBatch" 
+                                                            icon="sap-icon://sys-cancel"
+                                                            press="onCancelBatch()" 
+                                                            visible="false" />
+                                                        <Button id="btnFullScreenBatch" 
+                                                            icon="sap-icon://full-screen"
+                                                            press="onTableResize('Attr','Max')"
+                                                            visible="true" />
+                                                        <Button id="btnExitFullScreenBatch" 
+                                                            icon="sap-icon://exit-full-screen"
+                                                            press="onTableResize('Attr','Min')"
+                                                            visible="false" />
+                                                        <!-- <Button id="btnColPropBatch" 
+                                                            icon="sap-icon://table-column"
+                                                            press="onColumnProp"
+                                                            tooltip="Columns"
+                                                            visible="true" /> -->
+                                                        <Button id="btnTabLayoutBatch"
+                                                            icon="sap-icon://grid" 
+                                                            tooltip="{ddtext>/SAVELAYOUT}" 
+                                                            press="onSaveTableLayout" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="batchTab" />
+                                                            </customData>
+                                                    </Button>
+                                                        <Button id="btnDataWrapBatch" 
+                                                            text="{= ${ui>/dataWrap/batchTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            press="onWrapText"
+                                                            tooltip="{= ${ui>/dataWrap/batchTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            visible="true" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="batchTab" />
+                                                            </customData>
+                                                        </Button>
+                                        </Toolbar>
+                                    </uiT:extension>
+                                    <uiT:layoutData>
+                                        <FlexItemData id="_IDGenFlexItemData5" growFactor="1" baseSize="0%"/>
+                                    </uiT:layoutData> 
+                                </uiT:Table>
+                            </IconTabFilter>
+                            <IconTabFilter id="_IDGenIconTabFilter6" text="Custom Info">
+                                <uiT:Table id="customInfoTab"
+                                            class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            selectionMode="MultiToggle"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            alternateRowColors="true"
+                                            sort="onSort"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated">
+                                    <uiT:rowSettingsTemplate>
+                                        <uiT:RowSettings id="_IDGenRowSettings7" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
+                                    </uiT:rowSettingsTemplate>
+                                    <uiT:extension>
+                                        <Toolbar id="_IDGenToolbar8">
+                                            <Text id="_IDGenText9" text="{counts>/customInfo} Customer Info/s" class="selHdrKeyFontStyle" />
+                                            <ToolbarSeparator/> 
+                                            <Text id="customInfoMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
+                                            <ToolbarSpacer id="_IDGenToolbarSpacer8"/>
+                                            <!-- <SearchField
+                                                            id="searchFieldCustomInfo"
+                                                            placeholder="Filter"
+                                                            value=""
+                                                            search="filterGlobally"
+                                                            visible="false"
+                                                            width="15rem"/> -->
+                                                        <!-- <ToolbarSeparator/> -->
+                                                        <Button id="btnEditCustomInfo" 
+                                                            icon="sap-icon://edit"
+                                                            press="onEditCustomInfo"
+                                                            tooltip="Edit"
+                                                            visible="true"/>
+                                                        <Button id="btnSaveCustomInfo" 
+                                                            icon="sap-icon://save"
+                                                            press=".onSaveCustomInfo()" 
+                                                            visible="false" />
+                                                        <Button id="btnCancelCustomInfo" 
+                                                            icon="sap-icon://sys-cancel"
+                                                            press="onCancelCustomInfo()" 
+                                                            visible="false" /> 
+                                                        <Button id="btnDeleteCustomInfo" 
+                                                            icon="sap-icon://delete"
+                                                            press="onDeleteCustomInfo"
+                                                            visible="true"/>
+                                                        <Button id="btnRefreshCustomInfo" 
+                                                            icon="sap-icon://refresh"
+                                                            press=".onRefresh"
+                                                            visible="true" />
+                                                        <Button id="btnFullScreenCustomInfo" 
+                                                            icon="sap-icon://full-screen"
+                                                            press="onTableResize('Attr','Max')"
+                                                            visible="true" />
+                                                        <Button id="btnExitFullScreenCustomInfo" 
+                                                            icon="sap-icon://exit-full-screen"
+                                                            press="onTableResize('Attr','Min')"
+                                                            visible="false" />
+                                                        <!-- <Button id="btnColPropCustomInfo" 
+                                                            icon="sap-icon://table-column"
+                                                            press="onColumnProp"
+                                                            tooltip="Columns"
+                                                            visible="true" /> -->
+                                                        <Button id="btnTabLayoutCustomInfo"
+                                                            icon="sap-icon://grid" 
+                                                            tooltip="{ddtext>/SAVELAYOUT}" 
+                                                            press="onSaveTableLayout" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="customInfoTab" />
+                                                            </customData>
+                                                    </Button>
+                                                        <Button id="btnDataWrapCustomInfo" 
+                                                            text="{= ${ui>/dataWrap/customInfoTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            press="onWrapText"
+                                                            tooltip="{= ${ui>/dataWrap/customInfoTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            visible="true" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="customInfoTab" />
+                                                            </customData>
+                                                        </Button>
+                                        </Toolbar>
+                                    </uiT:extension>
+                                    <uiT:layoutData>
+                                        <FlexItemData id="_IDGenFlexItemData9" growFactor="1" baseSize="0%"/>
+                                    </uiT:layoutData> 
+                                </uiT:Table>
+                            </IconTabFilter>
+                            <IconTabFilter id="_IDGenIconTabFilter10" text="Plant">
+                                <uiT:Table id="plantTab"
+                                            class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            selectionMode="MultiToggle"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            alternateRowColors="true"
+                                            sort="onSort"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated">
+                                    <uiT:rowSettingsTemplate>
+                                        <uiT:RowSettings id="_IDGenRowSettings11" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
+                                    </uiT:rowSettingsTemplate>
+                                    <uiT:extension>
+                                        <Toolbar id="_IDGenToolbar12">
+                                            <Text id="_IDGenText13" text="{counts>/plant} Plant/s" class="selHdrKeyFontStyle" />
+                                            <ToolbarSeparator/> 
+                                            <Text id="plantMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
+                                            <ToolbarSpacer id="_IDGenToolbarSpacer13"/>
+                                            <!-- <SearchField
+                                                            id="searchFieldPlant"
+                                                            placeholder="Filter"
+                                                            value=""
+                                                            search="filterGlobally"
+                                                            visible="false"
+                                                            width="15rem"/> -->
+                                                        <!-- <ToolbarSeparator/> -->
+                                                        <Button id="btnExtendMat" 
+                                                            text="Extend Material"
+                                                            icon="sap-icon://add-coursebook"
+                                                            tooltip="Extend Material"
+                                                            press=".onExtendMaterial"
+                                                            visible="true" />
+                                                        <Button id="btnRefreshPlant" 
+                                                            icon="sap-icon://refresh"
+                                                            press=".onRefresh"
+                                                            visible="true" />
+                                                        <Button id="btnFullScreenPlant" 
+                                                            icon="sap-icon://full-screen"
+                                                            press="onTableResize('Attr','Max')"
+                                                            visible="true" />
+                                                        <Button id="btnExitFullScreenPlant" 
+                                                            icon="sap-icon://exit-full-screen"
+                                                            press="onTableResize('Attr','Min')"
+                                                            visible="false" />
+                                                        <!-- <Button id="btnColPropPlant" 
+                                                            icon="sap-icon://table-column"
+                                                            press="onColumnProp"
+                                                            tooltip="Columns"
+                                                            visible="true" /> -->
+                                                        <Button id="btnTabLayoutPlant"
+                                                            icon="sap-icon://grid" 
+                                                            tooltip="{ddtext>/SAVELAYOUT}" 
+                                                            press="onSaveTableLayout" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="plantTab" />
+                                                            </customData>
+                                                    </Button>
+                                                        <Button id="btnDataWrapPlant" 
+                                                            text="{= ${ui>/dataWrap/plantTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            press="onWrapText"
+                                                            tooltip="{= ${ui>/dataWrap/plantTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            visible="true" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="plantTab" />
+                                                            </customData>
+                                                        </Button>
+                                        </Toolbar>
+                                    </uiT:extension>
+                                    <uiT:layoutData>
+                                        <FlexItemData id="_IDGenFlexItemData14" growFactor="1" baseSize="0%"/>
+                                    </uiT:layoutData> 
+                                </uiT:Table>
+                            </IconTabFilter>
+                            <IconTabFilter id="_IDGenIconTabFilter11" text="Units Of Measure">
+                                <uiT:Table id="unitTab"
+                                            class="sapUiTinyMarginBottom sapUiTinyMarginBegin sapUiTinyMarginEnd"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            selectionMode="MultiToggle"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            alternateRowColors="true"
+                                            sort="onSort"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated">
+                                    <uiT:rowSettingsTemplate>
+                                        <uiT:RowSettings id="_IDGenRowSettings12" highlight="{= ${EDITED} === true ? 'Warning' : null}" />
+                                    </uiT:rowSettingsTemplate>
+                                    <uiT:extension>
+                                        <Toolbar id="_IDGenToolbar13">
+                                            <Text id="_IDGenText14" text="{counts>/unit} Unit of Measure/s" class="selHdrKeyFontStyle" />
+                                            <ToolbarSeparator/> 
+                                            <Text id="unitMatNo" text="Material No: {ui>/acitveMatno}" class="selHdrKeyFontStyle" />
+                                            <ToolbarSpacer id="_IDGenToolbarSpacer12"/>
+                                            <ToolbarSeparator/>
+                                            <Button id="btnRefreshUnit" 
+                                                icon="sap-icon://refresh"
+                                                press=".onRefresh"
+                                                visible="true" />
+                                            <Button id="btnFullScreenUnit" 
+                                                icon="sap-icon://full-screen"
+                                                press="onTableResize('Unit','Max')"
+                                                visible="true" />
+                                            <Button id="btnExitFullScreenUnit" 
+                                                icon="sap-icon://exit-full-screen"
+                                                press="onTableResize('Unit','Min')"
+                                                visible="false" />
+                                            <!-- <Button id="btnColPropUnit" 
+                                                icon="sap-icon://table-column"
+                                                press="onColumnProp"
+                                                tooltip="Columns"
+                                                visible="true" /> -->
+                                            <Button id="btnTabLayoutUnit"
+                                                            icon="sap-icon://grid" 
+                                                            tooltip="{ddtext>/SAVELAYOUT}" 
+                                                            press="onSaveTableLayout" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="unitTab" />
+                                                            </customData>
+                                                    </Button>
+                                            <Button id="btnDataWrapUnit" 
+                                                            text="{= ${ui>/dataWrap/unitTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            press="onWrapText"
+                                                            tooltip="{= ${ui>/dataWrap/unitTab} === true ? ${ddtext>/UNWRAP} : ${ddtext>/WRAP} }"
+                                                            visible="true" >
+                                                            <customData>
+                                                                <core:CustomData key="TableId" value="unitTab" />
+                                                            </customData>
+                                                        </Button> 
+                                        </Toolbar>
+                                    </uiT:extension>
+                                    <uiT:layoutData>
+                                        <FlexItemData id="_IDGenFlexItemData12" growFactor="1" baseSize="0%"/>
+                                    </uiT:layoutData> 
+                                </uiT:Table>
+                            </IconTabFilter>
+                        </items>
+                        <layoutData>
+                            <FlexItemData id="_IDGenFlexItemData4" growFactor="1" baseSize="0%"/>
+                        </layoutData>
+                    </IconTabBar>
+                    <layoutData>
+                            <uiL:SplitterLayoutData size="50%" id="splitterDtl" />
+                        </layoutData> 
+                </Panel>
+                    <uiL:layoutData>
+                        <FlexItemData id="_IDGenFlexItemData10" growFactor="0.94" baseSize="0%"/>
+                    </uiL:layoutData>
+                </uiL:Splitter>
             </VBox>
         </content>
     </Page>
