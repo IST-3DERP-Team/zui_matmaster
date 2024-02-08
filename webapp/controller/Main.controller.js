@@ -1755,148 +1755,179 @@ sap.ui.define([
                         }
                     })
                 }
-                // else if (aEditedRows.length > 0) {
-                //     var oModel = this.getOwnerComponent().getModel();
-                //     var iEdited = 0;
-                //     var _this = this; 
-                //     var bProceed = true;
-                //     var mParameters = {
-                //         "groupId": "update"
-                //     };
-
-                //     oModel.setUseBatch(true);
-                //     oModel.setDeferredGroups(["update"]);
-
-                //     aEditedRows.forEach(item => {
-                //         var entitySet = "/MaterialSet(";
-                //         var param = {};
-                //         var iKeyCount = this._aColumns[arg].filter(col => col.Key === "X").length;
-                        
-                        
-                //         _this._aColumns[arg].forEach(col => {
-                //             if (col.Editable) param[col.ColumnName] = item[col.ColumnName];
-
-                //             // if (arg === "attributes" && (col.name === "DESCEN" || col.name === "DESCZH")) {
-                //             //     param[col.name] = item[col.name];
-                //             // }
-
-                //             if (iKeyCount === 1) { 
-                //                 if (col.key) entitySet += "'" + item[col.ColumnName] + "'" 
-                //             }
-                //             else if (iKeyCount > 1) { 
-                //                 if (col.key) entitySet += col.ColumnName + "='" + item[col.ColumnName] + "',"
-                //             }
-                //         })
-                        
-                //         if (iKeyCount > 1) entitySet = entitySet.substring(0, entitySet.length - 1);
-
-                //         entitySet += ")";
-                //         console.log(param)
-                //         oModel.update(entitySet, param, mParameters);
-                //     });
-                    
-                //     if (bProceed) {
-                //         this.showLoadingDialog('Processing...');
-
-                //         oModel.submitChanges({
-                //             groupId: "update",
-                //             success: function(odata, resp){ 
-                //                 alert("Edited");
-                //                 // _this.closeLoadingDialog();
-                //                 // _this.setButton(arg, "save");
-
-                //                 // if (sap.ushell.Container !== undefined) { sap.ushell.Container.setDirtyFlag(false); }
-
-                //                 // var oIconTabBar = _this.byId("itbDetail");
-                //                 // oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
-
-                //                 // _this.getView().getModel(arg).getData().results.forEach((row,index) => {
-                //                 //     _this.getView().getModel(arg).setProperty('/results/' + index + '/Edited', false);
-                //                 // })
-                                
-                //                 // _this.getView().getModel("ui").setProperty("/dataMode", 'READ');
-
-                //                 // var oTable = _this.byId(arg + "Tab");
-
-                //                 // setTimeout(() => {
-                //                 //     var iActiveRowIndex = oTable.getModel(arg).getData().results.findIndex(item => item.ACTIVE === "X");
-                
-                //                 //     oTable.getRows().forEach(row => {
-                //                 //         if (row.getBindingContext(arg) && +row.getBindingContext(arg).sPath.replace("/results/", "") === iActiveRowIndex) {
-                //                 //             row.addStyleClass("activeRow");
-                //                 //         }
-                //                 //         else row.removeStyleClass("activeRow");
-                //                 //     })                    
-                //                 // }, 1);
-
-                //                 // if (arg === "attributes") {
-                //                 //     _this.getAttributes(false);
-                //                 // }
-                //                 // else if (arg === "cusmat") {
-                //                 //     _this.getCustomerMaterial(false);
-                //                 // }
-                //             },
-                //             error: function(odata, resp) { console.log(resp); }
-                //         });
-                //     }
-                // }
                 else if (aEditedRows.length > 0) {
                     var oModel = this.getOwnerComponent().getModel();
                     var iEdited = 0;
-                    var _this = this;
-                    console.log("acol-header",this._aColumns["header"]);
+                    var _this = this; 
+                    var bProceed = true;
+                    var mParameters = {
+                        "groupId": "update"
+                    };
+
+                    oModel.setUseBatch(true);
+                    oModel.setDeferredGroups(["update"]);
+
                     aEditedRows.forEach(item => {
                         var entitySet = "/MaterialSet(";
                         var param = {};
-
                         var iKeyCount = this._aColumns["header"].filter(col => col.Key === "X").length;
-
+                        
+                        
+                        
                         _this._aColumns["header"].forEach(col => {
-                            if (col.Editable) param[col.ColumnName] = item[col.ColumnName]
+                            if (col.Editable) param[col.ColumnName] = item[col.ColumnName];
 
-                            if (iKeyCount === 1) {
-                                if (col.Key) entitySet += "'" + item[col.ColumnName] + "'"
+                            // if (arg === "attributes" && (col.name === "DESCEN" || col.name === "DESCZH")) {
+                            //     param[col.name] = item[col.name];
+                            // }
+
+                            if (iKeyCount === 1) { 
+                                if (col.Key) entitySet += "'" + item[col.ColumnName] + "'" 
                             }
-                            else if (iKeyCount > 1) {
+                            else if (iKeyCount > 1) { 
                                 if (col.Key) entitySet += col.ColumnName + "='" + item[col.ColumnName] + "',"
                             }
                         })
-
-                        if (iKeyCount > 1) entitySet = entitySet.substr(0, entitySet.length - 1);
+                        
+                        if (iKeyCount > 1) entitySet = entitySet.substring(0, entitySet.length - 1);
 
                         entitySet += ")";
-
                         console.log("entitySet",entitySet);
-
-                        console.log("update-param",param);
-
-                        setTimeout(() => {
-                            oModel.update(entitySet, param, {
-                                method: "PUT",
-                                success: function (data, oResponse) {
-                                    iEdited++;
-
-                                    if (iEdited === aEditedRows.length) {
-                                        alert("done editing");
-                                        // _this.setButton(arg, "save");
-
-                                        // var oIconTabBar = _this.byId("itbDetail");
-                                        // oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
-
-                                        // _this.getView().getModel(arg).getData().forEach((row, index) => {
-                                        //     _this.getView().getModel(arg).setProperty('/results/' + index + '/Edited', false);
-                                        // })
-
-                                        // _this.getView().getModel("ui").setProperty("/dataMode", 'READ');
-                                    }
-                                },
-                                error: function () {
-                                    // alert("Error");
-                                }
-                            });
-                        }, 500)
+                        console.log("param",param);
+                        oModel.update(entitySet, param, mParameters);
                     });
+                    
+                    if (bProceed) {
+                        Common.openProcessingDialog(me, "Processing...");
+
+                        oModel.submitChanges({
+                            groupId: "update",
+                            success: function(odata, resp){ 
+                                Common.closeProcessingDialog(me);
+
+                                me.byId("btnAddHdr").setVisible(true);
+                                me.byId("btnEditHdr").setVisible(true);
+                                //me.byId("btnAddNewHdr").setVisible(false);
+                                me.byId("btnAddRowHdr").setVisible(false);
+                                me.byId("btnRemoveRowHdr").setVisible(false);
+                                me.byId("btnSaveHdr").setVisible(false);
+                                me.byId("btnCancelHdr").setVisible(false);
+                                me.byId("btnDeleteHdr").setVisible(true);
+                                //me.byId("btnSettingsHdr").setVisible(true);
+                                me.byId("btnRefreshHdr").setVisible(true);
+                                me.byId("btnFullScreenHdr").setVisible(true);
+                                me.byId("smartFilterBar").setVisible(true);
+
+                                me.byId(me._sActiveTable).getModel().setProperty("/rows", me._aDataBeforeChange);
+                                me.byId(me._sActiveTable).bindRows("/rows");
+
+                                if (me._aColFilters.length > 0) { me.setColumnFilters(me._sActiveTable); }
+                                if (me._aColSorters.length > 0) { me.setColumnSorters(me._sActiveTable); }
+                                me.byId("splitterHdr").setProperty("size", "50%");
+                                me.byId("splitterDtl").setProperty("size", "50%");
+                                me.getMain();
+                
+                                me.setRowReadMode();
+                                me._dataMode = "READ";
+
+                                // _this.closeLoadingDialog();
+                                // _this.setButton(arg, "save");
+
+                                // if (sap.ushell.Container !== undefined) { sap.ushell.Container.setDirtyFlag(false); }
+
+                                // var oIconTabBar = _this.byId("itbDetail");
+                                // oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
+
+                                // _this.getView().getModel(arg).getData().results.forEach((row,index) => {
+                                //     _this.getView().getModel(arg).setProperty('/results/' + index + '/Edited', false);
+                                // })
+                                
+                                // _this.getView().getModel("ui").setProperty("/dataMode", 'READ');
+
+                                // var oTable = _this.byId(arg + "Tab");
+
+                                // setTimeout(() => {
+                                //     var iActiveRowIndex = oTable.getModel(arg).getData().results.findIndex(item => item.ACTIVE === "X");
+                
+                                //     oTable.getRows().forEach(row => {
+                                //         if (row.getBindingContext(arg) && +row.getBindingContext(arg).sPath.replace("/results/", "") === iActiveRowIndex) {
+                                //             row.addStyleClass("activeRow");
+                                //         }
+                                //         else row.removeStyleClass("activeRow");
+                                //     })                    
+                                // }, 1);
+
+                                // if (arg === "attributes") {
+                                //     _this.getAttributes(false);
+                                // }
+                                // else if (arg === "cusmat") {
+                                //     _this.getCustomerMaterial(false);
+                                // }
+                                
+                            },
+                            error: function(odata, resp) { console.log(resp); }
+                        });
+                    }
                 }
+                // else if (aEditedRows.length > 0) {
+                //     var oModel = this.getOwnerComponent().getModel();
+                //     var iEdited = 0;
+                //     var _this = this;
+                //     console.log("acol-header",this._aColumns["header"]);
+                //     aEditedRows.forEach(item => {
+                //         var entitySet = "/MaterialSet(";
+                //         var param = {};
+
+                //         var iKeyCount = this._aColumns["header"].filter(col => col.Key === "X").length;
+
+                //         _this._aColumns["header"].forEach(col => {
+                //             if (col.Editable) param[col.ColumnName] = item[col.ColumnName]
+
+                //             if (iKeyCount === 1) {
+                //                 if (col.Key) entitySet += "'" + item[col.ColumnName] + "'"
+                //             }
+                //             else if (iKeyCount > 1) {
+                //                 if (col.Key) entitySet += col.ColumnName + "='" + item[col.ColumnName] + "',"
+                //             }
+                //         })
+
+                //         if (iKeyCount > 1) entitySet = entitySet.substr(0, entitySet.length - 1);
+
+                //         entitySet += ")";
+
+                //         console.log("entitySet",entitySet);
+
+                //         console.log("update-param",param);
+
+                //         setTimeout(() => {
+                //             oModel.update(entitySet, param, {
+                //                 method: "PUT",
+                //                 success: function (data, oResponse) {
+                //                     iEdited++;
+
+                //                     if (iEdited === aEditedRows.length) {
+                //                         alert("done editing");
+                //                         // _this.setButton(arg, "save");
+
+                //                         // var oIconTabBar = _this.byId("itbDetail");
+                //                         // oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
+
+                //                         // _this.getView().getModel(arg).getData().forEach((row, index) => {
+                //                         //     _this.getView().getModel(arg).setProperty('/results/' + index + '/Edited', false);
+                //                         // })
+
+                //                         // _this.getView().getModel("ui").setProperty("/dataMode", 'READ');
+                //                     }
+                //                 },
+                //                 error: function (err) {
+
+                //                      var errorMessage = JSON.parse(err.message.match(/"value":"(.*?)"/)[1]);
+                //                     alert(errorMessage);
+                //                 }
+                //             });
+                //         }, 500)
+                //     });
+                // }
             },
             createDialog: null,
             onMaterialTypeClassDialog(args) {
@@ -2311,6 +2342,7 @@ sap.ui.define([
                 this.cancelData();
             },
             cancelData() {
+                
                 if (this._dataMode === "NEW" || this._dataMode === "EDIT") {
                     var bChanged = false;
 
@@ -2360,6 +2392,8 @@ sap.ui.define([
                         //     me.byId("searchFieldHdr").setEnabled(true);
                         //     this.onTableResize('Dtls', 'Min');
                         // }
+                        
+
                         this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
                         this.byId(this._sActiveTable).bindRows("/rows");
 
@@ -2367,6 +2401,7 @@ sap.ui.define([
                         if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
                         this.byId("splitterHdr").setProperty("size", "50%");
                         this.byId("splitterDtl").setProperty("size", "50%");
+                        this.getMain();
                         this.setRowReadMode();
                         this._dataMode = "READ";
                     }
@@ -2391,7 +2426,7 @@ sap.ui.define([
                         this.byId("smartFilterBar").setVisible(false);
                         this.onEditMain(); 
                     }
-                    
+                    this._dataMode = "EDIT";
                 }
             },
             onEditMain() {
@@ -2573,6 +2608,7 @@ sap.ui.define([
                 if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
                 this.byId("splitterHdr").setProperty("size", "50%");
                 this.byId("splitterDtl").setProperty("size", "50%");
+                this.getMain();
                 this.setRowReadMode();
                 this._dataMode = "READ";
 

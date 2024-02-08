@@ -1770,10 +1770,11 @@ sap.ui.define([
                     aEditedRows.forEach(item => {
                         var entitySet = "/MaterialSet(";
                         var param = {};
-                        var iKeyCount = this._aColumns[arg].filter(col => col.Key === "X").length;
+                        var iKeyCount = this._aColumns["header"].filter(col => col.Key === "X").length;
                         
                         
-                        _this._aColumns[arg].forEach(col => {
+                        
+                        _this._aColumns["header"].forEach(col => {
                             if (col.Editable) param[col.ColumnName] = item[col.ColumnName];
 
                             // if (arg === "attributes" && (col.name === "DESCEN" || col.name === "DESCZH")) {
@@ -1781,27 +1782,54 @@ sap.ui.define([
                             // }
 
                             if (iKeyCount === 1) { 
-                                if (col.key) entitySet += "'" + item[col.ColumnName] + "'" 
+                                if (col.Key) entitySet += "'" + item[col.ColumnName] + "'" 
                             }
                             else if (iKeyCount > 1) { 
-                                if (col.key) entitySet += col.ColumnName + "='" + item[col.ColumnName] + "',"
+                                if (col.Key) entitySet += col.ColumnName + "='" + item[col.ColumnName] + "',"
                             }
                         })
                         
                         if (iKeyCount > 1) entitySet = entitySet.substring(0, entitySet.length - 1);
 
                         entitySet += ")";
-                        console.log(param)
+                        console.log("entitySet",entitySet);
+                        console.log("param",param);
                         oModel.update(entitySet, param, mParameters);
                     });
                     
                     if (bProceed) {
-                        this.showLoadingDialog('Processing...');
+                        Common.openProcessingDialog(me, "Processing...");
 
                         oModel.submitChanges({
                             groupId: "update",
                             success: function(odata, resp){ 
-                                alert("Edited");
+                                Common.closeProcessingDialog(me);
+
+                                me.byId("btnAddHdr").setVisible(true);
+                                me.byId("btnEditHdr").setVisible(true);
+                                //me.byId("btnAddNewHdr").setVisible(false);
+                                me.byId("btnAddRowHdr").setVisible(false);
+                                me.byId("btnRemoveRowHdr").setVisible(false);
+                                me.byId("btnSaveHdr").setVisible(false);
+                                me.byId("btnCancelHdr").setVisible(false);
+                                me.byId("btnDeleteHdr").setVisible(true);
+                                //me.byId("btnSettingsHdr").setVisible(true);
+                                me.byId("btnRefreshHdr").setVisible(true);
+                                me.byId("btnFullScreenHdr").setVisible(true);
+                                me.byId("smartFilterBar").setVisible(true);
+
+                                me.byId(me._sActiveTable).getModel().setProperty("/rows", me._aDataBeforeChange);
+                                me.byId(me._sActiveTable).bindRows("/rows");
+
+                                if (me._aColFilters.length > 0) { me.setColumnFilters(me._sActiveTable); }
+                                if (me._aColSorters.length > 0) { me.setColumnSorters(me._sActiveTable); }
+                                me.byId("splitterHdr").setProperty("size", "50%");
+                                me.byId("splitterDtl").setProperty("size", "50%");
+                                me.getMain();
+                
+                                me.setRowReadMode();
+                                me._dataMode = "READ";
+
                                 // _this.closeLoadingDialog();
                                 // _this.setButton(arg, "save");
 
@@ -1835,6 +1863,7 @@ sap.ui.define([
                                 // else if (arg === "cusmat") {
                                 //     _this.getCustomerMaterial(false);
                                 // }
+                                
                             },
                             error: function(odata, resp) { console.log(resp); }
                         });
@@ -1890,8 +1919,10 @@ sap.ui.define([
                 //                         // _this.getView().getModel("ui").setProperty("/dataMode", 'READ');
                 //                     }
                 //                 },
-                //                 error: function () {
-                //                     // alert("Error");
+                //                 error: function (err) {
+
+                //                      var errorMessage = JSON.parse(err.message.match(/"value":"(.*?)"/)[1]);
+                //                     alert(errorMessage);
                 //                 }
                 //             });
                 //         }, 500)
@@ -2311,6 +2342,7 @@ sap.ui.define([
                 this.cancelData();
             },
             cancelData() {
+                
                 if (this._dataMode === "NEW" || this._dataMode === "EDIT") {
                     var bChanged = false;
 
@@ -2360,6 +2392,8 @@ sap.ui.define([
                         //     me.byId("searchFieldHdr").setEnabled(true);
                         //     this.onTableResize('Dtls', 'Min');
                         // }
+                        
+
                         this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
                         this.byId(this._sActiveTable).bindRows("/rows");
 
@@ -2367,6 +2401,7 @@ sap.ui.define([
                         if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
                         this.byId("splitterHdr").setProperty("size", "50%");
                         this.byId("splitterDtl").setProperty("size", "50%");
+                        this.getMain();
                         this.setRowReadMode();
                         this._dataMode = "READ";
                     }
@@ -2391,7 +2426,7 @@ sap.ui.define([
                         this.byId("smartFilterBar").setVisible(false);
                         this.onEditMain(); 
                     }
-                    
+                    this._dataMode = "EDIT";
                 }
             },
             onEditMain() {
@@ -2573,6 +2608,7 @@ sap.ui.define([
                 if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
                 this.byId("splitterHdr").setProperty("size", "50%");
                 this.byId("splitterDtl").setProperty("size", "50%");
+                this.getMain();
                 this.setRowReadMode();
                 this._dataMode = "READ";
 
