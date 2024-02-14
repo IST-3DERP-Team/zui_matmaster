@@ -18,11 +18,18 @@
 			<Button text="Cancel" press=".onCreateMMCancel"/>
 		</endButton>
         <uit:Table id="classTab"
+            class="sapMDialogScroll"
             rows="{mtClassModel>/results}"
             selectionMode="None"
             visibleRowCount="{/rowCount}"
             paste="onPaste">
             <uit:columns>
+                <uit:Column width="10rem">
+                    <Label text="GMC" />
+                    <uit:template>
+                        <Text text="{mtClassModel>Gmc}" wrapping="false" />
+                    </uit:template>
+                </uit:Column>
                 <uit:Column width="10rem">
                     <Label text="Material Type" />
                     <uit:template>

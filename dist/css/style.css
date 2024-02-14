@@ -294,3 +294,7 @@ span[data-row-active-class=X] {
 .sapMDialogScroll {
     height: 100%;
 }
+
+#classTab {
+    height: 100%;
+}
