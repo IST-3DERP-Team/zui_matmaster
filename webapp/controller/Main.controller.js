@@ -2731,7 +2731,6 @@ sap.ui.define([
                                         if (me.byId(me._sActiveTable).getBinding("rows").aSorters.length > 0) {
                                             me._aColSorters = me.byId(me._sActiveTable).getBinding("rows").aSorters;
                                         }
-
                                         aSelIndices.forEach(item => {
                                             var oModel = me.getOwnerComponent().getModel();
                                             var oEntitySet = "/MaterialSet('" + aData.at(item)['MATERIALNO'] + "')";
