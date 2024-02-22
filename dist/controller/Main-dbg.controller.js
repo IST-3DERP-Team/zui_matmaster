@@ -2799,13 +2799,11 @@ sap.ui.define([
                 var oParamInitParam = {};
                 var oParamData = [];
 
+
                 if (aSelIndices.length > 0) {
                     Common.openLoadingDialog(this);
-                    aSelIndices.forEach(item => {
-                        oTmpSelectedIndices.push(oTable.getBinding("rows").aIndices[item])
-                    });
-                    aSelIndices = oTmpSelectedIndices;
-                    for (var item in aSelIndices) {
+                    aSelIndices.forEach(async item => {
+                        var dataIndex = oTable.getBinding("rows").aIndices[item];
                         await new Promise((resolve, reject) => {
                             iCounter++;
                             oModel.read("/ExtendMaterialVldMatChkSet", {
@@ -2824,17 +2822,21 @@ sap.ui.define([
                                 }
                             });
                         });
+                        
+
                         if (isValid) {
+                            var selectedData = aData[dataIndex];
+                            console.log(selectedData.PLANTCD);
                             oParamInitParam = {
-                                Subrc: 0
-                            }
-                            oParamData.push({
-                                Row: 0,
-                                Matnr: matNo,
-                                WerksFrom: plantCd,
-                                WerksTo: aData.at(item).PLANTCD
-                            })
-                        }
+                                            Subrc: 0
+                                        }
+                                        oParamData.push({
+                                            Row: 0,
+                                            Matnr: matNo,
+                                            WerksFrom: plantCd,
+                                            WerksTo: selectedData.PLANTCD
+                                        })
+                        }   
                         if (aSelIndices.length === iCounter) {
                             oParam = oParamInitParam;
                             oParam['N_IMatPlant'] = oParamData;
@@ -2849,6 +2851,7 @@ sap.ui.define([
                                             // if(oData.N_Messtab.results[0].Message !== undefined || oData.N_Messtab.results[0].Message !== "" || oData.N_Messtab.results[0].Message !== null){
                                             const lastKey = oData.N_Messtab.results.length - 1;
                                             if (oData.N_Messtab.results[lastKey].Type === "S") {
+                                                _this.getPlant(matNo);
                                                 MessageBox.information(oData.N_Messtab.results[0].Message);
                                             }
                                             // }
@@ -2865,16 +2868,104 @@ sap.ui.define([
                             } else {
                                 MessageBox.error("No valid Purchasing Plant found.");
                             }
-
                         }
-                    }
+                    });
+                    //aSelIndices = oTmpSelectedIndices;
 
+                    
                     Common.closeLoadingDialog(me);
                     this.onExtendMaterialDialog.destroy(true);
-                    this.getPlant(matNo);
+                    
                 } else {
                     MessageBox.warning("No Selected Record!");
                 }
+
+                // if (aSelIndices.length > 0) {
+                //     Common.openLoadingDialog(this);
+                //     aSelIndices.forEach(item => {
+                //         oTmpSelectedIndices.push(oTable.getBinding("rows").aIndices[item])
+                //     });
+                //     aSelIndices = oTmpSelectedIndices;
+                    
+                //     for (var item in aSelIndices) {
+                //         await new Promise((resolve, reject) => {
+                //             iCounter++;
+                //             oModel.read("/ExtendMaterialVldMatChkSet", {
+                //                 urlParameters: {
+                //                     "$filter": "MATNO eq '" + matNo + "'"
+                //                     // "$filter": "VENDORCD eq '0003101604' and PURCHORG eq '1601' and PURCHGRP eq '601' and SHIPTOPLANT eq 'B601' and PURCHPLANT eq 'C600' and DOCTYP eq 'ZMRP'"
+                //                 }, success: async function (oData, oResponse) {
+                //                     if (oData.results.length > 0) {
+                //                         isValid = true;
+                //                         resolve(plantCd = oData.results[0].PLANTCD);
+                //                     }
+                //                     resolve();
+                //                 },
+                //                 error: function () {
+                //                     resolve();
+                //                 }
+                //             });
+                //         });
+                //         if (isValid) {
+                //             var dataIndex = oTable.getBinding("rows").aIndices[item];
+                            
+                //             //var selectedData = aData[dataIndex];
+                //             console.log("aSelIndices",aSelIndices);
+                //             console.log("selPlant",aData[dataIndex].PLANTCD);
+                //             oParamInitParam = {
+                //                 Subrc: 0
+                //             }
+                //             oParamData.push({
+                //                 Row: 0,
+                //                 Matnr: matNo,
+                //                 WerksFrom: plantCd,
+                //                 WerksTo: aData.at(item).PLANTCD
+                //             })
+                //             console.log("item",item);
+                //             console.log("plantcd",aData.at(item).PLANTCD[aSelIndices]);
+                //         }
+                //         if (aSelIndices.length === iCounter) {
+                //             oParam = oParamInitParam;
+                //             oParam['N_IMatPlant'] = oParamData;
+                //             oParam['N_EMatPlant'] = [];
+                //             oParam['N_Messtab'] = [];
+
+                //             //console.log("oParamData",oParamData);
+
+                //             if (oParamData.length > 0) {
+                //                 await new Promise((resolve, reject) => {
+                //                     matModel.create("/MatExtendSet", oParam, {
+                //                         method: "POST",
+                //                         success: function (oData, oResponse) {
+                //                             // if(oData.N_Messtab.results[0].Message !== undefined || oData.N_Messtab.results[0].Message !== "" || oData.N_Messtab.results[0].Message !== null){
+                //                             const lastKey = oData.N_Messtab.results.length - 1;
+                //                             if (oData.N_Messtab.results[lastKey].Type === "S") {
+                //                                 MessageBox.information(oData.N_Messtab.results[0].Message);
+                //                             }
+                //                             // }
+                //                             else if (oData.N_Messtab.results[lastKey].Type === "E") {
+                //                                 MessageBox.error(Object.values(oData.N_Messtab.results).pop().Message);
+                //                             }
+                //                             resolve();
+                //                         }, error: function (error) {
+
+                //                             resolve();
+                //                         }
+                //                     });
+                //                 })
+                //             } else {
+                //                 MessageBox.error("No valid Purchasing Plant found.");
+                //             }
+
+                //         }
+                //     }
+
+                //     Common.closeLoadingDialog(me);
+                //     this.onExtendMaterialDialog.destroy(true);
+                //     this.getPlant(matNo);
+                // } else {
+                //     MessageBox.warning("No Selected Record!");
+                // }
 
             },
             formatValueHelp: function(sValue, sPath, sKey, sText, sFormat) {
