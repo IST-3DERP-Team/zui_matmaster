@@ -1,7 +1,11 @@
 {
 	"name": "zuimatmaster",
 	"version": "0.0.1",
+<<<<<<< HEAD
+	"buildTimestamp": "202402220714",
+=======
 	"buildTimestamp": "202402140747",
+>>>>>>> origin/main
 	"scmRevision": "",
 	"libraries": []
 }

@@ -371,6 +371,7 @@ sap.ui.define([
                 oModel.read("/ColumnsSet", {
                     success: function (oData, oResponse) {
                         if (oData.results.length > 0) {
+                            console.log("columnset",oData.results);
                             if (oLocColProp[sTabId.replace("Tab", "")] !== undefined) {
                                 oData.results.forEach(item => {
                                     oLocColProp[sTabId.replace("Tab", "")].filter(loc => loc.ColumnName === item.ColumnName)
@@ -1158,6 +1159,190 @@ sap.ui.define([
 
                 oTable.focus();
             },
+            setRowEditMode(arg) {
+                //this.getView().getModel(arg).getData().results.forEach(item => item.Edited = false);
+                var oTable = this.byId(arg + "Tab");
+                var me = this;
+
+                var oInputEventDelegate = {
+                    onkeydown: function(oEvent){
+                        me.onInputKeyDown(oEvent);
+                    },
+
+                    onclick: function(oEvent) {
+                        if (arg === "attributes") {
+                            me.onInputFocus(oEvent);
+                        }
+                    }
+                };
+
+                oTable.getColumns().forEach((col, idx) => {
+                    var sColName = "";
+                    var oValueHelp = false;
+
+                    if (col.mAggregations.template.mBindingInfos.text !== undefined) {
+                        sColName = col.mAggregations.template.mBindingInfos.text.parts[0].path;
+                    }
+                    else if (col.mAggregations.template.mBindingInfos.selected !== undefined) {
+                        sColName = col.mAggregations.template.mBindingInfos.selected.parts[0].path;
+                    }
+                    else if (col.mAggregations.template.mBindingInfos.value !== undefined) {
+                        sColName = col.mAggregations.template.mBindingInfos.value.parts[0].path;
+                    }
+
+                    this._aColumns[this._sActiveTable.replace("Tab", "")].filter(item => item.ColumnName === sColName)
+                        .forEach(ci => {
+                            if (ci.Editable || ci.Creatable) {
+                                if (ci.ValueHelp !== undefined) oValueHelp = ci.ValueHelp["show"];
+
+                                if (oValueHelp) {
+                                    var bValueFormatter = false;
+                                    var sSuggestItemText = ci.ValueHelp["SuggestionItems"].text;
+                                    var sSuggestItemAddtlText = ci.ValueHelp["SuggestionItems"].additionalText !== undefined ? ci.ValueHelp["SuggestionItems"].additionalText : '';
+                                    var sTextFormatMode = "Key";
+
+                                    if (ci.TextFormatMode && ci.TextFormatMode !== "" && ci.TextFormatMode !== "Key" && ci.ValueHelp["items"].value !== ci.ValueHelp["items"].text) {
+                                        sTextFormatMode = ci.TextFormatMode;
+                                        bValueFormatter = true;
+
+                                        if (ci.ValueHelp["SuggestionItems"].additionalText && ci.ValueHelp["SuggestionItems"].text !== ci.ValueHelp["SuggestionItems"].additionalText) {
+                                            if (sTextFormatMode === "ValueKey" || sTextFormatMode === "Value") {
+                                                sSuggestItemText = ci.ValueHelp["SuggestionItems"].additionalText;
+                                                sSuggestItemAddtlText = ci.ValueHelp["SuggestionItems"].text;
+                                            }
+                                        }
+                                    }
+
+                                    // Assuming me and ci are defined appropriately
+                                    var oInput = new sap.m.Input({
+                                        type: "Text",
+                                        showValueHelp: true,
+                                        valueHelpRequest: TableValueHelp.handleTableValueHelp.bind(this),
+                                        showSuggestion: true,
+                                        maxSuggestionWidth: ci.ValueHelp["SuggestionItems"]?.additionalText ? ci.ValueHelp["SuggestionItems"].maxSuggestionWidth : "1px",
+                                        suggestionItems: {
+                                            path: ci.ValueHelp["SuggestionItems"].path,
+                                            length: 10000,
+                                            template: new sap.ui.core.ListItem({
+                                                key: ci.ValueHelp["SuggestionItems"].text,
+                                                text: sSuggestItemText,
+                                                additionalText: sSuggestItemAddtlText,
+                                            }),
+                                            templateShareable: false
+                                        },
+                                        change: this.handleValueHelpChange.bind(this)
+                                    });
+
+                                    if (bValueFormatter) {
+                                        oInput.setProperty("textFormatMode", sTextFormatMode);
+
+                                        // Using optional chaining (?.) to simplify property access
+                                        oInput.bindValue({
+                                            parts: [
+                                                { path: sColName },
+                                                { value: ci.ValueHelp?.items?.path },
+                                                { value: ci.ValueHelp?.items?.value },
+                                                { value: ci.ValueHelp?.items?.text },
+                                                { value: sTextFormatMode }
+                                            ],
+                                            formatter: this.formatValueHelp.bind(this)
+                                        });
+                                    } else {
+                                        oInput.bindValue({
+                                            parts: [{ path: sColName }]
+                                        });
+                                    }
+
+                                    col.setTemplate(oInput);
+                                }
+                                else if (ci.DataType === "DATETIME") {
+                                    if (this._sActiveTable === "costHdrTab" && sColName === "CSDATE") {
+                                        col.setTemplate(new sap.m.DatePicker({
+                                            value: "{path: '" + ci.ColumnName + "', mandatory: '" + ci.Mandatory + "'}",
+                                            displayFormat: "MM/dd/yyyy",
+                                            valueFormat: "MM/dd/yyyy",
+                                            change: this.onInputLiveChange.bind(this),
+                                            enabled: {
+                                                path: "COSTSTATUS",
+                                                formatter: function (COSTSTATUS) {
+                                                    if (COSTSTATUS === "REL") { return false }
+                                                    else { return true }
+                                                }
+                                            }
+                                        }));
+                                    }
+                                    else {
+                                        col.setTemplate(new sap.m.DatePicker({
+                                            value: "{path: '" + ci.ColumnName + "', mandatory: '" + ci.Mandatory + "'}",
+                                            displayFormat: "MM/dd/yyyy",
+                                            valueFormat: "MM/dd/yyyy",
+                                            change: this.onInputLiveChange.bind(this)
+                                        }));
+                                    }
+                                }
+                                else if (ci.DataType === "NUMBER") {
+                                    // console.log("a3 NUMBER " + sColName);
+                                    col.setTemplate(new sap.m.Input({
+                                        type: sap.m.InputType.Number,
+                                        textAlign: sap.ui.core.TextAlign.Right,
+                                        value: "{path:'" + sColName + "', formatOptions:{ minFractionDigits:" + ci.Decimal + ", maxFractionDigits:" + ci.Decimal + " }, constraints:{ precision:" + ci.Length + ", scale:" + ci.Decimal + " }}",
+                                        // change: this.onNumberChange.bind(this),
+                                        liveChange: this.onNumberLiveChange.bind(this)
+                                    }));
+                                }
+                                else if (ci.DataType === "BOOLEAN") {
+                                    col.setTemplate(new sap.m.CheckBox({ selected: "{" + sColName + "}", editable: true }));
+                                }
+                                else {
+                                    if (this._sActiveTable === "ioMatListTab" && sColName === "MATDESC1") {
+                                        col.setTemplate(new sap.m.Input({
+                                            type: "Text",
+                                            value: "{" + sColName + "}",
+                                            maxLength: ci.Length,
+                                            change: this.onInputLiveChange.bind(this),
+                                            enabled: {
+                                                path: "MATNO",
+                                                formatter: function (MATNO) {
+                                                    if (MATNO !== "") { return false }
+                                                    else { return true }
+                                                }
+                                            }
+                                        }));
+                                    }
+                                    else if (this._sActiveTable === "costHdrTab" && sColName === "VERDESC") {
+                                        col.setTemplate(new sap.m.Input({
+                                            type: "Text",
+                                            value: "{" + sColName + "}",
+                                            maxLength: ci.Length,
+                                            change: this.onInputLiveChange.bind(this),
+                                            enabled: {
+                                                path: "COSTSTATUS",
+                                                formatter: function (COSTSTATUS) {
+                                                    if (COSTSTATUS === "REL") { return false }
+                                                    else { return true }
+                                                }
+                                            }
+                                        }));
+                                    }
+                                    else {
+                                        col.setTemplate(new sap.m.Input({
+                                            type: "Text",
+                                            value: "{" + sColName + "}",
+                                            maxLength: ci.Length,
+                                            change: this.onInputLiveChange.bind(this)
+                                        }));
+                                    }
+                                }
+
+                                if (ci.Mandatory) {
+                                    col.getLabel().addStyleClass("sapMLabelRequired");
+                                }
+
+                                
+                            }
+                        })
+                })
+            },
             setRowReadMode() {
                 var oTable = this.byId(this._sActiveTable);
                 var sColName = "";
@@ -1518,6 +1703,7 @@ sap.ui.define([
             },
             onSaveHdr() {
                 var aNewRows = this.byId(this._sActiveTable).getModel().getData().rows.filter(item => item.NEW === true);
+                var aEditedRows = this.byId(this._sActiveTable).getModel().getData().rows.filter(item => item.EDITED === true);
                 var oModel = this.getOwnerComponent().getModel();
                 var oModel1 = this.getOwnerComponent().getModel();
                 var oJSONModel = new JSONModel();
@@ -1527,46 +1713,221 @@ sap.ui.define([
                     results: []
                 };
 
-                aNewRows.forEach((item, idx) => {
-                    item.NEWSEQ = idx;
-                })
 
-                console.log("aNewRows", aNewRows);
-                this.onMaterialTypeClassDialog(aNewRows);
+                if (aNewRows.length > 0) {
+                    aNewRows.forEach((item, idx) => {
+                        item.NEWSEQ = idx;
+                    })
 
-                aNewRows.forEach((item, idx) => {
-                    oModel.read('/MRPTypeSet', {
+                    this.onMaterialTypeClassDialog(aNewRows);
+
+                    aNewRows.forEach((item, idx) => {
+                        oModel.read('/MRPTypeSet', {
+                            urlParameters: {
+                                "$filter": "Screencode eq 'BAPI_MATNR' and Mtart eq '" + item.MATERIALTYPE + "'"
+                            },
+                            success: function (data, response) {
+                                if (data.results.length > 0) {
+                                    oData.results.push(data.results[0]);
+                                }
+
+                                if (idx == aNewRows.length - 1) {
+                                    oJSONModel.setData(oData);
+                                    me.getView().setModel(oJSONModel, "mrpTypeClass");
+                                }
+                            },
+                            error: function (err) {
+                                MessageBox.information(err);
+                            }
+                        })
+                    })
+
+                    oModel1.read('/MatPlantSet', {
                         urlParameters: {
-                            "$filter": "Screencode eq 'BAPI_MATNR' and Mtart eq '" + item.MATERIALTYPE + "'"
+                            "$filter": "SBU eq '" + vSBU + "'"
                         },
                         success: function (data, response) {
-                            if (data.results.length > 0) {
-                                oData.results.push(data.results[0]);
-                            }
+                            oJSONModel1.setData(data);
+                            me.getView().setModel(oJSONModel1, "matPlantClass");
 
-                            if (idx == aNewRows.length - 1) {
-                                oJSONModel.setData(oData);
-                                me.getView().setModel(oJSONModel, "mrpTypeClass");
-                            }
                         },
                         error: function (err) {
-                            MessageBox.information(err);
                         }
                     })
-                })
+                }
+                else if (aEditedRows.length > 0) {
+                    var oModel = this.getOwnerComponent().getModel();
+                    var iEdited = 0;
+                    var _this = this; 
+                    var bProceed = true;
+                    var mParameters = {
+                        "groupId": "update"
+                    };
 
-                oModel1.read('/MatPlantSet', {
-                    urlParameters: {
-                        "$filter": "SBU eq '" + vSBU + "'"
-                    },
-                    success: function (data, response) {
-                        oJSONModel1.setData(data);
-                        me.getView().setModel(oJSONModel1, "matPlantClass");
+                    oModel.setUseBatch(true);
+                    oModel.setDeferredGroups(["update"]);
 
-                    },
-                    error: function (err) {
+                    aEditedRows.forEach(item => {
+                        var entitySet = "/MaterialSet(";
+                        var param = {};
+                        var iKeyCount = this._aColumns["header"].filter(col => col.Key === "X").length;
+                        
+                        
+                        
+                        _this._aColumns["header"].forEach(col => {
+                            if (col.Editable) param[col.ColumnName] = item[col.ColumnName];
+
+                            // if (arg === "attributes" && (col.name === "DESCEN" || col.name === "DESCZH")) {
+                            //     param[col.name] = item[col.name];
+                            // }
+
+                            if (iKeyCount === 1) { 
+                                if (col.Key) entitySet += "'" + item[col.ColumnName] + "'" 
+                            }
+                            else if (iKeyCount > 1) { 
+                                if (col.Key) entitySet += col.ColumnName + "='" + item[col.ColumnName] + "',"
+                            }
+                        })
+                        
+                        if (iKeyCount > 1) entitySet = entitySet.substring(0, entitySet.length - 1);
+
+                        entitySet += ")";
+                        console.log("entitySet",entitySet);
+                        console.log("param",param);
+                        oModel.update(entitySet, param, mParameters);
+                    });
+                    
+                    if (bProceed) {
+                        Common.openProcessingDialog(me, "Processing...");
+
+                        oModel.submitChanges({
+                            groupId: "update",
+                            success: function(odata, resp){ 
+                                Common.closeProcessingDialog(me);
+
+                                me.byId("btnAddHdr").setVisible(true);
+                                me.byId("btnEditHdr").setVisible(true);
+                                //me.byId("btnAddNewHdr").setVisible(false);
+                                me.byId("btnAddRowHdr").setVisible(false);
+                                me.byId("btnRemoveRowHdr").setVisible(false);
+                                me.byId("btnSaveHdr").setVisible(false);
+                                me.byId("btnCancelHdr").setVisible(false);
+                                me.byId("btnDeleteHdr").setVisible(true);
+                                //me.byId("btnSettingsHdr").setVisible(true);
+                                me.byId("btnRefreshHdr").setVisible(true);
+                                me.byId("btnFullScreenHdr").setVisible(true);
+                                me.byId("smartFilterBar").setVisible(true);
+
+                                me.byId(me._sActiveTable).getModel().setProperty("/rows", me._aDataBeforeChange);
+                                me.byId(me._sActiveTable).bindRows("/rows");
+
+                                if (me._aColFilters.length > 0) { me.setColumnFilters(me._sActiveTable); }
+                                if (me._aColSorters.length > 0) { me.setColumnSorters(me._sActiveTable); }
+                                me.byId("splitterHdr").setProperty("size", "50%");
+                                me.byId("splitterDtl").setProperty("size", "50%");
+                                me.getMain();
+                
+                                me.setRowReadMode();
+                                me._dataMode = "READ";
+
+                                // _this.closeLoadingDialog();
+                                // _this.setButton(arg, "save");
+
+                                // if (sap.ushell.Container !== undefined) { sap.ushell.Container.setDirtyFlag(false); }
+
+                                // var oIconTabBar = _this.byId("itbDetail");
+                                // oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
+
+                                // _this.getView().getModel(arg).getData().results.forEach((row,index) => {
+                                //     _this.getView().getModel(arg).setProperty('/results/' + index + '/Edited', false);
+                                // })
+                                
+                                // _this.getView().getModel("ui").setProperty("/dataMode", 'READ');
+
+                                // var oTable = _this.byId(arg + "Tab");
+
+                                // setTimeout(() => {
+                                //     var iActiveRowIndex = oTable.getModel(arg).getData().results.findIndex(item => item.ACTIVE === "X");
+                
+                                //     oTable.getRows().forEach(row => {
+                                //         if (row.getBindingContext(arg) && +row.getBindingContext(arg).sPath.replace("/results/", "") === iActiveRowIndex) {
+                                //             row.addStyleClass("activeRow");
+                                //         }
+                                //         else row.removeStyleClass("activeRow");
+                                //     })                    
+                                // }, 1);
+
+                                // if (arg === "attributes") {
+                                //     _this.getAttributes(false);
+                                // }
+                                // else if (arg === "cusmat") {
+                                //     _this.getCustomerMaterial(false);
+                                // }
+                                
+                            },
+                            error: function(odata, resp) { console.log(resp); }
+                        });
                     }
-                })
+                }
+                // else if (aEditedRows.length > 0) {
+                //     var oModel = this.getOwnerComponent().getModel();
+                //     var iEdited = 0;
+                //     var _this = this;
+                //     console.log("acol-header",this._aColumns["header"]);
+                //     aEditedRows.forEach(item => {
+                //         var entitySet = "/MaterialSet(";
+                //         var param = {};
+
+                //         var iKeyCount = this._aColumns["header"].filter(col => col.Key === "X").length;
+
+                //         _this._aColumns["header"].forEach(col => {
+                //             if (col.Editable) param[col.ColumnName] = item[col.ColumnName]
+
+                //             if (iKeyCount === 1) {
+                //                 if (col.Key) entitySet += "'" + item[col.ColumnName] + "'"
+                //             }
+                //             else if (iKeyCount > 1) {
+                //                 if (col.Key) entitySet += col.ColumnName + "='" + item[col.ColumnName] + "',"
+                //             }
+                //         })
+
+                //         if (iKeyCount > 1) entitySet = entitySet.substr(0, entitySet.length - 1);
+
+                //         entitySet += ")";
+
+                //         console.log("entitySet",entitySet);
+
+                //         console.log("update-param",param);
+
+                //         setTimeout(() => {
+                //             oModel.update(entitySet, param, {
+                //                 method: "PUT",
+                //                 success: function (data, oResponse) {
+                //                     iEdited++;
+
+                //                     if (iEdited === aEditedRows.length) {
+                //                         alert("done editing");
+                //                         // _this.setButton(arg, "save");
+
+                //                         // var oIconTabBar = _this.byId("itbDetail");
+                //                         // oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
+
+                //                         // _this.getView().getModel(arg).getData().forEach((row, index) => {
+                //                         //     _this.getView().getModel(arg).setProperty('/results/' + index + '/Edited', false);
+                //                         // })
+
+                //                         // _this.getView().getModel("ui").setProperty("/dataMode", 'READ');
+                //                     }
+                //                 },
+                //                 error: function (err) {
+
+                //                      var errorMessage = JSON.parse(err.message.match(/"value":"(.*?)"/)[1]);
+                //                     alert(errorMessage);
+                //                 }
+                //             });
+                //         }, 500)
+                //     });
+                // }
             },
             createDialog: null,
             onMaterialTypeClassDialog(args) {
@@ -2104,53 +2465,55 @@ sap.ui.define([
             //         });
             //     }
             // },
-            onCloseConfirmDialog: function (oEvent) {
-                if (this._ConfirmDialog.getModel().getData().Action === "update-cancel") {
-                    if (this._sActiveTable === "headerTab") {
-                        this.byId("smartFilterBar").setVisible(true);
-                        // this.byId("btnAddHdr").setVisible(true);
-                        // this.byId("btnEditHdr").setVisible(true);
-                        // this.byId("btnDeleteHdr").setVisible(true);
-                        // this.byId("btnRefreshHdr").setVisible(true);
-                        // this.byId("btnSaveHdr").setVisible(false);
-                        // this.byId("btnCancelHdr").setVisible(false);
-                        // this.byId("btnCopyHdr").setVisible(true);
-                        //this.byId("btnAddNewDtl").setVisible(false);
-                        me.byId("btnAddHdr").setVisible(true);
-                            me.byId("btnEditHdr").setVisible(true);
-                            //me.byId("btnAddNewHdr").setVisible(false);
-                            me.byId("btnAddRowHdr").setVisible(false);
-                            me.byId("btnRemoveRowHdr").setVisible(false);
-                            me.byId("btnSaveHdr").setVisible(false);
-                            me.byId("btnCancelHdr").setVisible(false);
-                            me.byId("btnDeleteHdr").setVisible(true);
-                            //me.byId("btnSettingsHdr").setVisible(true);
-                            me.byId("btnRefreshHdr").setVisible(true);
-                            me.byId("btnFullScreenHdr").setVisible(true);
-                    }
+            // onCloseConfirmDialog: function (oEvent) {
+            //     alert("here");
+            //     if (this._ConfirmDialog.getModel().getData().Action === "update-cancel") {
+            //         if (this._sActiveTable === "headerTab") {
+            //             this.byId("smartFilterBar").setVisible(true);
+            //             // this.byId("btnAddHdr").setVisible(true);
+            //             // this.byId("btnEditHdr").setVisible(true);
+            //             // this.byId("btnDeleteHdr").setVisible(true);
+            //             // this.byId("btnRefreshHdr").setVisible(true);
+            //             // this.byId("btnSaveHdr").setVisible(false);
+            //             // this.byId("btnCancelHdr").setVisible(false);
+            //             // this.byId("btnCopyHdr").setVisible(true);
+            //             //this.byId("btnAddNewDtl").setVisible(false);
+            //             me.byId("btnAddHdr").setVisible(true);
+            //                 me.byId("btnEditHdr").setVisible(true);
+            //                 //me.byId("btnAddNewHdr").setVisible(false);
+            //                 me.byId("btnAddRowHdr").setVisible(false);
+            //                 me.byId("btnRemoveRowHdr").setVisible(false);
+            //                 me.byId("btnSaveHdr").setVisible(false);
+            //                 me.byId("btnCancelHdr").setVisible(false);
+            //                 me.byId("btnDeleteHdr").setVisible(true);
+            //                 //me.byId("btnSettingsHdr").setVisible(true);
+            //                 me.byId("btnRefreshHdr").setVisible(true);
+            //                 me.byId("btnFullScreenHdr").setVisible(true);
+            //         }
 
-                    this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
-                    this.byId(this._sActiveTable).bindRows("/rows");
+            //         this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
+            //         this.byId(this._sActiveTable).bindRows("/rows");
 
-                    if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
-                    if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
-                    //this.onTableResize('Dtls', 'Min');
-                    this.setRowReadMode();
-                    this._dataMode = "READ";
-                    this.setActiveRowHighlightByTableId(this._sActiveTable);
-                }
+            //         if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
+            //         if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
+            //         //this.onTableResize('Dtls', 'Min');
+            //         this.setRowReadMode();
+            //         this._dataMode = "READ";
+            //         this.setActiveRowHighlightByTableId(this._sActiveTable);
+            //     }
 
-                this._ConfirmDialog.close();
-            },
+            //     this._ConfirmDialog.close();
+            // },
             onCancel: function (oEvent) {
                 var oTable = oEvent.getSource().oParent.oParent;
                 var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
                 this._sActiveTable = sTabId;
                 //this.onTableResize('Dtls', 'Min');
-                this.byId("smartFilterBar").setVisible(true);
+                
                 this.cancelData();
             },
             cancelData() {
+                
                 if (this._dataMode === "NEW" || this._dataMode === "EDIT") {
                     var bChanged = false;
 
@@ -2189,6 +2552,7 @@ sap.ui.define([
                             //me.byId("btnSettingsHdr").setVisible(true);
                             me.byId("btnRefreshHdr").setVisible(true);
                             me.byId("btnFullScreenHdr").setVisible(true);
+                            this.byId("smartFilterBar").setVisible(true);
                             //this.onTableResize('Hdr', 'Min');
 
                         }
@@ -2200,6 +2564,7 @@ sap.ui.define([
                         //     this.onTableResize('Dtls', 'Min');
                         // }
                         
+
                         this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
                         this.byId(this._sActiveTable).bindRows("/rows");
 
@@ -2207,6 +2572,7 @@ sap.ui.define([
                         if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
                         this.byId("splitterHdr").setProperty("size", "50%");
                         this.byId("splitterDtl").setProperty("size", "50%");
+                        this.getMain();
                         this.setRowReadMode();
                         this._dataMode = "READ";
                     }
@@ -2214,8 +2580,24 @@ sap.ui.define([
             },
             onEdit() {
                 if (this._dataMode === "READ") {
-                    if (this._sActiveTable === "headerTab") { this.onEditMain(); }
-                    
+                    if (this._sActiveTable === "headerTab") { 
+                        this.byId("splitterHdr").setProperty("size", "100%");
+                        this.byId("splitterDtl").setProperty("size", "0%");
+                        this.byId("btnAddHdr").setVisible(false);
+                        this.byId("btnEditHdr").setVisible(false);
+                        this.byId("btnDeleteHdr").setVisible(false);
+                        this.byId("btnRefreshHdr").setVisible(false);
+                        this.byId("btnAddRowHdr").setVisible(true);
+                        this.byId("btnRemoveRowHdr").setVisible(true);
+                        this.byId("btnSaveHdr").setVisible(true);
+                        this.byId("btnCancelHdr").setVisible(true);
+                        //this.byId("searchFieldHdr").setVisible(false);
+                        this.byId("btnFullScreenHdr").setVisible(false);
+                        this.byId("btnExitFullScreenHdr").setVisible(false);
+                        this.byId("smartFilterBar").setVisible(false);
+                        this.onEditMain(); 
+                    }
+                    this._dataMode = "EDIT";
                 }
             },
             onEditMain() {
@@ -2286,49 +2668,53 @@ sap.ui.define([
                                 success: function (data, response) {
                                     iCounter++;
                                     console.log(data.results)
-                                    if (data.results.length > 0) { 
-                                        bWithMaterial = true; 
-                                        aData.at(item).WMAT = true;
-                                    }
-                                    else {
-                                        aData.at(item).WMAT = false;
-                                    }
+                                    // if (data.results.length > 0) { 
+                                    //     bWithMaterial = true; 
+                                    //     aData.at(item).WMAT = true;
+                                    // }
+                                    // else {
+                                    //     aData.at(item).WMAT = false;
+                                    // }
 
                                     aDataToEdit.push(aData.at(item));
 
                                     if (aSelIndices.length === iCounter) {
-                                        if (!me._GMCDescZHAuth && aDataToEdit.filter(fItem => fItem.WMAT === false).length === 0) {
-                                            MessageBox.information(me.getView().getModel("ddtext").getData()["INFO_GMC_NO_EDIT"]);
-                                        }
-                                        else {
-                                            me.byId("btnAddGMC").setVisible(false);
-                                            me.byId("btnEditGMC").setVisible(false);
-                                            me.byId("btnSaveGMC").setVisible(true);
-                                            me.byId("btnCancelGMC").setVisible(true);
-                                            me.byId("btnDeleteGMC").setVisible(false);
-                                            me.byId("btnRefreshGMC").setVisible(false);
-                                            me.byId("btnSortGMC").setVisible(false);
-                                            // me.byId("btnFilterGMC").setVisible(false);
-                                            me.byId("btnExitFullScreenHdr").setVisible(false);
-                                            // me.byId("btnColPropGMC").setVisible(false);
-                                            me.byId("searchFieldGMC").setVisible(false);
-                                            // me.onTableResize("Hdr","Max");
-                                            me.byId("btnExitFullScreenHdr").setVisible(false);
-                                            me.byId("btnTabLayoutGMC").setVisible(false);
-                                            me.byId("btnDataWrapGMC").setVisible(false);
-                                            me.byId("cboxSBU").setEnabled(false);
-                                            me.setScreenSize("header", true, "100%", "0%");
+                                        me.byId("headerTab").getModel().setProperty("/rows", aDataToEdit);
+                                        me.byId("headerTab").bindRows("/rows");
+                                        me.getView().getModel("counts").setProperty("/header", aDataToEdit.length);
+                                        me.setRowEditMode("header");
+                                        // if (!me._GMCDescZHAuth && aDataToEdit.filter(fItem => fItem.WMAT === false).length === 0) {
+                                        //     MessageBox.information(me.getView().getModel("ddtext").getData()["INFO_GMC_NO_EDIT"]);
+                                        // }
+                                        // else {
+                                        //     me.byId("btnAddGMC").setVisible(false);
+                                        //     me.byId("btnEditGMC").setVisible(false);
+                                        //     me.byId("btnSaveGMC").setVisible(true);
+                                        //     me.byId("btnCancelGMC").setVisible(true);
+                                        //     me.byId("btnDeleteGMC").setVisible(false);
+                                        //     me.byId("btnRefreshGMC").setVisible(false);
+                                        //     me.byId("btnSortGMC").setVisible(false);
+                                        //     // me.byId("btnFilterGMC").setVisible(false);
+                                        //     me.byId("btnExitFullScreenHdr").setVisible(false);
+                                        //     // me.byId("btnColPropGMC").setVisible(false);
+                                        //     me.byId("searchFieldGMC").setVisible(false);
+                                        //     // me.onTableResize("Hdr","Max");
+                                        //     me.byId("btnExitFullScreenHdr").setVisible(false);
+                                        //     me.byId("btnTabLayoutGMC").setVisible(false);
+                                        //     me.byId("btnDataWrapGMC").setVisible(false);
+                                        //     me.byId("cboxSBU").setEnabled(false);
+                                        //     me.setScreenSize("header", true, "100%", "0%");
 
-                                            me._oDataBeforeChange = jQuery.extend(true, {}, me.getView().getModel("gmc").getData());
+                                        //     me._oDataBeforeChange = jQuery.extend(true, {}, me.getView().getModel("gmc").getData());
                         
-                                            me.getView().getModel("gmc").setProperty("/results", aDataToEdit);
-                                            me.setRowEditMode("gmc");
+                                        //     me.getView().getModel("gmc").setProperty("/results", aDataToEdit);
+                                        //     me.setRowEditMode("gmc");
                             
-                                            me.getView().getModel("ui").setProperty("/dataMode", 'EDIT');
-                                            me.getView().getModel("ui").setProperty("/updTable", "gmc");
-                                            me._isGMCEdited = false;
-                                            if (sap.ushell.Container !== undefined) { sap.ushell.Container.setDirtyFlag(false); }
-                                        }
+                                        //     me.getView().getModel("ui").setProperty("/dataMode", 'EDIT');
+                                        //     me.getView().getModel("ui").setProperty("/updTable", "gmc");
+                                        //     me._isGMCEdited = false;
+                                        //     if (sap.ushell.Container !== undefined) { sap.ushell.Container.setDirtyFlag(false); }
+                                        // }
                                     }                                    
                                 },
                                 error: function (err) {
@@ -2345,46 +2731,83 @@ sap.ui.define([
                 // aDataToEdit = aDataToEdit.filter(item => item.Deleted === false);
             },
             onCancelConfirmDialog: function (oEvent) {
-                var oTable = oEvent.getSource().oParent.oParent;
-                var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
-                this._sActiveTable = sTabId;
-                //this.onTableResize('Dtls', 'Min');
-                this.byId("smartFilterBar").setVisible(true);
+                
+
                 this._ConfirmDialog.close();
-                this.cancelData();
                 
             },
-            // onCloseConfirmDialog: function (oEvent) {
-            //      var oTable = oEvent.getSource().oParent.oParent;
-            //     var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
-            //     this._sActiveTable = sTabId;
-            //     //console.log("confirm", oTable, sTabId, oEvent.getSource())
-            //     //this.onTableResize('Dtls', 'Min');
-            //     this.byId("smartFilterBar").setVisible(true);
-            //     this._ConfirmDialog.close();
-            //     this.cancelData();
-            //     // if (this._ConfirmDialog.getModel().getData().Action === "update-cancel") {
-            //     //     if (this._sActiveTable === "headerTab") {
-            //     //         me.byId("btnAddHdr").setVisible(true);
-            //     //         me.byId("btnEditHdr").setVisible(true);
-            //     //         //me.byId("btnAddNewHdr").setVisible(false);
-            //     //         me.byId("btnAddRowHdr").setVisible(false);
-            //     //         me.byId("btnRemoveRowHdr").setVisible(false);
-            //     //         me.byId("btnSaveHdr").setVisible(false);
-            //     //         me.byId("btnCancelHdr").setVisible(false);
-            //     //         me.byId("btnDeleteHdr").setVisible(true);
-            //     //         //me.byId("btnSettingsHdr").setVisible(true);
-            //     //         me.byId("btnRefreshHdr").setVisible(true);
-            //     //         me.byId("btnFullScreenHdr").setVisible(true);
-            //     //         this.onTableResize('Hdr', 'Min');
-            //     //     }
-            //     //     // else if (this._sActiveTable === "detailTab") {
-            //     //     //     me.byId("btnRefreshDtl").setVisible(true);
-            //     //     //     me.byId("searchFieldDtl").setVisible(true);
-            //     //     //     me.byId("btnRefreshHdr").setEnabled(true);
-            //     //     //     me.byId("searchFieldHdr").setEnabled(true);
-            //     //     //     this.onTableResize('Dtls', 'Min');
-            //     //     // }
+            onCloseConfirmDialog: function (oEvent) {
+                var oTable = oEvent.getSource().oParent.oParent;
+                var sTabId = oTable.sId.split("--")[oTable.sId.split("--").length - 1];
+                this._sActiveTable = "headerTab";
+                
+                //this.onTableResize('Dtls', 'Min');
+                // this.byId("smartFilterBar").setVisible(true);
+                // this.byId("splitterHdr").setProperty("size", "50%");
+                // this.byId("splitterDtl").setProperty("size", "50%");
+                // this._ConfirmDialog.close();
+                // this.setRowReadMode();
+                // this.refreshData();
+
+                if (this._sActiveTable === "headerTab") {
+                    me.byId("btnAddHdr").setVisible(true);
+                    me.byId("btnEditHdr").setVisible(true);
+                    //me.byId("btnAddNewHdr").setVisible(false);
+                    me.byId("btnAddRowHdr").setVisible(false);
+                    me.byId("btnRemoveRowHdr").setVisible(false);
+                    me.byId("btnSaveHdr").setVisible(false);
+                    me.byId("btnCancelHdr").setVisible(false);
+                    me.byId("btnDeleteHdr").setVisible(true);
+                    //me.byId("btnSettingsHdr").setVisible(true);
+                    me.byId("btnRefreshHdr").setVisible(true);
+                    me.byId("btnFullScreenHdr").setVisible(true);
+                    me.byId("smartFilterBar").setVisible(true);
+                    //this.onTableResize('Hdr', 'Min');
+
+                }
+                // else if (this._sActiveTable === "detailTab") {
+                //     me.byId("btnRefreshDtl").setVisible(true);
+                //     me.byId("searchFieldDtl").setVisible(true);
+                //     me.byId("btnRefreshHdr").setEnabled(true);
+                //     me.byId("searchFieldHdr").setEnabled(true);
+                //     this.onTableResize('Dtls', 'Min');
+                // }
+                this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
+                this.byId(this._sActiveTable).bindRows("/rows");
+
+                if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
+                if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
+                this.byId("splitterHdr").setProperty("size", "50%");
+                this.byId("splitterDtl").setProperty("size", "50%");
+                this.getMain();
+                this.setRowReadMode();
+                this._dataMode = "READ";
+
+                this._ConfirmDialog.close();
+                
+                
+                // if (this._ConfirmDialog.getModel().getData().Action === "update-cancel") {
+                //     if (this._sActiveTable === "headerTab") {
+                //         me.byId("btnAddHdr").setVisible(true);
+                //         me.byId("btnEditHdr").setVisible(true);
+                //         //me.byId("btnAddNewHdr").setVisible(false);
+                //         me.byId("btnAddRowHdr").setVisible(false);
+                //         me.byId("btnRemoveRowHdr").setVisible(false);
+                //         me.byId("btnSaveHdr").setVisible(false);
+                //         me.byId("btnCancelHdr").setVisible(false);
+                //         me.byId("btnDeleteHdr").setVisible(true);
+                //         //me.byId("btnSettingsHdr").setVisible(true);
+                //         me.byId("btnRefreshHdr").setVisible(true);
+                //         me.byId("btnFullScreenHdr").setVisible(true);
+                //         this.onTableResize('Hdr', 'Min');
+                //     }
+                //     // else if (this._sActiveTable === "detailTab") {
+                //     //     me.byId("btnRefreshDtl").setVisible(true);
+                //     //     me.byId("searchFieldDtl").setVisible(true);
+                //     //     me.byId("btnRefreshHdr").setEnabled(true);
+                //     //     me.byId("searchFieldHdr").setEnabled(true);
+                //     //     this.onTableResize('Dtls', 'Min');
+                //     // }
 
             //     //     this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
             //     //     this.byId(this._sActiveTable).bindRows("/rows");
@@ -2398,6 +2821,7 @@ sap.ui.define([
 
             //     // this._ConfirmDialog.close();
             // },
+            },
             onCellClick: function (oEvent) {
                 if (oEvent.getParameters().rowBindingContext) {
                     var oTable = oEvent.getSource();
@@ -2547,13 +2971,11 @@ sap.ui.define([
                 var oParamInitParam = {};
                 var oParamData = [];
 
+
                 if (aSelIndices.length > 0) {
                     Common.openLoadingDialog(this);
-                    aSelIndices.forEach(item => {
-                        oTmpSelectedIndices.push(oTable.getBinding("rows").aIndices[item])
-                    });
-                    aSelIndices = oTmpSelectedIndices;
-                    for (var item in aSelIndices) {
+                    aSelIndices.forEach(async item => {
+                        var dataIndex = oTable.getBinding("rows").aIndices[item];
                         await new Promise((resolve, reject) => {
                             iCounter++;
                             oModel.read("/ExtendMaterialVldMatChkSet", {
@@ -2572,17 +2994,21 @@ sap.ui.define([
                                 }
                             });
                         });
+                        
+
                         if (isValid) {
+                            var selectedData = aData[dataIndex];
+                            console.log(selectedData.PLANTCD);
                             oParamInitParam = {
-                                Subrc: 0
-                            }
-                            oParamData.push({
-                                Row: 0,
-                                Matnr: matNo,
-                                WerksFrom: plantCd,
-                                WerksTo: aData.at(item).PLANTCD
-                            })
-                        }
+                                            Subrc: 0
+                                        }
+                                        oParamData.push({
+                                            Row: 0,
+                                            Matnr: matNo,
+                                            WerksFrom: plantCd,
+                                            WerksTo: selectedData.PLANTCD
+                                        })
+                        }   
                         if (aSelIndices.length === iCounter) {
                             oParam = oParamInitParam;
                             oParam['N_IMatPlant'] = oParamData;
@@ -2597,6 +3023,7 @@ sap.ui.define([
                                             // if(oData.N_Messtab.results[0].Message !== undefined || oData.N_Messtab.results[0].Message !== "" || oData.N_Messtab.results[0].Message !== null){
                                             const lastKey = oData.N_Messtab.results.length - 1;
                                             if (oData.N_Messtab.results[lastKey].Type === "S") {
+                                                _this.getPlant(matNo);
                                                 MessageBox.information(oData.N_Messtab.results[0].Message);
                                             }
                                             // }
@@ -2613,16 +3040,104 @@ sap.ui.define([
                             } else {
                                 MessageBox.error("No valid Purchasing Plant found.");
                             }
-
                         }
-                    }
+                    });
+                    //aSelIndices = oTmpSelectedIndices;
 
+                    
                     Common.closeLoadingDialog(me);
                     this.onExtendMaterialDialog.destroy(true);
-                    this.getPlant(matNo);
+                    
                 } else {
                     MessageBox.warning("No Selected Record!");
                 }
+
+                // if (aSelIndices.length > 0) {
+                //     Common.openLoadingDialog(this);
+                //     aSelIndices.forEach(item => {
+                //         oTmpSelectedIndices.push(oTable.getBinding("rows").aIndices[item])
+                //     });
+                //     aSelIndices = oTmpSelectedIndices;
+                    
+                //     for (var item in aSelIndices) {
+                //         await new Promise((resolve, reject) => {
+                //             iCounter++;
+                //             oModel.read("/ExtendMaterialVldMatChkSet", {
+                //                 urlParameters: {
+                //                     "$filter": "MATNO eq '" + matNo + "'"
+                //                     // "$filter": "VENDORCD eq '0003101604' and PURCHORG eq '1601' and PURCHGRP eq '601' and SHIPTOPLANT eq 'B601' and PURCHPLANT eq 'C600' and DOCTYP eq 'ZMRP'"
+                //                 }, success: async function (oData, oResponse) {
+                //                     if (oData.results.length > 0) {
+                //                         isValid = true;
+                //                         resolve(plantCd = oData.results[0].PLANTCD);
+                //                     }
+                //                     resolve();
+                //                 },
+                //                 error: function () {
+                //                     resolve();
+                //                 }
+                //             });
+                //         });
+                //         if (isValid) {
+                //             var dataIndex = oTable.getBinding("rows").aIndices[item];
+                            
+                //             //var selectedData = aData[dataIndex];
+                //             console.log("aSelIndices",aSelIndices);
+                //             console.log("selPlant",aData[dataIndex].PLANTCD);
+                //             oParamInitParam = {
+                //                 Subrc: 0
+                //             }
+                //             oParamData.push({
+                //                 Row: 0,
+                //                 Matnr: matNo,
+                //                 WerksFrom: plantCd,
+                //                 WerksTo: aData.at(item).PLANTCD
+                //             })
+                //             console.log("item",item);
+                //             console.log("plantcd",aData.at(item).PLANTCD[aSelIndices]);
+                //         }
+                //         if (aSelIndices.length === iCounter) {
+                //             oParam = oParamInitParam;
+                //             oParam['N_IMatPlant'] = oParamData;
+                //             oParam['N_EMatPlant'] = [];
+                //             oParam['N_Messtab'] = [];
+
+                //             //console.log("oParamData",oParamData);
+
+                //             if (oParamData.length > 0) {
+                //                 await new Promise((resolve, reject) => {
+                //                     matModel.create("/MatExtendSet", oParam, {
+                //                         method: "POST",
+                //                         success: function (oData, oResponse) {
+                //                             // if(oData.N_Messtab.results[0].Message !== undefined || oData.N_Messtab.results[0].Message !== "" || oData.N_Messtab.results[0].Message !== null){
+                //                             const lastKey = oData.N_Messtab.results.length - 1;
+                //                             if (oData.N_Messtab.results[lastKey].Type === "S") {
+                //                                 MessageBox.information(oData.N_Messtab.results[0].Message);
+                //                             }
+                //                             // }
+                //                             else if (oData.N_Messtab.results[lastKey].Type === "E") {
+                //                                 MessageBox.error(Object.values(oData.N_Messtab.results).pop().Message);
+                //                             }
+                //                             resolve();
+                //                         }, error: function (error) {
+
+                //                             resolve();
+                //                         }
+                //                     });
+                //                 })
+                //             } else {
+                //                 MessageBox.error("No valid Purchasing Plant found.");
+                //             }
+
+                //         }
+                //     }
+
+                //     Common.closeLoadingDialog(me);
+                //     this.onExtendMaterialDialog.destroy(true);
+                //     this.getPlant(matNo);
+                // } else {
+                //     MessageBox.warning("No Selected Record!");
+                // }
 
             },
             formatValueHelp: function(sValue, sPath, sKey, sText, sFormat) {
