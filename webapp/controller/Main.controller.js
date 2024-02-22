@@ -1950,6 +1950,7 @@ sap.ui.define([
                             console.log(data)
                             var aDataMatTClass = JSON.parse(JSON.stringify(data));
                             aDataMatTClass.results.forEach(itemMatClass => {
+                                itemMatClass.Gmc = args[idx].GMC;
                                 itemMatClass.Descen = '';
                                 itemMatClass.Desczh = '';
                                 itemMatClass.Attrib = itemMatClass.Attrib === "X" ? true : false;
@@ -2014,7 +2015,8 @@ sap.ui.define([
             onCreateMMCancel() {
                 this._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
             },
-            onCreateMMSave() {
+
+            onCreateMMSave: async function() {
                 var vSBU = 'VER';
                 var _aDescen = [], _aDesczh = [];
                 var _this = this;
@@ -2037,15 +2039,17 @@ sap.ui.define([
                     var aNewRows = this.byId(this._sActiveTable).getModel().getData().rows.filter(item => item.NEW === true);
                     var sMessage = "";
                     var bError = false;
-                    var iTimeOut = 0;
+                    var aParam = [];
+                    _this._bErrorCreateMM = false;
 
-                    aNewRows.forEach((item, idx) => {
+                    for (var i = 0; i < aNewRows.length; i++) {
+                        var oNewRow = aNewRows[i];
 
                         _aDescen = [];
                         _aDesczh = [];
 
                         _this.getView().getModel("mtClassModel").getData().results.forEach(itemMatClass => {
-                            if (itemMatClass.Mattyp == item.MATERIALTYPE && itemMatClass.NEWSEQ == item.NEWSEQ) {
+                            if (itemMatClass.Mattyp == oNewRow.MATERIALTYPE && itemMatClass.NEWSEQ == oNewRow.NEWSEQ) {
                                 if (itemMatClass.Desczh === '') itemMatClass.Desczh = itemMatClass.Descen;
 
                                 if (itemMatClass.Inclindesc === 'X') {
@@ -2063,7 +2067,7 @@ sap.ui.define([
                         var _paramAttrib = [];
 
                         _this.getView().getModel("mtClassModel").getData().results.forEach((itemMatClass, idxMatClass) => {
-                            if (itemMatClass.Mattyp == item.MATERIALTYPE && itemMatClass.NEWSEQ == item.NEWSEQ) {
+                            if (itemMatClass.Mattyp == oNewRow.MATERIALTYPE && itemMatClass.NEWSEQ == oNewRow.NEWSEQ) {
                                 _paramAttrib.push({
                                     "Seq": "1",
                                     "Seqno": (idxMatClass + 1) + "",
@@ -2076,21 +2080,21 @@ sap.ui.define([
                         })
 
                         var oMrpTypeClass = _this.getView().getModel("mrpTypeClass").getData().results.filter(
-                            x => x.Mtart == item.MATERIALTYPE)[0];
+                            x => x.Mtart == oNewRow.MATERIALTYPE)[0];
 
                         _MatImportParamSet.push({
                             "Seq": "1",
                             "Seqno": "1",
                             "Ind_sector": "J",
-                            "Matl_type": item.MATERIALTYPE,
-                            "Matl_group": item.MATERIALGROUP,
-                            "Old_mat_no": item.OLDMATERIALNO,
-                            "Base_uom": item.BASEUOM,
+                            "Matl_type": oNewRow.MATERIALTYPE,
+                            "Matl_group": oNewRow.MATERIALGROUP,
+                            "Old_mat_no": oNewRow.OLDMATERIALNO,
+                            "Base_uom": oNewRow.BASEUOM,
                             "Batch_mgmt": "X",
-                            "Net_weight": item.NETWT,
-                            "Unit_of_wt": item.WTUOM,
-                            "Po_unit": item.ORDERUOM,
-                            "Pur_valkey": item.PURCHVALUEKEY,
+                            "Net_weight": oNewRow.NETWT,
+                            "Unit_of_wt": oNewRow.WTUOM,
+                            "Po_unit": oNewRow.ORDERUOM,
+                            "Pur_valkey": oNewRow.PURCHVALUEKEY,
                             "Plant": _this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
                             "Mrp_type": oMrpTypeClass.Dismm,
                             "Period_ind": "M",
@@ -2098,7 +2102,7 @@ sap.ui.define([
                             "Availcheck": "KP",
                             "Profit_ctr": _this.getView().getModel("matPlantClass").getData().results[0].PROFITCTR,
                             "Val_area": _this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
-                            "Price_ctrl": (item.MATERIALGROUP === "ACC" || item.MATERIALGROUP === "FAB") ? "V" : "",
+                            "Price_ctrl": (oNewRow.MATERIALGROUP === "ACC" || oNewRow.MATERIALGROUP === "FAB") ? "V" : "",
                             "Moving_pr": "0",
                             "Price_unit": "1",
                             "Val_class": oMrpTypeClass.Bklas
@@ -2106,79 +2110,246 @@ sap.ui.define([
 
                         _param = {
                             "Seq": "1",
-                            "Mattyp": item.MATERIALTYPE,
-                            "Gmc": item.GMC,
+                            "Mattyp": oNewRow.MATERIALTYPE,
+                            "Gmc": oNewRow.GMC,
                             "Descen": _descen,
                             "Desczh": _desczh,
-                            "Processcd": item.PROCESSCODE,
-                            "Cusmatno": item.CUSMATCODE,
-                            "Grswt": item.GROSSWT,
-                            "Volume": item.VOLUME,
-                            "Voluom": item.VOLUMEUOM,
-                            "Length": item.LENGTH + '',
-                            "Width": item.WIDTH + '',
-                            "Height": item.HEIGHT + '',
-                            "Dimuom": item.DIMENSIONUOM,
+                            "Processcd": oNewRow.PROCESSCODE,
+                            "Cusmatno": oNewRow.CUSMATCODE,
+                            "Grswt": oNewRow.GROSSWT,
+                            "Volume": oNewRow.VOLUME,
+                            "Voluom": oNewRow.VOLUMEUOM,
+                            "Length": oNewRow.LENGTH + '',
+                            "Width": oNewRow.WIDTH + '',
+                            "Height": oNewRow.HEIGHT + '',
+                            "Dimuom": oNewRow.DIMENSIONUOM,
                             "Remarks": "",
                             "MatAttribParamSet": _paramAttrib,
                             "MatImportParamSet": _MatImportParamSet,
                             "RetMsgSet": [{ "Seq": "1" }]
                         }
+                        
+                        sMessage += await _this.saveMM(vSBU, _param);
+                    }
 
-                        console.log("_param", _param);
-                        iTimeOut += 100;
-
-                        setTimeout(() => {
-                            var oModel = _this.getOwnerComponent().getModel("ZGW_3DERP_MATERIAL_SRV");
-
-                            oModel.setHeaders({
-                                sbu: vSBU
-                            });
-
-                            oModel.create("/MaterialHdrSet", _param, {
-                                method: "POST",
-                                success: function (res, oResponse) {
-                                    Common.closeProcessingDialog(me);
-
-                                    if (res.RetMsgSet.results[0].Type != "S") bError = true;
-
-                                    sMessage += res.RetMsgSet.results[0].Message + "\n";
-
-                                    if (idx == aNewRows.length - 1) {
-                                        if (bError == false) {
-                                            me._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
-                                            me.getMain();
-                                            //me.onTableResize('Hdr', 'Min');
-                                            me.byId("smartFilterBar").setVisible(true);
-                                            me.byId("splitterHdr").setProperty("size", "50%");
-                                            me.byId("splitterDtl").setProperty("size", "50%");
-                                            me.byId("btnAddHdr").setVisible(true);
-                                            me.byId("btnEditHdr").setVisible(true);
-                                            me.byId("btnAddRowHdr").setVisible(false);
-                                            me.byId("btnRemoveRowHdr").setVisible(false);
-                                            me.byId("btnSaveHdr").setVisible(false);
-                                            me.byId("btnCancelHdr").setVisible(false);
-                                            me.byId("btnDeleteHdr").setVisible(true);
-                                            //me.byId("btnSettingsHdr").setVisible(true);
-                                            me.byId("btnFullScreenHdr").setVisible(true);
-                                            me.setRowReadMode();
-                                            me._dataMode = "READ";
-                                        }
-
-                                        MessageBox.information(sMessage);
-                                        Common.closeProcessingDialog(me);
-                                    }
-                                },
-                                error: function () {
-                                    Common.closeProcessingDialog(me);
-                                    // alert("Error");
-                                }
-                            });
-                        }, iTimeOut);
-
-                    });
+                    if (_this._bErrorCreateMM == false) {
+                        this._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
+                        this.getMain();
+                        this.byId("smartFilterBar").setVisible(true);
+                        this.byId("splitterHdr").setProperty("size", "50%");
+                        this.byId("splitterDtl").setProperty("size", "50%");
+                        this.byId("btnAddHdr").setVisible(true);
+                        this.byId("btnEditHdr").setVisible(true);
+                        this.byId("btnAddRowHdr").setVisible(false);
+                        this.byId("btnRemoveRowHdr").setVisible(false);
+                        this.byId("btnSaveHdr").setVisible(false);
+                        this.byId("btnCancelHdr").setVisible(false);
+                        this.byId("btnDeleteHdr").setVisible(true);
+                        this.byId("btnFullScreenHdr").setVisible(true);
+                        this.setRowReadMode();
+                        this._dataMode = "READ";
+                    }
+                    
+                    MessageBox.information(sMessage);
+                    Common.closeProcessingDialog(me);
                 }
             },
+
+            saveMM: function(pSbu, pParam) {
+                var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_MATERIAL_SRV");
+                var sMessage = "";
+                oModel.setHeaders({
+                    sbu: pSbu
+                });
+
+                var oPromiseResult = new Promise((resolve, reject) => {
+                    
+                    console.log("pParam", pParam);
+                    oModel.create("/MaterialHdrSet", pParam, {
+                        method: "POST",
+                        async: false,
+                        success: function (res, oResponse) {
+                            if (res.RetMsgSet.results[0].Type != "S" && me._bErrorCreateMM == false) me._bErrorCreateMM = true;
+
+                            sMessage += res.RetMsgSet.results[0].Message + "\n";
+                            resolve(sMessage);
+                        },
+                        error: function () {
+                            // Common.closeProcessingDialog(me);
+                            // alert("Error");
+                        }
+                    });
+                });
+
+                return oPromiseResult;
+            },
+
+            // ROL 20240214
+            // onCreateMMSave() {
+            //     var vSBU = 'VER';
+            //     var _aDescen = [], _aDesczh = [];
+            //     var _this = this;
+
+            //     this.getView().getModel("mtClassModel").getData().results.forEach(item => {
+            //         if (item.Desczh === '') item.Desczh = item.Descen;
+
+            //         if (item.Inclindesc === 'X') {
+            //             if (item.Descen !== '') _aDescen.push(item.Descen);
+            //             if (item.Desczh !== '') _aDesczh.push(item.Desczh);
+            //         }
+            //     })
+
+            //     if (_aDescen.join('') === '') {
+            //         MessageBox.information("At least one description should be specified.");
+            //     }
+            //     else {
+            //         Common.openProcessingDialog(me, "Processing...");
+
+            //         var aNewRows = this.byId(this._sActiveTable).getModel().getData().rows.filter(item => item.NEW === true);
+            //         var sMessage = "";
+            //         var bError = false;
+            //         var iTimeOut = 0;
+
+            //         aNewRows.forEach((item, idx) => {
+
+            //             _aDescen = [];
+            //             _aDesczh = [];
+
+            //             _this.getView().getModel("mtClassModel").getData().results.forEach(itemMatClass => {
+            //                 if (itemMatClass.Mattyp == item.MATERIALTYPE && itemMatClass.NEWSEQ == item.NEWSEQ) {
+            //                     if (itemMatClass.Desczh === '') itemMatClass.Desczh = itemMatClass.Descen;
+
+            //                     if (itemMatClass.Inclindesc === 'X') {
+            //                         if (itemMatClass.Descen !== '') _aDescen.push(itemMatClass.Descen);
+            //                         if (itemMatClass.Desczh !== '') _aDesczh.push(itemMatClass.Desczh);
+            //                     }
+            //                 }
+            //             })
+
+            //             var _descen = _aDescen.join(', ');
+            //             var _desczh = _aDesczh.join(', ');
+            //             var _param = {};
+            //             var dismm = '';
+            //             var _MatImportParamSet = [];
+            //             var _paramAttrib = [];
+
+            //             _this.getView().getModel("mtClassModel").getData().results.forEach((itemMatClass, idxMatClass) => {
+            //                 if (itemMatClass.Mattyp == item.MATERIALTYPE && itemMatClass.NEWSEQ == item.NEWSEQ) {
+            //                     _paramAttrib.push({
+            //                         "Seq": "1",
+            //                         "Seqno": (idxMatClass + 1) + "",
+            //                         "Mattypcls": itemMatClass.Mattypcls,
+            //                         "Attribcd": itemMatClass.Attribcd,
+            //                         "Descen": itemMatClass.Descen,
+            //                         "Desczh": itemMatClass.Desczh
+            //                     })
+            //                 }
+            //             })
+
+            //             var oMrpTypeClass = _this.getView().getModel("mrpTypeClass").getData().results.filter(
+            //                 x => x.Mtart == item.MATERIALTYPE)[0];
+
+            //             _MatImportParamSet.push({
+            //                 "Seq": "1",
+            //                 "Seqno": "1",
+            //                 "Ind_sector": "J",
+            //                 "Matl_type": item.MATERIALTYPE,
+            //                 "Matl_group": item.MATERIALGROUP,
+            //                 "Old_mat_no": item.OLDMATERIALNO,
+            //                 "Base_uom": item.BASEUOM,
+            //                 "Batch_mgmt": "X",
+            //                 "Net_weight": item.NETWT,
+            //                 "Unit_of_wt": item.WTUOM,
+            //                 "Po_unit": item.ORDERUOM,
+            //                 "Pur_valkey": item.PURCHVALUEKEY,
+            //                 "Plant": _this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
+            //                 "Mrp_type": oMrpTypeClass.Dismm,
+            //                 "Period_ind": "M",
+            //                 "Proc_type": "F",
+            //                 "Availcheck": "KP",
+            //                 "Profit_ctr": _this.getView().getModel("matPlantClass").getData().results[0].PROFITCTR,
+            //                 "Val_area": _this.getView().getModel("matPlantClass").getData().results[0].PLANTCD,
+            //                 "Price_ctrl": (item.MATERIALGROUP === "ACC" || item.MATERIALGROUP === "FAB") ? "V" : "",
+            //                 "Moving_pr": "0",
+            //                 "Price_unit": "1",
+            //                 "Val_class": oMrpTypeClass.Bklas
+            //             })
+
+            //             _param = {
+            //                 "Seq": "1",
+            //                 "Mattyp": item.MATERIALTYPE,
+            //                 "Gmc": item.GMC,
+            //                 "Descen": _descen,
+            //                 "Desczh": _desczh,
+            //                 "Processcd": item.PROCESSCODE,
+            //                 "Cusmatno": item.CUSMATCODE,
+            //                 "Grswt": item.GROSSWT,
+            //                 "Volume": item.VOLUME,
+            //                 "Voluom": item.VOLUMEUOM,
+            //                 "Length": item.LENGTH + '',
+            //                 "Width": item.WIDTH + '',
+            //                 "Height": item.HEIGHT + '',
+            //                 "Dimuom": item.DIMENSIONUOM,
+            //                 "Remarks": "",
+            //                 "MatAttribParamSet": _paramAttrib,
+            //                 "MatImportParamSet": _MatImportParamSet,
+            //                 "RetMsgSet": [{ "Seq": "1" }]
+            //             }
+
+            //             setTimeout(() => {
+            //                 var oModel = _this.getOwnerComponent().getModel("ZGW_3DERP_MATERIAL_SRV");
+
+            //                 oModel.setHeaders({
+            //                     sbu: vSBU
+            //                 });
+
+            //                 console.log("_param", _param);
+            //                 oModel.create("/MaterialHdrSet", _param, {
+            //                     method: "POST",
+            //                     success: function (res, oResponse) {
+            //                         Common.closeProcessingDialog(me);
+
+            //                         if (res.RetMsgSet.results[0].Type != "S") bError = true;
+
+            //                         sMessage += res.RetMsgSet.results[0].Message + "\n";
+
+            //                         if (idx == aNewRows.length - 1) {
+            //                             if (bError == false) {
+            //                                 me._oViewSettingsDialog["zuimatmaster.view.fragments.MaterialTypeClassDialog"].close();
+            //                                 me.getMain();
+            //                                 //me.onTableResize('Hdr', 'Min');
+            //                                 me.byId("smartFilterBar").setVisible(true);
+            //                                 me.byId("splitterHdr").setProperty("size", "50%");
+            //                                 me.byId("splitterDtl").setProperty("size", "50%");
+            //                                 me.byId("btnAddHdr").setVisible(true);
+            //                                 me.byId("btnEditHdr").setVisible(true);
+            //                                 me.byId("btnAddRowHdr").setVisible(false);
+            //                                 me.byId("btnRemoveRowHdr").setVisible(false);
+            //                                 me.byId("btnSaveHdr").setVisible(false);
+            //                                 me.byId("btnCancelHdr").setVisible(false);
+            //                                 me.byId("btnDeleteHdr").setVisible(true);
+            //                                 //me.byId("btnSettingsHdr").setVisible(true);
+            //                                 me.byId("btnFullScreenHdr").setVisible(true);
+            //                                 me.setRowReadMode();
+            //                                 me._dataMode = "READ";
+            //                             }
+
+            //                             MessageBox.information(sMessage);
+            //                             Common.closeProcessingDialog(me);
+            //                         }
+            //                     },
+            //                     error: function () {
+            //                         Common.closeProcessingDialog(me);
+            //                         // alert("Error");
+            //                     }
+            //                 });
+            //             }, iTimeOut);
+
+            //             iTimeOut += 3000;
+
+            //         });
+            //     }
+            // },
             // onCreateMMSave() {
             //     var _aDescen = [], _aDesczh = [];
             //     var _this = this;
@@ -2638,17 +2809,18 @@ sap.ui.define([
                 //     //     this.onTableResize('Dtls', 'Min');
                 //     // }
 
-                //     this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
-                //     this.byId(this._sActiveTable).bindRows("/rows");
+            //     //     this.byId(this._sActiveTable).getModel().setProperty("/rows", this._aDataBeforeChange);
+            //     //     this.byId(this._sActiveTable).bindRows("/rows");
 
-                //     if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
-                //     if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
-                //     this.setRowReadMode();
-                //     this._dataMode = "READ";
-                //     this.setActiveRowHighlightByTableId(this._sActiveTable);
-                // }
+            //     //     if (this._aColFilters.length > 0) { this.setColumnFilters(this._sActiveTable); }
+            //     //     if (this._aColSorters.length > 0) { this.setColumnSorters(this._sActiveTable); }
+            //     //     this.setRowReadMode();
+            //     //     this._dataMode = "READ";
+            //     //     this.setActiveRowHighlightByTableId(this._sActiveTable);
+            //     // }
 
-                // this._ConfirmDialog.close();
+            //     // this._ConfirmDialog.close();
+            // },
             },
             onCellClick: function (oEvent) {
                 if (oEvent.getParameters().rowBindingContext) {
